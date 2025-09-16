@@ -51,14 +51,14 @@ const projects: Project[] = [
     title: "Bringing an Eredivisie club's matches and campaigns to life.",
     meta: "PEC Zwolle, 2023 - 2024",
     link: "/pec-zwolle",
-    media: { src: "/images/peczwolle-cover.jpg", alt: "Bus stop advertisement for PEC Zwolle showing a supporter with his arm around a child in a PEC Zwolle shirt, both looking into a glowing box filled with season memories and fan moments." },
+    media: { src: "/images/peczwolle-cover.jpg", alt: "A showcase of your third project" },
     isVideo: false,
   },
   {
     title: "Researching social connection in a shifting residential community.",
     meta: "Hallo Buur, 2025",
     link: "/hallo-buur-2",
-    media: { src: "/images/hallo-buur2-cover.jpg", alt: "Poster on a hallway wall titled ‘De Aubade Waardeplaat’ with colorful icons and text bubbles showing community values such as activities, social contact, amenities, celebrations, and the surrounding environment." },
+    media: { src: "/images/hallo-buur2-cover.jpg", alt: "A showcase of your fourth project" },
     isVideo: false,
   },
 ];
