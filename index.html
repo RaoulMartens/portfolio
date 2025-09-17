@@ -24,6 +24,45 @@
 
   <!-- dotLottie web component -->
   <script defer src="https://cdn.jsdelivr.net/npm/@dotlottie/player-component@latest/dist/dotlottie-player.js"></script>
+
+  <!-- ======== Persistent theme bootstrap (runs before React) ======== -->
+  <script>
+    (function () {
+      var STORAGE_KEY = 'theme';           // 'light' | 'dark' | 'system'
+      var mql = window.matchMedia('(prefers-color-scheme: dark)');
+      var osDark = mql.matches;
+
+      function apply(choice) {
+        var mode = choice === 'system' ? (osDark ? 'dark' : 'light') : (choice || 'system');
+        var cl = document.documentElement.classList;
+        cl.toggle('dark', mode === 'dark');
+        cl.toggle('light', mode === 'light');
+        // Inform UA widgets (scrollbars, form controls)
+        document.documentElement.style.colorScheme = mode;
+      }
+
+      var saved = localStorage.getItem(STORAGE_KEY) || 'system';
+      apply(saved);
+
+      // Expose a global setter for your UI
+      window.__setTheme = function (choice) {
+        try { localStorage.setItem(STORAGE_KEY, choice); } catch (_) {}
+        apply(choice);
+      };
+
+      // Track OS changes when user picked 'system'
+      function onChange(e) {
+        var current = localStorage.getItem(STORAGE_KEY) || 'system';
+        if (current === 'system') {
+          osDark = e.matches;
+          apply('system');
+        }
+      }
+      try { mql.addEventListener('change', onChange); } catch(_) { mql.addListener(onChange); }
+    })();
+  </script>
+  <!-- =============================================================== -->
+
 </head>
 <body>
   <div id="root"></div>

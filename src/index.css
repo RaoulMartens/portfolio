@@ -2899,6 +2899,47 @@ section[class*="gallery"] { margin-bottom: 1.5rem; }
   .hb2-bottom-gap { margin-bottom: 12rem; }
 }
 
+@font-face {
+  font-family: "General Sans Variable";
+  src: url("/fonts/GeneralSans/GeneralSans-Variable.woff2") format("woff2"),
+       url("/fonts/GeneralSans/GeneralSans-Variable.woff") format("woff");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "General Sans Variable";
+  src: url("/fonts/GeneralSans/GeneralSans-VariableItalic.woff2") format("woff2"),
+       url("/fonts/GeneralSans/GeneralSans-VariableItalic.woff") format("woff");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "General Sans";
+  src: url("/fonts/GeneralSans/GeneralSans-Regular.woff2") format("woff2"),
+       url("/fonts/GeneralSans/GeneralSans-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "General Sans";
+  src: url("/fonts/GeneralSans/GeneralSans-Bold.woff2") format("woff2"),
+       url("/fonts/GeneralSans/GeneralSans-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: "General Sans Variable", "General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+
 
 
 
