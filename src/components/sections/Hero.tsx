@@ -111,9 +111,9 @@ const Hero: React.FC = () => {
 
   const handleAnimationComplete = () => {};
 
-  // Play-like image animation
-  const heroImgAnim = {
-    distance: 80,
+  // Fade-up base config
+  const fadeUp = {
+    distance: 50,
     direction: 'vertical' as const,
     duration: 0.8,
     ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
@@ -121,10 +121,19 @@ const Hero: React.FC = () => {
     animateOpacity: true,
     startOnMount: true,
     rootMarginBottomPct: 14,
-    delay: 0.18,
   };
 
-  // The phrase we want to highlight across all breakpoints
+  // Stagger timings
+  const iconDelay = 1.0;      // subtitle icon later
+  const subtitleDelay = 1.2;  // subtitle text latest
+
+  // Image comes in *after title but before subtitle*
+  const heroImgAnim = {
+    ...fadeUp,
+    distance: 80,
+    delay: 0.6, // middle timing
+  };
+
   const heroGroupPhrase = {
     tokens: ['ux', '&', 'product', 'designer'],
     className: 'gradient-group',
@@ -145,7 +154,7 @@ const Hero: React.FC = () => {
                     <div className="page-title hero-title">
                       <SplitText
                         text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
-                        delay={50}
+                        delay={0.06}
                         duration={0.8}
                         ease="power3.out"
                         splitType="words"
@@ -160,49 +169,17 @@ const Hero: React.FC = () => {
                     </div>
 
                     <div className="subtitle-row">
-                      <AnimatedContent
-                        distance={50}
-                        direction="vertical"
-                        duration={1}
-                        ease="power3.out"
-                        initialOpacity={0}
-                        animateOpacity
-                        scale={1}
-                        threshold={0.1}
-                        delay={1.1}
-                      >
+                      <AnimatedContent {...fadeUp} delay={iconDelay}>
                         <img src="/images/map-pin.svg" alt="Location pin" width={24} height={24} />
                       </AnimatedContent>
-                      <AnimatedContent
-                        distance={50}
-                        direction="vertical"
-                        duration={1}
-                        ease="power3.out"
-                        initialOpacity={0}
-                        animateOpacity
-                        scale={1}
-                        threshold={0.1}
-                        delay={1.3}
-                      >
-                        <div className="subtitle-text">
-                          <SplitText
-                            text="Currently designing at HAN University"
-                            delay={80}
-                            duration={0.6}
-                            ease="power3.out"
-                            splitType="words"
-                            from={{ opacity: 0, y: 30 }}
-                            to={{ opacity: 1, y: 0 }}
-                            threshold={0.9}
-                            rootMargin="-100px"
-                            textAlign="left"
-                          />
-                        </div>
+
+                      <AnimatedContent {...fadeUp} delay={subtitleDelay}>
+                        <div className="subtitle-text">Currently designing at HAN University</div>
                       </AnimatedContent>
                     </div>
                   </div>
 
-                  {/* HERO IMAGE — Play-like animation */}
+                  {/* HERO IMAGE — still after subtitle row in DOM, but animates earlier */}
                   <AnimatedContent {...heroImgAnim}>
                     <Magnet padding={50} magnetStrength={9}>
                       <img
@@ -235,7 +212,7 @@ const Hero: React.FC = () => {
               <div className="page-title hero-title hero-title--tablet">
                 <SplitText
                   text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
-                  delay={50}
+                  delay={0.06}
                   duration={0.8}
                   ease="power3.out"
                   splitType="words"
@@ -250,45 +227,12 @@ const Hero: React.FC = () => {
               </div>
 
               <div className="subtitle-row">
-                <AnimatedContent
-                  distance={50}
-                  direction="vertical"
-                  duration={1}
-                  ease="power3.out"
-                  initialOpacity={0}
-                  animateOpacity
-                  scale={1}
-                  threshold={0.1}
-                  delay={1.1}
-                >
+                <AnimatedContent {...fadeUp} delay={iconDelay}>
                   <img src="/images/map-pin.svg" alt="Location pin" width={24} height={24} />
                 </AnimatedContent>
 
-                <AnimatedContent
-                  distance={50}
-                  direction="vertical"
-                  duration={1}
-                  ease="power3.out"
-                  initialOpacity={0}
-                  animateOpacity
-                  scale={1}
-                  threshold={0.1}
-                  delay={1.3}
-                >
-                  <div className="subtitle-text">
-                    <SplitText
-                      text="Currently designing at HAN University"
-                      delay={80}
-                      duration={0.6}
-                      ease="power3.out"
-                      splitType="words"
-                      from={{ opacity: 0, y: 30 }}
-                      to={{ opacity: 1, y: 0 }}
-                      threshold={0.9}
-                      rootMargin="-100px"
-                      textAlign="center"
-                    />
-                  </div>
+                <AnimatedContent {...fadeUp} delay={subtitleDelay}>
+                  <div className="subtitle-text">Currently designing at HAN University</div>
                 </AnimatedContent>
               </div>
             </div>
@@ -312,7 +256,7 @@ const Hero: React.FC = () => {
               <div className="page-title hero-title hero-title--mobile">
                 <SplitText
                   text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
-                  delay={50}
+                  delay={0.06}
                   duration={0.8}
                   ease="power3.out"
                   splitType="words"
@@ -327,17 +271,7 @@ const Hero: React.FC = () => {
               </div>
 
               <div className="subtitle-row">
-                <AnimatedContent
-                  distance={50}
-                  direction="vertical"
-                  duration={1}
-                  ease="power3.out"
-                  initialOpacity={0}
-                  animateOpacity
-                  scale={1}
-                  threshold={0.1}
-                  delay={1.1}
-                >
+                <AnimatedContent {...fadeUp} delay={iconDelay}>
                   <img
                     src="/images/map-pin.svg"
                     alt="Location pin"
@@ -347,31 +281,8 @@ const Hero: React.FC = () => {
                   />
                 </AnimatedContent>
 
-                <AnimatedContent
-                  distance={50}
-                  direction="vertical"
-                  duration={1}
-                  ease="power3.out"
-                  initialOpacity={0}
-                  animateOpacity
-                  scale={1}
-                  threshold={0.1}
-                  delay={1.3}
-                >
-                  <div className="subtitle-text">
-                    <SplitText
-                      text="Currently designing at HAN University"
-                      delay={80}
-                      duration={0.6}
-                      ease="power3.out"
-                      splitType="words"
-                      from={{ opacity: 0, y: 30 }}
-                      to={{ opacity: 1, y: 0 }}
-                      threshold={0.9}
-                      rootMargin="-100px"
-                      textAlign="center"
-                    />
-                  </div>
+                <AnimatedContent {...fadeUp} delay={subtitleDelay}>
+                  <div className="subtitle-text">Currently designing at HAN University</div>
                 </AnimatedContent>
               </div>
             </div>

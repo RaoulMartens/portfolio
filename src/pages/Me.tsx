@@ -89,7 +89,7 @@ const Me: React.FC = () => {
     minTopRatio: 0.2,
   });
 
-  // Reuse the exact hero image animation config
+  // Image animation (same as hero)
   const heroImgAnim = {
     distance: 80,
     direction: "vertical" as const,
@@ -102,13 +102,13 @@ const Me: React.FC = () => {
     delay: 0.18,
   };
 
-  // Paragraph should appear a bit later than the image
+  // Body appears noticeably later than the image
   const heroBodyAnim = {
     ...heroImgAnim,
-    delay: 0.35,
+    delay: 0.9, // ⬅️ was 0.35 — now a clear gap after the image
   };
 
-  // Card reveal (identical to HalloBuur2.tsx textReveal)
+  // Card reveal
   const cardReveal = {
     distance: 80,
     direction: "vertical" as const,
@@ -125,13 +125,13 @@ const Me: React.FC = () => {
 
       <main aria-label="Me page" className="me-main">
         <div className="grid-container me-grid">
-          {/* Title (mount-animated SplitText) */}
+          {/* Title */}
           <div className="me-title-col">
             <h1 className="page-title me-title">
               <SplitText
                 text="My design journey kicked off with late night sessions making football posters. That spark soon branched into digital products."
                 splitType="words"
-                delay={60}
+                delay={0.06}
                 duration={0.7}
                 ease="power3.out"
                 from={{ opacity: 0, y: 28 }}
@@ -144,14 +144,14 @@ const Me: React.FC = () => {
             </h1>
           </div>
 
-          {/* Image — AnimatedContent */}
+          {/* Image */}
           <div className="me-image-col">
             <AnimatedContent {...heroImgAnim}>
               <img className="me-image" src="/images/me/me.jpg" alt="Raoul Martens" />
             </AnimatedContent>
           </div>
 
-          {/* Body — animated slightly later than image */}
+          {/* Body — later */}
           <div className="me-body-col">
             <AnimatedContent {...heroBodyAnim}>
               <p className="me-body">
@@ -171,15 +171,15 @@ const Me: React.FC = () => {
                   <SplitText
                     text="My approach, from first spark to live product"
                     splitType="words"
-                    delay={100}
+                    delay={0.06}
                     duration={0.8}
                     ease="power3.out"
                     from={{ opacity: 0, y: 32 }}
                     to={{ opacity: 1, y: 0 }}
-                    threshold={0.9}
-                    rootMargin="-5% 0px -25% 0px"
+                    threshold={0}
+                    rootMargin="100% 0 100% 0"
                     textAlign="left"
-                    startDelay={0}
+                    startDelay={0.1}
                   />
                 ) : (
                   <span className="invisible-placeholder">
@@ -217,15 +217,15 @@ const Me: React.FC = () => {
                   <SplitText
                     text="A few things I live for"
                     splitType="words"
-                    delay={100}
+                    delay={0.06}
                     duration={0.8}
                     ease="power3.out"
                     from={{ opacity: 0, y: 32 }}
                     to={{ opacity: 1, y: 0 }}
-                    threshold={0.9}
-                    rootMargin="-5% 0px -25% 0px"
+                    threshold={0}
+                    rootMargin="100% 0 100% 0"
                     textAlign="right"
-                    startDelay={0}
+                    startDelay={0.1}
                   />
                 ) : (
                   <span className="invisible-placeholder">A few things I live for</span>

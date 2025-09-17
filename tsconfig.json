@@ -9,6 +9,5 @@
     "isolatedModules": true,
     "types": ["vite/client", "node"]
   },
-  "files": ["src/types/global.d.ts"],   // <-- FIXED PATH
   "include": ["src", "vite.config.ts"]
 }

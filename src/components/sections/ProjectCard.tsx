@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState, memo } from 'react';
 import SplitText from '../common/SplitText';
 import AnimatedContent from '../common/AnimatedContent';
-import { hasPlayed } from '../../utils/animationMemory';
+import { hasPlayed, markPlayed } from '../../utils/animationMemory';
 
 /* ---------- dotLottie web component wrapper ---------- */
 const DotlottiePlayer = React.forwardRef<any, any>((props, ref) =>
@@ -136,18 +136,17 @@ const ProjectInfo: React.FC<{ title: string; meta: string; link: string }> = mem
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
 
-  useEffect(() => {
-    if (hasPlayed(`${link}::title`) || hasPlayed(`${link}::meta`) || hasPlayed(`${link}::cta`)) {
-      setInView(true);
-    }
-  }, [link]);
+  const playedTitle = hasPlayed(`${link}::title`);
+  const playedMeta  = hasPlayed(`${link}::meta`);
+  const playedCta   = hasPlayed(`${link}::cta`);
 
+  // Gate: only IO triggers first play (and only after some scroll)
   useEffect(() => {
-    if (inView) return;
+    if (inView || (playedTitle && playedMeta && playedCta)) return;
     const obs = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && window.scrollY > 50) {
             setInView(true);
             obs.disconnect();
             break;
@@ -155,67 +154,97 @@ const ProjectInfo: React.FC<{ title: string; meta: string; link: string }> = mem
         }
       },
       {
-        rootMargin: '0px 0px -25% 0px',
-        threshold: [0, 0.1, 0.2, 0.3, 0.5],
+        rootMargin: '-20% 0px -40% 0px',
+        threshold: 0.3,
       }
     );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
-  }, [inView]);
+  }, [inView, playedTitle, playedMeta, playedCta]);
+
+  // Title timing
+  const titleDelay = 0.06;      // seconds per word
+  const titleDuration = 0.8;
+  const titleWordCount = title.trim().split(/\s+/).length;
+
+  // Subtitle starts earlier: ~half the title + small buffer
+  const subtitleStartDelay = titleWordCount * titleDelay * 0.5 + 0.1;
+
+  // Desktop CTA timing
+  const ctaDelay = subtitleStartDelay + 0.3;
+  const ctaDuration = 0.8;
+
+  // Mark CTA as played after its animation would finish (desktop)
+  useEffect(() => {
+    if (!inView || playedCta) return;
+    const t = window.setTimeout(() => {
+      markPlayed(`${link}::cta`);
+    }, Math.max(0, (ctaDelay + ctaDuration) * 1000));
+    return () => window.clearTimeout(t);
+  }, [inView, playedCta, link, ctaDelay, ctaDuration]);
 
   return (
     <div className="project-header" ref={ref}>
       <div className="project-info">
         <h2 className="project-title">
-          {inView ? (
+          {playedTitle ? (
+            <span className="static">{title}</span>
+          ) : inView ? (
             <SplitText
               text={title}
-              delay={100}
-              duration={0.8}
+              delay={titleDelay}
+              duration={titleDuration}
               ease="power3.out"
               splitType="words"
               from={{ opacity: 0, y: 32 }}
               to={{ opacity: 1, y: 0 }}
-              threshold={0.9}
-              rootMargin="-5% 0px -25% 0px"
+              threshold={0}
+              rootMargin="100% 0px 100% 0px"
               textAlign="left"
               persistId={`${link}::title`}
+              onLetterAnimationComplete={() => markPlayed(`${link}::title`)}
             />
           ) : (
-            <span className="invisible">{title}</span>
+            <span className="invisible" aria-hidden="true">{title}</span>
           )}
         </h2>
 
         <p className="project-meta body-sm-medium">
-          {inView ? (
+          {playedMeta ? (
+            <span className="static">{meta}</span>
+          ) : inView ? (
             <SplitText
               text={meta}
-              delay={100}
+              delay={0.05}
               duration={0.6}
               ease="power3.out"
               splitType="words"
               from={{ opacity: 0, y: 24 }}
               to={{ opacity: 1, y: 0 }}
-              threshold={0.95}
-              rootMargin="-5% 0px -20% 0px"
+              threshold={0}
+              rootMargin="100% 0px 100% 0px"
               textAlign="left"
               persistId={`${link}::meta`}
+              startDelay={subtitleStartDelay}
+              onLetterAnimationComplete={() => markPlayed(`${link}::meta`)}
             />
           ) : (
-            <span className="invisible">{meta}</span>
+            <span className="invisible" aria-hidden="true">{meta}</span>
           )}
         </p>
       </div>
 
       <div className="project-link-desktop">
-        {inView && (
+        {playedCta ? (
+          <LinkWithHover link={link} />
+        ) : inView && (
           <AnimatedContent
             distance={50}
             direction="horizontal"
             reverse
             duration={0.8}
             ease="power3.out"
-            delay={1}
+            delay={ctaDelay}
             animateOpacity
             initialOpacity={0}
             persistId={`${link}::cta`}
@@ -239,6 +268,34 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   const lottieSrc = '/videos/hallo-buur.lottie';
 
+  // Mobile CTA: mark played once it appears in viewport
+  const mobileCtaRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (hasPlayed(`${link}::cta`)) return;
+    const node = mobileCtaRef.current;
+    if (!node) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            // small delay to approximate animation end
+            setTimeout(() => markPlayed(`${link}::cta`), 800);
+            obs.disconnect();
+            break;
+          }
+        }
+      },
+      { rootMargin: '0px 0px -20% 0px', threshold: 0.2 }
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, [link]);
+
+  const imageProps =
+    isVideo
+      ? { src: (media as any).poster as string, alt: (media as any).alt as string }
+      : (media as ImageMedia);
+
   return (
     <section className="project-background">
       <div className="grid-container">
@@ -253,8 +310,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     <LottieAnim src={lottieSrc} loop autoplay />
                   ) : (
                     <img
-                      src={(media as ImageMedia).src}
-                      alt={(media as ImageMedia).alt}
+                      src={imageProps.src}
+                      alt={imageProps.alt}
                       className="project-image"
                     />
                   )}
@@ -263,10 +320,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
 
             {/* mobile-only CTA */}
-            <div className="project-link-mobile">
-              <AnimatedContent persistId={`${link}::cta`}>
+            <div className="project-link-mobile" ref={mobileCtaRef}>
+              {hasPlayed(`${link}::cta`) ? (
                 <LinkWithHover link={link} />
-              </AnimatedContent>
+              ) : (
+                <AnimatedContent persistId={`${link}::cta`}>
+                  <LinkWithHover link={link} />
+                </AnimatedContent>
+              )}
             </div>
           </section>
         </div>

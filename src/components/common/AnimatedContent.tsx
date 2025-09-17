@@ -4,32 +4,24 @@ type Direction = "vertical" | "horizontal";
 
 export interface AnimatedContentProps {
   children: React.ReactNode;
-
-  // motion
-  distance?: number;              // px to translate from (positive number)
-  direction?: Direction;          // "vertical" | "horizontal"
-  duration?: number;              // seconds
-  ease?: string;                  // CSS cubic-bezier or keyword
-  delay?: number;                 // seconds
-  initialOpacity?: number;        // 0..1
+  distance?: number;
+  direction?: Direction;
+  duration?: number;     // seconds
+  ease?: string;         // accepts CSS timing fn OR "power3.out"
+  delay?: number;        // seconds
+  initialOpacity?: number;
   animateOpacity?: boolean;
-
-  // NEW: start scale value (animates to 1)
   scale?: number;
-
-  // NEW: reverse the translation direction (e.g. from right/above instead of left/below)
   reverse?: boolean;
 
-  // trigger behavior
-  startOnMount?: boolean;         // play immediately on mount
-  rootMarginBottomPct?: number;   // % bottom root-margin (for later triggering)
-  threshold?: number;             // IO threshold (default 0.1)
-  persistId?: string;             // (optional) key for “already played” memory
+  startOnMount?: boolean;
+  rootMarginBottomPct?: number;
+  threshold?: number;
+  persistId?: string;
 
   className?: string;
 }
 
-/** Tiny in-memory "already played" registry (per session). */
 const played = new Set<string>();
 
 const AnimatedContent: React.FC<AnimatedContentProps> = ({
@@ -41,8 +33,8 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
   delay = 0,
   initialOpacity = 0,
   animateOpacity = true,
-  scale = 1,                // NEW
-  reverse = false,          // NEW
+  scale = 1,
+  reverse = false,
   startOnMount = false,
   rootMarginBottomPct = 14,
   threshold = 0.1,
@@ -50,22 +42,53 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
   className,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [inView, setInView] = useState<boolean>(() => {
-    if (persistId && played.has(persistId)) return true;
-    return startOnMount;
-  });
 
+  // Map GSAP-like alias to CSS timing function
+  const cssEase =
+    ease === "power3.out" ? "cubic-bezier(0.22, 1, 0.36, 1)" : ease;
+
+  // Only enable transitions after initial paint to ensure we see the "from" state.
+  const [armed, setArmed] = useState(false);
+
+  // Always start "not in view"; we'll flip later via IO or startOnMount.
+  const [inView, setInView] = useState<boolean>(() =>
+    persistId && played.has(persistId) ? true : false
+  );
+
+  // Arm transitions on the next frame
   useEffect(() => {
-    if (!ref.current || inView) return;
+    const id1 = requestAnimationFrame(() => {
+      const id2 = requestAnimationFrame(() => setArmed(true));
+      return () => cancelAnimationFrame(id2);
+    });
+    return () => cancelAnimationFrame(id1);
+  }, []);
+
+  // If startOnMount, flip to inView AFTER first paint so it animates
+  useEffect(() => {
+    if (!startOnMount || inView) return;
+    const id1 = requestAnimationFrame(() => {
+      const id2 = requestAnimationFrame(() => setInView(true));
+      return () => cancelAnimationFrame(id2);
+    });
+    return () => cancelAnimationFrame(id1);
+  }, [startOnMount, inView]);
+
+  // IntersectionObserver (only if not already inView/persisted)
+  useEffect(() => {
+    if (!ref.current || inView || startOnMount) return;
 
     const rootMargin = `0px 0px -${Math.max(0, rootMarginBottomPct)}% 0px`;
     const io = new IntersectionObserver(
       (entries) => {
         const hit = entries.find((e) => e.isIntersecting);
         if (hit) {
-          setInView(true);
-          if (persistId) played.add(persistId);
-          io.disconnect();
+          // Defer to next frame so initial "from" styles have painted
+          requestAnimationFrame(() => {
+            setInView(true);
+            if (persistId) played.add(persistId);
+            io.disconnect();
+          });
         }
       },
       { root: null, rootMargin, threshold }
@@ -73,31 +96,28 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
 
     io.observe(ref.current);
     return () => io.disconnect();
-  }, [inView, persistId, rootMarginBottomPct, threshold]);
+  }, [inView, persistId, rootMarginBottomPct, threshold, startOnMount]);
+
+  // Respect reduced motion
+  const prefersReduced =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const dur = prefersReduced ? 0 : duration;
 
   const axis = direction === "horizontal" ? "X" : "Y";
   const signed = reverse ? -Math.abs(distance) : Math.abs(distance);
-  const fromTranslate = `translate${axis}(${signed}px)`;
-  const toTranslate = `translate${axis}(0px)`;
 
-  const fromScale = `scale(${scale})`;
-  const toScale = `scale(1)`;
-
-  const fromTransform =
-    direction === "horizontal"
-      ? `${fromTranslate} ${fromScale}`
-      : `${fromTranslate} ${fromScale}`;
-
-  const toTransform =
-    direction === "horizontal"
-      ? `${toTranslate} ${toScale}`
-      : `${toTranslate} ${toScale}`;
+  const fromTransform = `translate${axis}(${signed}px) scale(${scale})`;
+  const toTransform = `translate${axis}(0px) scale(1)`;
 
   const style: React.CSSProperties = {
     transform: inView ? toTransform : fromTransform,
     opacity: animateOpacity ? (inView ? 1 : initialOpacity) : undefined,
-    transition: `transform ${duration}s ${ease} ${delay}s, opacity ${duration}s ${ease} ${delay}s`,
-    willChange: "transform, opacity",
+    transition: armed
+      ? `transform ${dur}s ${cssEase} ${delay}s, opacity ${dur}s ${cssEase} ${delay}s`
+      : "none",
+    willChange: armed ? "transform, opacity" : undefined,
   };
 
   return (

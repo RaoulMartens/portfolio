@@ -97,7 +97,7 @@ const HalloBuur2: React.FC = () => {
                 <SplitText
                   text="Understanding community change"
                   splitType="words"
-                  delay={60}
+                  delay={0.06}                 // ✅ fixed (was 60)
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 28 }}
@@ -111,14 +111,14 @@ const HalloBuur2: React.FC = () => {
                 <SplitText
                   text="Researching social connection in a shifting residential community."
                   splitType="words"
-                  delay={60}
+                  delay={0.06}                 // ✅ fixed (was 60)
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 24 }}
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.1}
                   textAlign="left"
-                  startDelay={0.15}
+                  startDelay={0.15}            // subtle trail after title
                 />
               </p>
 

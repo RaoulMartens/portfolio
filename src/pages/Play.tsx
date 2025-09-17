@@ -89,13 +89,13 @@ const Play: React.FC = () => {
                 <SplitText
                   text="Made with nothing but curiosity. Browse, enjoy, and see where creativity runs free."
                   splitType="words"
-                  delay={60}
+                  delay={0.06}                 // ✅ was 60 (seconds!) → now 0.06s per word
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 28 }}
                   to={{ opacity: 1, y: 0 }}
-                  threshold={0.1}
-                  rootMargin="-100px"
+                  threshold={0.2}              // safer trigger
+                  rootMargin="0px 0px -10% 0px"
                   textAlign="left"
                   groupPhrase={{ tokens: ["curiosity"], className: "gradient-group" }}
                 />

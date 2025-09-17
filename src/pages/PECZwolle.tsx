@@ -90,7 +90,7 @@ const PECZwolle: React.FC = () => {
                 <SplitText
                   text="PEC Zwolle"
                   splitType="words"
-                  delay={60}
+                  delay={0.06}            // ✅ fixed (was 60)
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 28 }}
@@ -104,7 +104,7 @@ const PECZwolle: React.FC = () => {
                 <SplitText
                   text="Bringing an Eredivisie club’s matches and campaigns to life."
                   splitType="words"
-                  delay={60}
+                  delay={0.06}            // ✅ fixed (was 60)
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 24 }}

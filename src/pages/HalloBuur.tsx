@@ -327,7 +327,7 @@ const HalloBuur: React.FC = () => {
                 <SplitText
                   text="Hallo Buur"
                   splitType="words"
-                  delay={60}
+                  delay={0.06}              // ✅ fixed (was 60)
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 28 }}
@@ -341,14 +341,14 @@ const HalloBuur: React.FC = () => {
                 <SplitText
                   text="Community building through a digital bulletin board."
                   splitType="words"
-                  delay={60}
+                  delay={0.06}              // ✅ fixed (was 60)
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 24 }}
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.1}
                   textAlign="left"
-                  startDelay={0.15}
+                  startDelay={0.15}         // subtle trail after title
                 />
               </p>
 
