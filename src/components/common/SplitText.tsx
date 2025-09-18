@@ -36,6 +36,20 @@ const played = new Set<string>();
 const defaultFrom: Vec = { opacity: 0, y: 28 };
 const defaultTo: Vec = { opacity: 1, y: 0 };
 
+// ---- helpers to harden IO config -------------------------------------------
+const isValidRootMargin = (s: unknown) => {
+  if (typeof s !== "string") return false;
+  const parts = s.trim().split(/\s+/);
+  if (parts.length < 1 || parts.length > 4) return false;
+  return parts.every((p) => /^-?\d+(\.\d+)?(px|%)$/.test(p));
+};
+
+const clamp01 = (n: unknown, fb = 0.1) => {
+  const x = Number(n);
+  return Number.isFinite(x) ? Math.min(1, Math.max(0, x)) : fb;
+};
+// ----------------------------------------------------------------------------
+
 const SplitText: React.FC<SplitTextProps> = ({
   text,
   delay = 0.06,
@@ -58,7 +72,9 @@ const SplitText: React.FC<SplitTextProps> = ({
   const [armed, setArmed] = useState(false);
 
   // If persistId was played before, render directly "in view"; else wait for IO.
-  const [inView, setInView] = useState<boolean>(() => (persistId && played.has(persistId)) || false);
+  const [inView, setInView] = useState<boolean>(
+    () => (persistId && played.has(persistId)) || false
+  );
 
   const completionTimer = useRef<number | null>(null);
 
@@ -92,24 +108,52 @@ const SplitText: React.FC<SplitTextProps> = ({
   useEffect(() => {
     if (!holderRef.current || inView || reduceMotion) return;
 
-    const node = holderRef.current;
-    const io = new IntersectionObserver(
-      (entries) => {
-        const hit = entries.find((e) => e.isIntersecting);
-        if (hit) {
-          const run = () => {
-            setInView(true);
-            if (persistId) played.add(persistId);
-            io.disconnect();
-          };
-          requestAnimationFrame(() => requestAnimationFrame(run));
-        }
-      },
-      { threshold, root: null, rootMargin }
-    );
+    // SSR / polyfill-less environments
+    if (
+      typeof window === "undefined" ||
+      typeof (window as any).IntersectionObserver === "undefined"
+    ) {
+      setInView(true);
+      return;
+    }
 
-    io.observe(node);
-    return () => io.disconnect();
+    const node = holderRef.current;
+
+    // sanitize inputs
+    const safeRootMargin = isValidRootMargin(rootMargin)
+      ? rootMargin
+      : "0px 0px -10% 0px";
+    const safeThreshold = clamp01(threshold, 0.1);
+
+    let io: IntersectionObserver | undefined;
+    try {
+      io = new IntersectionObserver(
+        (entries) => {
+          const hit = entries.find((e) => e.isIntersecting);
+          if (hit) {
+            const run = () => {
+              setInView(true);
+              if (persistId) played.add(persistId);
+              io?.disconnect();
+            };
+            // ensure initial 'from' styles painted
+            requestAnimationFrame(() => requestAnimationFrame(run));
+          }
+        },
+        { threshold: safeThreshold, root: null, rootMargin: safeRootMargin }
+      );
+
+      io.observe(node);
+    } catch (err) {
+      // Never crash the app because of a malformed config: just reveal
+      console.warn(
+        "[SplitText] IntersectionObserver failed; revealing immediately",
+        { safeRootMargin, safeThreshold, err }
+      );
+      setInView(true);
+    }
+
+    return () => io?.disconnect();
   }, [inView, persistId, threshold, rootMargin, reduceMotion]);
 
   // --- tokenize: preserve ALL whitespace when splitting by words

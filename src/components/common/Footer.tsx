@@ -134,7 +134,7 @@ const Footer: React.FC = () => {
 
   const handleCopyEmail = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const email = 'your-email@example.com';
+    const email = 'Raoulma4@gmail.com';
     try {
       await navigator.clipboard.writeText(email);
       setCopyButtonText('Copied');
@@ -181,11 +181,11 @@ const Footer: React.FC = () => {
                     wrapperClassName="magnet--email"
                   >
                     <a
-                      href="mailto:your-email@example.com"
+                      href="mailto:Raoulma4@gmail.com"
                       onClick={handleCopyEmail}
                       onMouseEnter={() => setEmailHovered(true)}
                       onMouseLeave={() => setEmailHovered(false)}
-                      aria-label="Email me at your-email@example.com"
+                      aria-label="Email me at Raoulma4@gmail.com"
                       tabIndex={0}
                       className="btn-email"
                     >

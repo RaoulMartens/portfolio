@@ -1,75 +1,145 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Raoul Martens</title>
-  <meta name="description" content="Portfolio of Raoul Martens" />
-  <meta name="color-scheme" content="light dark" />
-  <!-- theme-color for light/dark UI chrome -->
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ECECEC" />
-  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#131313" />
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Raoul Martens</title>
+    <meta name="description" content="Portfolio of Raoul Martens" />
+    <meta name="color-scheme" content="light dark" />
 
-  <!-- Favicons (Vite: use %BASE_URL% or absolute / paths) -->
-  <link rel="icon" type="image/png" href="%BASE_URL%favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
-  <link rel="shortcut icon" href="%BASE_URL%favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="%BASE_URL%apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-title" content="Raoul" />
-  <link rel="manifest" href="%BASE_URL%site.webmanifest" />
+    <!-- theme-color for light/dark UI chrome -->
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#ECECEC"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#131313"
+    />
 
-  <!-- GSAP (non-blocking) -->
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Favicons (use %BASE_URL% so it works under subpaths in Vite) -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="%BASE_URL%images/favicon/favicon-96x96.png"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="%BASE_URL%images/favicon/favicon.svg"
+    />
+    <link
+      rel="shortcut icon"
+      href="%BASE_URL%images/favicon/favicon.ico"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="%BASE_URL%images/favicon/apple-touch-icon.png"
+    />
+    <meta name="apple-mobile-web-app-title" content="Raoul" />
 
-  <!-- dotLottie web component -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@dotlottie/player-component@latest/dist/dotlottie-player.js"></script>
+    <!-- ======== Fonts (Google) ======== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- General Sans is loaded locally via @font-face in index.css -->
 
-  <!-- ======== Persistent theme bootstrap (runs before React) ======== -->
-  <script>
-    (function () {
-      var STORAGE_KEY = 'theme';           // 'light' | 'dark' | 'system'
-      var mql = window.matchMedia('(prefers-color-scheme: dark)');
-      var osDark = mql.matches;
+    <!-- ======== External libraries ======== -->
+    <!-- GSAP (non-blocking) -->
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
+    ></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
+    ></script>
 
-      function apply(choice) {
-        var mode = choice === 'system' ? (osDark ? 'dark' : 'light') : (choice || 'system');
-        var cl = document.documentElement.classList;
-        cl.toggle('dark', mode === 'dark');
-        cl.toggle('light', mode === 'light');
-        // Inform UA widgets (scrollbars, form controls)
-        document.documentElement.style.colorScheme = mode;
-      }
+    <!-- dotLottie web component -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/@dotlottie/player-component@latest/dist/dotlottie-player.js"
+    ></script>
 
-      var saved = localStorage.getItem(STORAGE_KEY) || 'system';
-      apply(saved);
+    <!-- ======== Persistent theme bootstrap (runs before React) ======== -->
+    <script>
+      (function () {
+        var STORAGE_KEY = "theme"; // 'light' | 'dark' | 'system'
+        var mql = window.matchMedia?.("(prefers-color-scheme: dark)");
+        var osDark = !!mql && !!mql.matches;
 
-      // Expose a global setter for your UI
-      window.__setTheme = function (choice) {
-        try { localStorage.setItem(STORAGE_KEY, choice); } catch (_) {}
-        apply(choice);
-      };
+        function apply(choice) {
+          var mode =
+            choice === "system"
+              ? osDark
+                ? "dark"
+                : "light"
+              : choice || "system";
 
-      // Track OS changes when user picked 'system'
-      function onChange(e) {
-        var current = localStorage.getItem(STORAGE_KEY) || 'system';
-        if (current === 'system') {
-          osDark = e.matches;
-          apply('system');
+          var root = document.documentElement;
+          var body = document.body;
+
+          // Keep exactly one of these on both <html> and <body>
+          root.classList.toggle("dark", mode === "dark");
+          root.classList.toggle("light", mode === "light");
+          body.classList.toggle("dark", mode === "dark");
+          body.classList.toggle("light", mode === "light");
+
+          // Inform UA widgets (scrollbars, form controls)
+          root.style.colorScheme = mode;
+
+          // Broadcast so mounted pages/components can sync immediately
+          try {
+            window.dispatchEvent(
+              new CustomEvent("themechange", { detail: { mode: mode } })
+            );
+          } catch (_) {}
         }
-      }
-      try { mql.addEventListener('change', onChange); } catch(_) { mql.addListener(onChange); }
-    })();
-  </script>
-  <!-- =============================================================== -->
 
-</head>
-<body>
-  <div id="root"></div>
+        var saved = localStorage.getItem(STORAGE_KEY) || "system";
+        apply(saved);
 
-  <!-- Vite entry -->
-  <script type="module" src="/src/main.tsx"></script>
+        // Expose a global setter for your UI
+        window.__setTheme = function (choice) {
+          try {
+            localStorage.setItem(STORAGE_KEY, choice);
+          } catch (_) {}
+          apply(choice);
+        };
 
-  <noscript>Please enable JavaScript to view this website.</noscript>
-</body>
+        // Track OS changes when user picked 'system'
+        function onChange(e) {
+          var current = localStorage.getItem(STORAGE_KEY) || "system";
+          if (current === "system") {
+            osDark = e.matches;
+            apply("system");
+          }
+        }
+        try {
+          mql?.addEventListener?.("change", onChange);
+        } catch (_) {
+          mql && mql.addListener && mql.addListener(onChange);
+        }
+      })();
+    </script>
+    <!-- =============================================================== -->
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- Vite entry -->
+    <script type="module" src="/src/main.tsx"></script>
+
+    <noscript>Please enable JavaScript to view this website.</noscript>
+  </body>
 </html>
