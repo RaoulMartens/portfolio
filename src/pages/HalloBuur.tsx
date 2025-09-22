@@ -6,8 +6,9 @@ import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
 
 /* =========================================================
-   LottieBox v5 — unified .json/.lottie player
-   (no inline styles; class-based styling)
+   LottieBox v5.1 — unified .json/.lottie player
+   - Relaxed play trigger for mobile viewports
+   - "Play on ready" nudge to avoid stalled first frame
    ========================================================= */
 
 let dotlottieReadyPromise: Promise<void> | null = null;
@@ -140,6 +141,10 @@ const LottieBox: React.FC<{
 
           const onReady = () => {
             setReadyToShow(true);
+            // Mobile nudge: play the first frame once ready
+            requestAnimationFrame(() => {
+              try { instRef.current?.play?.(); } catch {}
+            });
             player.removeEventListener?.("ready", onReady);
           };
           player.addEventListener?.("ready", onReady);
@@ -176,23 +181,29 @@ const LottieBox: React.FC<{
 
           const onDomLoaded = () => {
             setReadyToShow(true);
+            // Mobile nudge: play once DOM is ready
+            requestAnimationFrame(() => {
+              try { instRef.current?.play?.(); } catch {}
+            });
             instRef.current?.removeEventListener?.("DOMLoaded", onDomLoaded);
           };
           instRef.current?.addEventListener?.("DOMLoaded", onDomLoaded);
         }
 
+        // Relaxed visibility rule for mobile (address bar resize, etc.)
         playObs = new IntersectionObserver(
           (es) => {
             const me = es.find((e) => e.target === holderRef.current);
             if (!me || !instRef.current) return;
 
-            const vh = me.rootBounds?.height ?? window.innerHeight;
-            const fullyInView =
-              me.intersectionRatio >= 0.999 &&
-              me.boundingClientRect.top >= 0 &&
-              me.boundingClientRect.bottom <= vh;
+            const ratio = me.intersectionRatio ?? 0;
+            const rect = me.boundingClientRect;
+            const vh = (me.rootBounds?.height ?? window.innerHeight) || 0;
 
-            if (fullyInView) {
+            // Consider "visible enough" if ≥ 35% in view and not scrolled far above
+            const visibleEnough = ratio >= 0.35 && rect.top > -0.8 * vh;
+
+            if (visibleEnough) {
               if (isDot) instRef.current.play?.();
               else if (instRef.current.isPaused) instRef.current.play();
             } else {
@@ -200,7 +211,7 @@ const LottieBox: React.FC<{
               else if (!instRef.current.isPaused) instRef.current.pause();
             }
           },
-          { root: null, rootMargin: "0px", threshold: [0, 0.2, 0.5, 0.95, 0.99, 1] }
+          { root: null, rootMargin: "0px", threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] }
         );
         if (holderRef.current) playObs.observe(holderRef.current);
       },
@@ -327,7 +338,7 @@ const HalloBuur: React.FC = () => {
                 <SplitText
                   text="Hallo Buur"
                   splitType="words"
-                  delay={0.06}              // ✅ fixed (was 60)
+                  delay={0.06}
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 28 }}
@@ -341,14 +352,14 @@ const HalloBuur: React.FC = () => {
                 <SplitText
                   text="Community building through a digital bulletin board."
                   splitType="words"
-                  delay={0.06}              // ✅ fixed (was 60)
+                  delay={0.06}
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 24 }}
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.1}
                   textAlign="left"
-                  startDelay={0.15}         // subtle trail after title
+                  startDelay={0.15}
                 />
               </p>
 

@@ -239,7 +239,7 @@ const Footer: React.FC = () => {
 
         <div className="footer-bottom">
           <div className="footer-brand">
-            <img src="/images/logo-grey.svg" alt="Your Logo" /> Raoul Martens
+            <img src="/images/logo-grey.svg" alt="Your Logo" /> Raoul Martens © 2025
           </div>
 
           <a

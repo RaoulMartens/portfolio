@@ -1,3 +1,4 @@
+// src/pages/Me.tsx
 import React, { useEffect, useRef, useState } from "react";
 import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
@@ -105,7 +106,7 @@ const Me: React.FC = () => {
   // Body appears noticeably later than the image
   const heroBodyAnim = {
     ...heroImgAnim,
-    delay: 0.9, // ⬅️ was 0.35 — now a clear gap after the image
+    delay: 0.9, // clear gap after the image
   };
 
   // Card reveal
@@ -190,8 +191,11 @@ const Me: React.FC = () => {
             </div>
           </div>
 
-          {/* Process Cards */}
-          <div className="me-cards-wrap" aria-label="Design process steps (grid on tablet & stacked on mobile)">
+          {/* Process Cards (keep your grid, borrow HalloBuur inner spacing) */}
+          <div
+            className="me-cards-wrap"
+            aria-label="Design process steps (grid on tablet & stacked on mobile)"
+          >
             {[
               { idx: 1, title: "Empathize", body: "Real insight saves weeks of nice looking but useless UI.", iconClass: "mask-empathize" },
               { idx: 2, title: "Define", body: "Focus keeps scope tight and decisions easy to defend.", iconClass: "mask-define" },
@@ -200,8 +204,9 @@ const Me: React.FC = () => {
               { idx: 5, title: "Iterate", body: "Each loop nudges the product closer to effortless.", iconClass: "mask-iterate" },
             ].map((c, i) => (
               <AnimatedContent key={c.idx} {...cardReveal} delay={i * 0.06}>
-                <div className="me-card">
-                  <div className={`me-card-icon ${c.iconClass}`} />
+                {/* ⬇️ Your layout class (me-card) + HalloBuur spacing (hb-card & hb-card-icon) */}
+                <div className="me-card hb-card">
+                  <div className={`hb-card-icon ${c.iconClass}`} />
                   <h5>{c.title}</h5>
                   <p>{c.body}</p>
                 </div>
