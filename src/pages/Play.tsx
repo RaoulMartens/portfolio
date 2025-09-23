@@ -1,3 +1,4 @@
+// src/pages/Play.tsx
 import React from "react";
 import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
@@ -5,6 +6,24 @@ import AnimatedContent from "../components/common/AnimatedContent";
 import SplitText from "../components/common/SplitText";
 
 type GalleryItem = { src: string; alt: string };
+
+/* ----------------------------- */
+/* Breakpoint hook (match Hero)  */
+/* ----------------------------- */
+type BP = "mobile" | "tablet" | "desktop";
+function useBreakpoint(): BP | null {
+  const [bp, setBp] = React.useState<BP | null>(null);
+  React.useEffect(() => {
+    const calc = () => {
+      const w = window.innerWidth;
+      setBp(w < 768 ? "mobile" : w <= 1024 ? "tablet" : "desktop");
+    };
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, []);
+  return bp;
+}
 
 const GALLERY_MAIN: GalleryItem[] = [
   { src: "/images/play/football-psg.jpg", alt: "Creative scene with players" },
@@ -60,6 +79,9 @@ function getCols(): number {
 }
 
 const Play: React.FC = () => {
+  const bp = useBreakpoint();
+  const isMobile = bp === "mobile";
+
   const imgAnim = {
     distance: 80,
     direction: "vertical" as const,
@@ -85,18 +107,24 @@ const Play: React.FC = () => {
         <section className="play-container">
           <div className="title-grid">
             <div className="title-col">
-              <h1 className="play-title">
+              <h1
+                className={
+                  isMobile
+                    ? "page-title hero-title hero-title--mobile play-title"
+                    : "play-title"
+                }
+              >
                 <SplitText
                   text="Made with nothing but curiosity. Browse, enjoy, and see where creativity runs free."
                   splitType="words"
-                  delay={0.06}                 // ✅ was 60 (seconds!) → now 0.06s per word
+                  delay={0.06}
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 28 }}
                   to={{ opacity: 1, y: 0 }}
-                  threshold={0.2}              // safer trigger
+                  threshold={0.2}
                   rootMargin="0px 0px -10% 0px"
-                  textAlign="left"
+                  textAlign={isMobile ? "center" : "left"}
                   groupPhrase={{ tokens: ["curiosity"], className: "gradient-group" }}
                 />
               </h1>

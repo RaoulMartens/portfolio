@@ -1,3 +1,4 @@
+// src/components/sections/Hero.tsx
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useSpring, animated, to } from '@react-spring/web';
 import SplitText from '../common/SplitText';
@@ -170,7 +171,13 @@ const Hero: React.FC = () => {
 
                     <div className="subtitle-row">
                       <AnimatedContent {...fadeUp} delay={iconDelay}>
-                        <img src="/images/map-pin.svg" alt="Location pin" width={24} height={24} />
+                        <img
+                          className="hero-pin"
+                          src="/images/map-pin.svg"
+                          alt="Location pin"
+                          width={24}
+                          height={24}
+                        />
                       </AnimatedContent>
 
                       <AnimatedContent {...fadeUp} delay={subtitleDelay}>
@@ -179,7 +186,7 @@ const Hero: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* HERO IMAGE — still after subtitle row in DOM, but animates earlier */}
+                  {/* HERO IMAGE */}
                   <AnimatedContent {...heroImgAnim}>
                     <Magnet padding={50} magnetStrength={9}>
                       <img
@@ -228,7 +235,13 @@ const Hero: React.FC = () => {
 
               <div className="subtitle-row">
                 <AnimatedContent {...fadeUp} delay={iconDelay}>
-                  <img src="/images/map-pin.svg" alt="Location pin" width={24} height={24} />
+                  <img
+                    className="hero-pin"
+                    src="/images/map-pin.svg"
+                    alt="Location pin"
+                    width={24}
+                    height={24}
+                  />
                 </AnimatedContent>
 
                 <AnimatedContent {...fadeUp} delay={subtitleDelay}>
@@ -273,6 +286,7 @@ const Hero: React.FC = () => {
               <div className="subtitle-row">
                 <AnimatedContent {...fadeUp} delay={iconDelay}>
                   <img
+                    className="hero-pin"
                     src="/images/map-pin.svg"
                     alt="Location pin"
                     width={16}

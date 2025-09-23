@@ -1,26 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="light">
   <head>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>Raoul Martens</title>
-    <meta name="description" content="Portfolio of Raoul Martens" />
-    <meta name="color-scheme" content="light dark" />
 
-    <!-- theme-color for light/dark UI chrome -->
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: light)"
-      content="#ECECEC"
-    />
-    <meta
-      name="theme-color"
-      media="(prefers-color-scheme: dark)"
-      content="#131313"
-    />
+    <!-- ========= Site Title ========= -->
+    <title>Raoul Martens | Designer</title>
+    <meta name="description" content="Portfolio of Raoul Martens" />
+
+    <!-- Force light mode (color-scheme for UI chrome) -->
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#ECECEC" />
 
     <!-- Favicons (use %BASE_URL% so it works under subpaths in Vite) -->
     <link
@@ -71,65 +64,43 @@
       src="https://cdn.jsdelivr.net/npm/@dotlottie/player-component@latest/dist/dotlottie-player.js"
     ></script>
 
-    <!-- ======== Persistent theme bootstrap (runs before React) ======== -->
+    <!-- ======== Persistent theme bootstrap (force LIGHT) ======== -->
     <script>
       (function () {
-        var STORAGE_KEY = "theme"; // 'light' | 'dark' | 'system'
-        var mql = window.matchMedia?.("(prefers-color-scheme: dark)");
-        var osDark = !!mql && !!mql.matches;
+        var STORAGE_KEY = "theme";
 
-        function apply(choice) {
-          var mode =
-            choice === "system"
-              ? osDark
-                ? "dark"
-                : "light"
-              : choice || "system";
-
+        function applyLight() {
           var root = document.documentElement;
           var body = document.body;
-
-          // Keep exactly one of these on both <html> and <body>
-          root.classList.toggle("dark", mode === "dark");
-          root.classList.toggle("light", mode === "light");
-          body.classList.toggle("dark", mode === "dark");
-          body.classList.toggle("light", mode === "light");
-
-          // Inform UA widgets (scrollbars, form controls)
-          root.style.colorScheme = mode;
-
-          // Broadcast so mounted pages/components can sync immediately
+          root.classList.add("light");
+          root.classList.remove("dark");
+          body.classList.add("light");
+          body.classList.remove("dark");
+          root.style.colorScheme = "light";
           try {
-            window.dispatchEvent(
-              new CustomEvent("themechange", { detail: { mode: mode } })
-            );
+            window.dispatchEvent(new CustomEvent("themechange", { detail: { mode: "light" } }));
           } catch (_) {}
         }
 
-        var saved = localStorage.getItem(STORAGE_KEY) || "system";
-        apply(saved);
+        // Always start light, overwrite storage
+        applyLight();
+        try { localStorage.setItem(STORAGE_KEY, "light"); } catch (_) {}
 
-        // Expose a global setter for your UI
+        // Expose global setter if you want to toggle later
         window.__setTheme = function (choice) {
-          try {
-            localStorage.setItem(STORAGE_KEY, choice);
-          } catch (_) {}
-          apply(choice);
-        };
-
-        // Track OS changes when user picked 'system'
-        function onChange(e) {
-          var current = localStorage.getItem(STORAGE_KEY) || "system";
-          if (current === "system") {
-            osDark = e.matches;
-            apply("system");
+          if (choice === "dark") {
+            document.documentElement.classList.add("dark");
+            document.documentElement.classList.remove("light");
+            document.body.classList.add("dark");
+            document.body.classList.remove("light");
+            document.documentElement.style.colorScheme = "dark";
+            try { localStorage.setItem(STORAGE_KEY, "dark"); } catch (_) {}
+            try { window.dispatchEvent(new CustomEvent("themechange", { detail: { mode: "dark" } })); } catch (_) {}
+          } else {
+            applyLight();
+            try { localStorage.setItem(STORAGE_KEY, "light"); } catch (_) {}
           }
-        }
-        try {
-          mql?.addEventListener?.("change", onChange);
-        } catch (_) {
-          mql && mql.addListener && mql.addListener(onChange);
-        }
+        };
       })();
     </script>
     <!-- =============================================================== -->

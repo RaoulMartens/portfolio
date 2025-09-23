@@ -6,6 +6,24 @@ import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
 
 /* ----------------------------- */
+/* Breakpoint hook (match Hero)  */
+/* ----------------------------- */
+type BP = "mobile" | "tablet" | "desktop";
+function useBreakpoint(): BP | null {
+  const [bp, setBp] = useState<BP | null>(null);
+  useEffect(() => {
+    const calc = () => {
+      const w = window.innerWidth;
+      setBp(w < 768 ? "mobile" : w <= 1024 ? "tablet" : "desktop");
+    };
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, []);
+  return bp;
+}
+
+/* ----------------------------- */
 /* In-view title hook            */
 /* ----------------------------- */
 function useInViewTitle(options?: {
@@ -75,6 +93,8 @@ function useInViewTitle(options?: {
 }
 
 const Me: React.FC = () => {
+  const bp = useBreakpoint();
+
   // Scroll-triggered titles (match ProjectCard behavior)
   const approach = useInViewTitle({
     rootMargin: "0px 0px -35% 0px",
@@ -120,6 +140,10 @@ const Me: React.FC = () => {
     rootMarginBottomPct: 14,
   };
 
+  if (!bp) return null;
+
+  const isMobile = bp === "mobile";
+
   return (
     <div className="viewport-wrapper">
       <Navigation />
@@ -128,7 +152,14 @@ const Me: React.FC = () => {
         <div className="grid-container me-grid">
           {/* Title */}
           <div className="me-title-col">
-            <h1 className="page-title me-title">
+            <h1
+              className={
+                // 👉 On mobile, reuse the exact Hero mobile title classes
+                isMobile
+                  ? "page-title hero-title hero-title--mobile me-title"
+                  : "page-title me-title"
+              }
+            >
               <SplitText
                 text="My design journey kicked off with late night sessions making football posters. That spark soon branched into digital products."
                 splitType="words"
@@ -139,8 +170,11 @@ const Me: React.FC = () => {
                 to={{ opacity: 1, y: 0 }}
                 threshold={0.1}
                 rootMargin="-100px"
-                textAlign="left"
-                groupPhrase={{ tokens: ["digital", "products"], className: "gradient-group" }}
+                textAlign={isMobile ? "center" : "left"}
+                groupPhrase={{
+                  tokens: ["digital", "products"],
+                  className: "gradient-group",
+                }}
               />
             </h1>
           </div>
@@ -191,7 +225,7 @@ const Me: React.FC = () => {
             </div>
           </div>
 
-          {/* Process Cards (keep your grid, borrow HalloBuur inner spacing) */}
+          {/* Process Cards */}
           <div
             className="me-cards-wrap"
             aria-label="Design process steps (grid on tablet & stacked on mobile)"
@@ -204,7 +238,6 @@ const Me: React.FC = () => {
               { idx: 5, title: "Iterate", body: "Each loop nudges the product closer to effortless.", iconClass: "mask-iterate" },
             ].map((c, i) => (
               <AnimatedContent key={c.idx} {...cardReveal} delay={i * 0.06}>
-                {/* ⬇️ Your layout class (me-card) + HalloBuur spacing (hb-card & hb-card-icon) */}
                 <div className="me-card hb-card">
                   <div className={`hb-card-icon ${c.iconClass}`} />
                   <h5>{c.title}</h5>

@@ -6,24 +6,48 @@ import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
 
 /* =========================================================
-   LottieBox v5.1 — unified .json/.lottie player
-   - Relaxed play trigger for mobile viewports
-   - "Play on ready" nudge to avoid stalled first frame
+   LottieBox v6 — .json/.lottie player (iOS/Safari hardened)
+   - Fallback CDN + timeout voor webcomponent load
+   - Autoplay op dotlottie-player + iOS double-play nudge
+   - Soepelere IntersectionObserver thresholds op mobiel
+   - Poster zichtbaar tot 'ready'
    ========================================================= */
 
 let dotlottieReadyPromise: Promise<void> | null = null;
 function ensureDotLottieDefined(): Promise<void> {
   if (typeof window === "undefined") return Promise.resolve();
   if (customElements.get("dotlottie-player")) return Promise.resolve();
+
   if (!dotlottieReadyPromise) {
     dotlottieReadyPromise = new Promise<void>((resolve) => {
-      const s = document.createElement("script");
-      s.type = "module";
-      s.src = "https://unpkg.com/@dotlottie/player-component/dist/dotlottie-player.mjs";
-      s.onload = () =>
-        customElements.whenDefined("dotlottie-player").then(() => resolve());
-      s.onerror = () => resolve();
-      document.head.appendChild(s);
+      const loadWith = (src: string, onFail?: () => void) => {
+        const s = document.createElement("script");
+        s.type = "module";
+        s.src = src;
+        s.onload = () =>
+          customElements.whenDefined("dotlottie-player").then(() => resolve());
+        s.onerror = () => (onFail ? onFail() : resolve());
+        document.head.appendChild(s);
+      };
+
+      let resolved = false;
+      const done = () => {
+        if (!resolved) {
+          resolved = true;
+          resolve();
+        }
+      };
+
+      // 1) unpkg → 2) jsDelivr → 3) timeout safety net (Safari)
+      loadWith(
+        "https://unpkg.com/@dotlottie/player-component/dist/dotlottie-player.mjs",
+        () =>
+          loadWith(
+            "https://cdn.jsdelivr.net/npm/@dotlottie/player-component/dist/dotlottie-player.mjs",
+            done
+          )
+      );
+      setTimeout(done, 1800);
     });
   }
   return dotlottieReadyPromise;
@@ -49,6 +73,11 @@ const prefersReducedMotion =
   window.matchMedia &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+const isIOS =
+  typeof navigator !== "undefined" &&
+  (/iP(hone|od|ad)/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1));
+
 const LottieBox: React.FC<{
   src: string;
   loop?: boolean;
@@ -70,6 +99,17 @@ const LottieBox: React.FC<{
     return smallScreen || lowMem ? "canvas" : "svg";
   }, []);
 
+  // Optioneel: pauzeren bij tab-weg en hervatten bij terugkeren
+  useEffect(() => {
+    const onVis = () => {
+      if (!instRef.current) return;
+      if (document.hidden) instRef.current.pause?.();
+      else instRef.current.play?.();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+
   useEffect(() => {
     const el = holderRef.current;
     if (!el) return;
@@ -81,6 +121,7 @@ const LottieBox: React.FC<{
 
     if (prefersReducedMotion) {
       setPreloaded(true);
+      setReadyToShow(true);
       return () => {};
     }
 
@@ -133,18 +174,31 @@ const LottieBox: React.FC<{
           const player = document.createElement("dotlottie-player") as any;
           player.setAttribute("src", src);
           player.setAttribute("loop", loop ? "true" : "false");
-          player.setAttribute("autoplay", "false");
+          player.setAttribute("autoplay", "true"); // laat de component zelf starten
           player.setAttribute("background", "transparent");
-          player.setAttribute("renderer", renderer);
+          // geen 'renderer' attribuut op dotlottie-player (kan verwarren)
           player.className = "hb-lottie-el";
           holderRef.current.appendChild(player);
 
           const onReady = () => {
             setReadyToShow(true);
-            // Mobile nudge: play the first frame once ready
-            requestAnimationFrame(() => {
-              try { instRef.current?.play?.(); } catch {}
-            });
+
+            if (isIOS) {
+              // iOS Safari duwtje: play → korte pause → opnieuw play
+              try {
+                player.seek?.(0);
+                player.play?.();
+                setTimeout(() => player.pause?.(), 24);
+                setTimeout(() => player.play?.(), 48);
+              } catch {}
+            } else {
+              requestAnimationFrame(() => {
+                try {
+                  player.play?.();
+                } catch {}
+              });
+            }
+
             player.removeEventListener?.("ready", onReady);
           };
           player.addEventListener?.("ready", onReady);
@@ -181,16 +235,17 @@ const LottieBox: React.FC<{
 
           const onDomLoaded = () => {
             setReadyToShow(true);
-            // Mobile nudge: play once DOM is ready
             requestAnimationFrame(() => {
-              try { instRef.current?.play?.(); } catch {}
+              try {
+                instRef.current?.play?.();
+              } catch {}
             });
             instRef.current?.removeEventListener?.("DOMLoaded", onDomLoaded);
           };
           instRef.current?.addEventListener?.("DOMLoaded", onDomLoaded);
         }
 
-        // Relaxed visibility rule for mobile (address bar resize, etc.)
+        // Soepelere zichtbaarheid op iOS (adresbalk/viewport jumps)
         playObs = new IntersectionObserver(
           (es) => {
             const me = es.find((e) => e.target === holderRef.current);
@@ -200,8 +255,10 @@ const LottieBox: React.FC<{
             const rect = me.boundingClientRect;
             const vh = (me.rootBounds?.height ?? window.innerHeight) || 0;
 
-            // Consider "visible enough" if ≥ 35% in view and not scrolled far above
-            const visibleEnough = ratio >= 0.35 && rect.top > -0.8 * vh;
+            const minRatio = isIOS ? 0.12 : 0.35;
+            const topLimit = isIOS ? -1.2 * vh : -0.8 * vh;
+
+            const visibleEnough = ratio >= minRatio && rect.top > topLimit;
 
             if (visibleEnough) {
               if (isDot) instRef.current.play?.();
@@ -211,7 +268,7 @@ const LottieBox: React.FC<{
               else if (!instRef.current.isPaused) instRef.current.pause();
             }
           },
-          { root: null, rootMargin: "0px", threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] }
+          { root: null, rootMargin: "0px", threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1] }
         );
         if (holderRef.current) playObs.observe(holderRef.current);
       },
@@ -224,7 +281,7 @@ const LottieBox: React.FC<{
       createObs?.disconnect();
       playObs?.disconnect();
       if (instRef.current) {
-        instRef.current.destroy?.(); // lottie-web only
+        instRef.current.destroy?.(); // lottie-web only; webcomponent negeert dit
         try {
           (holderRef.current as any)?.removeChild?.(instRef.current);
         } catch {}
@@ -240,7 +297,14 @@ const LottieBox: React.FC<{
       aria-busy={!preloaded && !prefersReducedMotion}
     >
       {poster && (!readyToShow || prefersReducedMotion) && (
-        <img src={poster} alt="" className="hb-poster" decoding="async" loading="lazy" fetchPriority="low" />
+        <img
+          src={poster}
+          alt=""
+          className="hb-poster"
+          decoding="async"
+          loading="lazy"
+          fetchPriority="low"
+        />
       )}
     </div>
   );

@@ -128,7 +128,8 @@
 
 .mapped--light {
   --text--headings: var(--neutral--900);
-  --text--body: var(--neutral--default);
+  /* WCAG: body text in light = neutral/600 */
+  --text--body: var(--neutral--600);
   --text--action: var(--primary--default);
   --text--action-hover: var(--primary--500);
   --text--on-action: var(--neutral--white);
@@ -171,7 +172,7 @@
 
 .mapped--dark {
   --text--headings: var(--neutral--100);
-  --text--body: var(--neutral--default);
+  --text--body: var(--neutral--400);
   --text--action: var(--secondary--default);
   --text--action-hover: var(--secondary--300);
   --text--on-action: var(--neutral--white);
@@ -224,7 +225,7 @@
   --surface-action-hover-2: var(--secondary--300);
 
   --text-headings: #ffffff;
-  --text-body: #a0a0a0;
+  --text-body: var(--neutral--400); /* #a0a0a0 */
   --text-action: var(--secondary--default);
   --text-on-action: var(--neutral--white);
   --text-on-action-2: #D3E6F9;
@@ -356,7 +357,7 @@
   --surface-action-hover-2: var(--primary--300);
 
   --text-headings: #131313;
-  --text-body: #808080;
+  --text-body: #606060;
   --text-action: #0080FF;
   --text-on-action: #FFF;
   --text-on-action-2: #D3E6F9;
@@ -388,6 +389,7 @@
    =========================== */
 
 html, body { background: var(--surface-page); font-family: var(--type-font-family-body); margin: 0; padding: 0; }
+body { color: var(--text-body); } /* ✅ forceer globale body-tekstkleur */
 * { box-sizing: border-box; }
 .grid-container { max-width: 105rem; margin: 0 auto; padding: 0 1rem; }
 
@@ -628,7 +630,7 @@ html, body { width: 100%; overflow-x: clip; }
 }
 
 .subtitle-text {
-  color: var(--text-body, #808080);
+  color: var(--text-body, #606060);
   font-family: var(--type-font-family-body, "General Sans Variable", sans-serif);
   font-weight: 500;
 }
@@ -2957,6 +2959,110 @@ body {
   }
 }
 
+/* ================================
+   SplitText: extra verticale ruimte
+   (voorkomt clipping bij translateY)
+   ================================ */
 
+/* 1) Basis: geef elk woord een beetje 'ademruimte' */
+.split-parent .split-word{
+  display:inline-block;
+  padding-block:0.10em;       /* extra boven/onderruimte binnen de woordspan */
+  margin-block:-0.10em;       /* behoudt oorspronkelijke lay-outhoogte */
+  will-change: transform, opacity;
+  transform: translateZ(0);   /* iOS Safari: subpixel randen/klipping fix */
+}
 
+/* 2) Titels op de Me-pagina: nooit clippen tijdens animatie */
+.me-title .split-parent,
+.me-approach-title .split-parent,
+.me-favorites-title .split-parent{
+  overflow: visible !important;   /* mask niet de op/af-animatie */
+  line-height: inherit !important;/* gebruik je typografische token */
+}
+
+/* 3) Fijnslijpen per breakpoint (I: desktop/tablet grovere lettervormen) */
+@media (min-width:768px){
+  .split-parent .split-word{
+    padding-block:0.12em;
+    margin-block:-0.12em;
+  }
+}
+
+/* 4) iOS/Safari nuance: iets meer buffer om baseline-glitches te vangen */
+@supports (-webkit-touch-callout: none) {
+  .split-parent .split-word{
+    padding-block:0.14em;
+    margin-block:-0.14em;
+  }
+}
+
+/* 5) Veiligheidsnet: als je elders bewust wilt maskeren, kun je dat
+   per titel overschrijven met een hulpfunctie */
+.split-parent.is-masked {
+  overflow: hidden !important;
+}
+
+/* ===========================================
+   Me page & HalloBuur cards → body-md/small (16px)
+   =========================================== */
+.me-card p,
+.me-fav-card p,
+.hb-card p {
+  font-size: 16px;           /* body-md small */
+  line-height: 1.5;          /* goede leesbaarheid */
+  color: var(--text-body);   /* gebruikt je toegankelijke token */
+  margin-top: 0.75rem;       /* extra ruimte boven de tekst */
+}
+
+/* ===========================================
+   Footer brand: body text size + color
+   and logo sizing + theme-aware tint
+   =========================================== */
+
+/* Light vs dark logo tint (approx neutral/600 vs neutral/400) */
+:root {
+  /* neutral/600 */
+  --footer-logo-filter: brightness(0) saturate(100%)
+                        invert(36%) sepia(0%) saturate(0%)
+                        hue-rotate(180deg) brightness(94%) contrast(88%);
+}
+.dark {
+  /* neutral/400 */
+  --footer-logo-filter: brightness(0) saturate(100%)
+                        invert(70%) sepia(0%) saturate(16%)
+                        hue-rotate(165deg) brightness(88%) contrast(88%);
+}
+
+/* Force footer brand to use body text token (16/24, medium) */
+.footer-bottom .footer-brand {
+  color: var(--text-body) !important;
+  font-family: var(--type-font-family-body, "General Sans Variable", system-ui, sans-serif) !important;
+  font-size: var(--font-size-body-sm, 1rem) !important;       /* 16px */
+  line-height: var(--line-height-body-sm, 1.5rem) !important; /* 24px */
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  gap: 0.5rem !important;  /* compact naast logo */
+}
+
+/* Logo: 20×20 + theme tint */
+.footer-bottom .footer-brand img {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain;
+  display: inline-block;
+  filter: var(--footer-logo-filter) !important; /* tint voor externe SVG/img */
+}
+
+/* (optioneel) als je inline SVG gebruikt die currentColor overneemt:  */
+/* .footer-bottom .footer-brand svg { width:20px; height:20px; fill: var(--text-body); } */
+
+/* Hero pin uses same theme-aware tint as footer logo */
+.hero-pin {
+  display: inline-block;
+  filter: var(--footer-logo-filter) !important;
+  /* sizing comes from width/height attributes; keep crisp edges */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
 
