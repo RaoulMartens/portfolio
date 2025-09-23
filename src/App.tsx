@@ -1,5 +1,7 @@
+// src/App.tsx
 import React, { useEffect, useMemo, useRef } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Home page pieces (local components)
 import Navigation from "./components/common/Navigation";
@@ -22,8 +24,11 @@ import ScrollToTop from "./components/common/ScrollToTop";
 interface MediaVideo { webm: string; mp4: string; poster: string; alt: string; }
 interface MediaImage { src: string; alt: string; }
 interface Project {
-  title: string; meta: string; link: string;
-  media: MediaVideo | MediaImage; isVideo: boolean;
+  title: string;
+  meta: string;
+  link: string;
+  media: MediaVideo | MediaImage;
+  isVideo: boolean;
 }
 
 /* ---- sample project data for Home ---- */
@@ -44,7 +49,10 @@ const projects: Project[] = [
     title: "A fresh take on the news-based reading comprehension method.",
     meta: "Nieuwsbegrip, 2024",
     link: "/nieuwsbegrip",
-    media: { src: "/images/nieuwsbegrip-cover.jpg", alt: "Illustration of a laptop displaying the Nieuwsbegrip dashboard interface, showing quick access tiles and workflows on a clean, modern layout." },
+    media: {
+      src: "/images/nieuwsbegrip-cover.jpg",
+      alt: "Illustration of a laptop displaying the Nieuwsbegrip dashboard interface, showing quick access tiles and workflows on a clean, modern layout.",
+    },
     isVideo: false,
   },
   {
@@ -117,7 +125,7 @@ const Home: React.FC = () => {
     const locState = (location.state ?? null) as LocState;
 
     const wantsWork = location.hash === "#work" || locState?.scrollTo === "work";
-    const wantsTop  = locState?.scrollToTop === true;
+    const wantsTop = locState?.scrollToTop === true;
 
     if (wantsTop) {
       scrollToY(0, "smooth");
@@ -213,7 +221,7 @@ const Home: React.FC = () => {
   const cards = useMemo(
     () =>
       projects.map((p, i) => {
-        const imageMedia = (p as any).isVideo
+        const imageMedia = p.isVideo
           ? { src: (p.media as MediaVideo).poster, alt: (p.media as MediaVideo).alt }
           : (p.media as MediaImage);
         return (
@@ -256,6 +264,9 @@ const App: React.FC = () => {
         <Route path="/pec-zwolle" element={<PECZwolle />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
+      {/* Vercel Speed Insights (RUM) */}
+      <SpeedInsights />
     </BrowserRouter>
   );
 };
