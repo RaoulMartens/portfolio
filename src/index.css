@@ -3066,3 +3066,56 @@ body {
   image-rendering: crisp-edges;
 }
 
+/* === Unify Play title line-height with Hero title (all breakpoints) === */
+
+/* Never force a custom line-height on Play; inherit from the hero title tokens */
+.play-title .split-parent { line-height: inherit !important; }
+
+/* Mobile (matches .hero-title--mobile = H4 / 2.5rem) */
+@media (max-width: 767px) {
+  .page-title.hero-title.hero-title--mobile.play-title .split-parent {
+    line-height: var(--line-height-heading-h4, 2.5rem) !important;
+  }
+}
+
+/* Tablet (matches .hero-title--tablet = H2 / 3.5rem) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-title.hero-title.hero-title--tablet.play-title .split-parent {
+    line-height: var(--line-height-heading-h2, 3.5rem) !important;
+  }
+}
+
+/* src/index.css or your main stylesheet */
+
+/* Full-width Me page image on mobile */
+@media (max-width: 767px) {
+  .me-image {
+    width: 100%;
+    height: auto;   /* preserve aspect ratio */
+    display: block; /* remove inline spacing */
+  }
+
+  /* optional: remove extra container padding on mobile */
+  .me-image-col {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Me page: make the hero image full width on mobile */
+@media (max-width: 767px) {
+  /* span all 4 mobile columns instead of 2 */
+  .me-image-col {
+    grid-column: 1 / span 4 !important;
+    margin-top: 1.5rem; /* optional: lighter spacing */
+  }
+
+  /* ensure the image itself fills its container width */
+  .me-image {
+    width: 100% !important;
+    height: auto !important;   /* override the base `height: 100%` */
+    display: block;
+    object-fit: cover;
+  }
+}
+

@@ -141,7 +141,6 @@ const Me: React.FC = () => {
   };
 
   if (!bp) return null;
-
   const isMobile = bp === "mobile";
 
   return (
@@ -150,11 +149,10 @@ const Me: React.FC = () => {
 
       <main aria-label="Me page" className="me-main">
         <div className="grid-container me-grid">
-          {/* Title */}
+          {/* Title — same sizes as Hero, but left-aligned */}
           <div className="me-title-col">
             <h1
               className={
-                // 👉 On mobile, reuse the exact Hero mobile title classes
                 isMobile
                   ? "page-title hero-title hero-title--mobile me-title"
                   : "page-title me-title"
@@ -170,11 +168,8 @@ const Me: React.FC = () => {
                 to={{ opacity: 1, y: 0 }}
                 threshold={0.1}
                 rootMargin="-100px"
-                textAlign={isMobile ? "center" : "left"}
-                groupPhrase={{
-                  tokens: ["digital", "products"],
-                  className: "gradient-group",
-                }}
+                textAlign="left" // ← keep left on all breakpoints
+                groupPhrase={{ tokens: ["digital", "products"], className: "gradient-group" }}
               />
             </h1>
           </div>

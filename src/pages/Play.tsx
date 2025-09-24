@@ -1,4 +1,3 @@
-// src/pages/Play.tsx
 import React from "react";
 import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
@@ -80,7 +79,18 @@ function getCols(): number {
 
 const Play: React.FC = () => {
   const bp = useBreakpoint();
+  if (!bp) return null;
+
   const isMobile = bp === "mobile";
+  const isTablet = bp === "tablet";
+
+  // Use the exact same Hero classes per breakpoint, but keep LEFT alignment
+  const titleClass =
+    bp === "desktop"
+      ? "page-title hero-title play-title"
+      : bp === "tablet"
+      ? "page-title hero-title hero-title--tablet play-title"
+      : "page-title hero-title hero-title--mobile play-title";
 
   const imgAnim = {
     distance: 80,
@@ -107,13 +117,7 @@ const Play: React.FC = () => {
         <section className="play-container">
           <div className="title-grid">
             <div className="title-col">
-              <h1
-                className={
-                  isMobile
-                    ? "page-title hero-title hero-title--mobile play-title"
-                    : "play-title"
-                }
-              >
+              <h1 className={titleClass}>
                 <SplitText
                   text="Made with nothing but curiosity. Browse, enjoy, and see where creativity runs free."
                   splitType="words"
@@ -124,7 +128,7 @@ const Play: React.FC = () => {
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.2}
                   rootMargin="0px 0px -10% 0px"
-                  textAlign={isMobile ? "center" : "left"}
+                  textAlign="left" // always left aligned
                   groupPhrase={{ tokens: ["curiosity"], className: "gradient-group" }}
                 />
               </h1>
