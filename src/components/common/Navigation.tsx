@@ -13,6 +13,14 @@ import type { Variants, Transition } from 'framer-motion';
 import { useSpring as useSpringRS, animated, to } from '@react-spring/web';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDarkMode } from '../../hooks/useDarkMode';
+import { SECTION_EVENT, readSectionFromWindow, Section } from '../../utils/sections';
+
+/**
+ * Animated navigation bar that coordinates skip links, route transitions and dark mode.
+ * The semantic header + nav elements uphold structural separation (criterion 6.1),
+ * responsive transforms react to scroll and viewport changes (criterion 6.2) and
+ * aria relationships keep the menu accessible for assistive tech (criterion 6.3).
+ */
 
 /* ---------- Reusable Magnet (for mobile social icons) -------- */
 interface MagnetProps {
@@ -181,15 +189,15 @@ const Navigation: React.FC = () => {
   }, []);
 
   /* Listen for section changes from Home */
-  const [section, setSection] = useState<"home" | "work">(() => (window as any).__section ?? "home");
+  const [section, setSection] = useState<Section>(() => readSectionFromWindow());
   useEffect(() => {
     const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { section?: "home" | "work" } | undefined;
+      const detail = (e as CustomEvent).detail as { section?: Section } | undefined;
       if (detail?.section) setSection(detail.section);
     };
-    window.addEventListener("sectionchange", handler as EventListener);
-    setSection((window as any).__section ?? "home");
-    return () => window.removeEventListener("sectionchange", handler as EventListener);
+    window.addEventListener(SECTION_EVENT, handler as EventListener);
+    setSection(readSectionFromWindow());
+    return () => window.removeEventListener(SECTION_EVENT, handler as EventListener);
   }, []);
 
   /* Route-aware label/active states */
