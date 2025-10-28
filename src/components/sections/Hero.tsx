@@ -114,7 +114,7 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
     return () => window.removeEventListener('resize', calculateHeight);
   }, []);
 
-  const handleAnimationComplete = () => {};
+  const handleAnimationComplete = () => { };
 
   // Fade-up base config
   const fadeUp = {
@@ -200,7 +200,7 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
                     <Magnet padding={50} magnetStrength={9}>
                       <img
                         src="/images/hero-image.jpg"
-                        alt="Hero image"
+                        alt="Raoul Martens sitting outside at a café, wearing a light cap and dark shirt, smiling at the camera."
                         className="hero-image hero-image--desktop"
                       />
                     </Magnet>

@@ -6,16 +6,16 @@
  */
 export type HomeProjectMedia =
   | {
-      kind: "video";
-      alt: string;
-      poster: string;
-      sources: { webm: string; mp4: string };
-    }
+    kind: "video";
+    alt: string;
+    poster: string;
+    sources: { webm: string; mp4: string };
+  }
   | {
-      kind: "image";
-      alt: string;
-      src: string;
-    };
+    kind: "image";
+    alt: string;
+    src: string;
+  };
 
 export interface HomeProject {
   title: string;
@@ -56,7 +56,7 @@ export const homeProjects: HomeProject[] = [
     media: {
       kind: "image",
       src: "/images/peczwolle-cover.jpg",
-      alt: "A showcase of your third project",
+      alt: "Street scene in Zwolle with the Sassenpoort gate in the background and a bus stop poster showing a father and son looking at a collage of PEC Zwolle football memories.",
     },
   },
   {
@@ -66,7 +66,7 @@ export const homeProjects: HomeProject[] = [
     media: {
       kind: "image",
       src: "/images/hallo-buur2-cover.jpg",
-      alt: "A showcase of your fourth project",
+      alt: "Poster titled ‘De Aubade Waardeplaat’ displayed in a hallway, showing icons and text about activities, social connections, facilities, and the neighborhood environment in a residential building.",
     },
   },
 ];

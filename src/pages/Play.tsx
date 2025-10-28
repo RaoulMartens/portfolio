@@ -25,48 +25,48 @@ function useBreakpoint(): BP | null {
 }
 
 const GALLERY_MAIN: GalleryItem[] = [
-  { src: "/images/play/football-psg.jpg", alt: "Creative scene with players" },
-  { src: "/images/play/football-euros.jpg", alt: "Retro sports composite" },
-  { src: "/images/play/football-messi.jpg", alt: "Trophies portrait" },
-  { src: "/images/play/football-haaland.jpg", alt: "Sails and atmosphere" },
-  { src: "/images/play/football-mbappe.jpg", alt: "Tower and sky vortex" },
-  { src: "/images/play/football-championsleague.jpg", alt: "Golden trophy composition" },
-  { src: "/images/play/football-liverpool.jpg", alt: "Juventus match moment" },
-  { src: "/images/play/football-messi-space.png", alt: "Barcelona celebration" },
-  { src: "/images/play/football-italy.jpg", alt: "Real Madrid intensity" },
+  { src: "/images/play/football-psg.jpg", alt: "Two PSG players in a dimly lit room strategize around a table with toy soldiers, a football, and the Champions League trophy, symbolizing tactical preparation and battle for victory." },
+  { src: "/images/play/football-euros.jpg", alt: "Abstract artwork of a football team celebrating on the field, with distorted red and blue glitch effects and players’ faces replaced by digital eye patterns." },
+  { src: "/images/play/football-messi.jpg", alt: "Lionel Messi sits on a throne holding the World Cup trophy, surrounded by numerous golden Ballon d’Ors and championship cups under dramatic lighting." },
+  { src: "/images/play/football-haaland.jpg", alt: "Erling Haaland wearing a Manchester City jersey sits in a Viking ship holding a glowing blue axe, surrounded by footballs, sailing toward a burning castle under a stormy sky." },
+  { src: "/images/play/football-mbappe.jpg", alt: "Kylian Mbappe in a Paris Saint-Germain kit poses confidently with one foot on a ball beneath the Eiffel Tower, illuminated by dramatic lighting and a surreal, cinematic sky." },
+  { src: "/images/play/football-championsleague.jpg", alt: "“Football players from various European clubs stand on rocky cliffs under a glowing sky, facing a massive Champions League trophy in the distance." },
+  { src: "/images/play/football-liverpool.jpg", alt: "Liverpool players in red vintage biplanes marked with ‘YNWA’ and the club logo struggle as the planes begin crashing down through a fiery sunset sky." },
+  { src: "/images/play/football-messi-space.png", alt: "Lionel Messi in a PSG kit stands triumphantly on a glowing planet in space, surrounded by floating debris and cosmic light, raising both hands toward the sky." },
+  { src: "/images/play/football-italy.jpg", alt: "“Italian football players celebrate a dramatic goal on the pitch with the words ‘The Italian way’ above them, set against a stylized blue graphic background." },
 ];
 
 const GALLERY_WIDE: GalleryItem[] = [
-  { src: "/images/play/collabassa-ver.jpg", alt: "Dutch orange crowd" },
-  { src: "/images/play/utrecht-gebouw.jpg", alt: "Italy team spirit" },
+  { src: "/images/play/collabassa-ver.jpg", alt: "View of a small Italian hillside village surrounded by dense green trees and mountains under a partly cloudy blue sky." },
+  { src: "/images/play/utrecht-gebouw.jpg", alt: "Street view of a large historic brick building with white trim in a European city, with a delivery van and pedestrians passing by under bright sunlight." },
 ];
 
 const GALLERY_SQUARE: GalleryItem[] = [
-  { src: "/images/play/kerk-plafond.jpg", alt: "Square image 1" },
-  { src: "/images/play/poemba.jpg", alt: "Square image 2" },
-  { src: "/images/play/boom-closeup.jpg", alt: "Square image 3" },
-  { src: "/images/play/toverland-paard.jpg", alt: "Square image 4" },
+  { src: "/images/play/kerk-plafond.jpg", alt: "Ceiling of a Gothic-style church with detailed stone arches and colorful floral patterns painted between the ribs." },
+  { src: "/images/play/poemba.jpg", alt: "A cat sits on a mat by a sunlit door, gazing outside as warm light highlights its fur." },
+  { src: "/images/play/boom-closeup.jpg", alt: "Close-up of a large moss-covered tree trunk in a sunlit forest garden with green plants and yellow flowers around the base." },
+  { src: "/images/play/toverland-paard.jpg", alt: "Close-up of a large wooden Trojan horse sculpture decorated with metal shields and armor details." },
 ];
 
 const GALLERY_MIX = {
-  horizontal: { src: "/images/play/venlo-station.jpg", alt: "Mixed row horizontal" },
-  vertical: { src: "/images/play/italie-bruggen.jpg", alt: "Mixed row vertical" },
+  horizontal: { src: "/images/play/venlo-station.jpg", alt: "A quiet street corner with a low beige building and two large green trees in front, lit by the warm evening sun." },
+  vertical: { src: "/images/play/italie-bruggen.jpg", alt: "View looking up between old connected buildings with arched bridges and worn shutters, showing a hanging towel and warm evening light." },
 };
 
 const GALLERY_VERTICALS: GalleryItem[] = [
-  { src: "/images/play/antwerpen-tram.jpg", alt: "Vertical image 1" },
-  { src: "/images/play/italie-uitzicht.jpg", alt: "Vertical image 2" },
-  { src: "/images/play/breda-cathedraal.jpg", alt: "Vertical image 3" },
+  { src: "/images/play/antwerpen-tram.jpg", alt: "Historic tram number 7 passing in front of the ornate Nationale Bank van België building on a sunny day in Antwerp." },
+  { src: "/images/play/italie-uitzicht.jpg", alt: "Moody mountain landscape with rolling green hills and soft clouds drifting across the peaks under a pale morning sky." },
+  { src: "/images/play/breda-cathedraal.jpg", alt: "Upward view of a tall Gothic church tower with intricate stone details and pointed arches, framed by a tree on the left under a cloudy sky." },
 ];
 
 const GALLERY_SQ_WIDE = {
-  square: { src: "/images/play/nina-sissy.jpg", alt: "Row square image" },
-  horizontal: { src: "/images/play/rund-in-bos.jpg", alt: "Row horizontal image" },
+  square: { src: "/images/play/nina-sissy.jpg", alt: "Black and white photo of an elderly woman sitting calmly on a bench beside a small dog, with stone walls and trees in the background." },
+  horizontal: { src: "/images/play/rund-in-bos.jpg", alt: "Black and white photo of a cow standing in a quiet forest clearing surrounded by tall, thin trees." },
 };
 
 const GALLERY_WIDE_2: GalleryItem[] = [
-  { src: "/images/play/antwerpen-werk.jpg", alt: "Extra horizontal image 1" },
-  { src: "/images/play/friet-scootmobiel.jpg", alt: "Extra horizontal image 2" },
+  { src: "/images/play/antwerpen-werk.jpg", alt: "Black and white photo of a construction worker cutting metal beside tram tracks, with a large rusted pipe lying across the rails and pedestrians passing by in the background." },
+  { src: "/images/play/friet-scootmobiel.jpg", alt: "Black and white photo of people waiting in line at a food stand labeled ‘Verse Friet & Snacks,’ with an older person on a mobility scooter in the foreground." },
 ];
 
 /** Returns 1/2/3 columns to match CSS (<=767:1, 768–1024:2, >=1025:3) */
@@ -89,8 +89,8 @@ const Play: React.FC = () => {
     bp === "desktop"
       ? "page-title hero-title play-title"
       : bp === "tablet"
-      ? "page-title hero-title hero-title--tablet play-title"
-      : "page-title hero-title hero-title--mobile play-title";
+        ? "page-title hero-title hero-title--tablet play-title"
+        : "page-title hero-title hero-title--mobile play-title";
 
   const imgAnim = {
     distance: 80,
@@ -154,10 +154,10 @@ const Play: React.FC = () => {
               const rootMarginBottomPct = isFirstRow
                 ? undefined
                 : VERY_LATE.has(i)
-                ? 6
-                : LATE.has(i)
-                ? 10
-                : 16;
+                  ? 6
+                  : LATE.has(i)
+                    ? 10
+                    : 16;
 
               return (
                 <div key={i} className="tile">

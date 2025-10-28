@@ -159,9 +159,13 @@ const Footer: React.FC = () => {
           <div className="footer-row grid-x align-stretch">
             <div className="cell small-12">
               <img
-                key={isDark ? 'footer-dark' : 'footer-light'}
+                key={isDark ? "footer-dark" : "footer-light"}
                 src={footerImgSrc}
-                alt="Footer illustration"
+                alt={
+                  isDark
+                    ? "Sunlight filtering through garden trees at sunset, casting a warm glow over the grass and surrounding plants."
+                    : "A quiet rural path curving through a line of trees beside plowed fields under a bright blue sky with scattered clouds."
+                }
                 className="footer-image"
                 loading="lazy"
               />
@@ -199,7 +203,7 @@ const Footer: React.FC = () => {
                         {emailCopied ? (
                           <img src="/images/confirm.svg" alt="Copied" />
                         ) : (
-                          showCopyIcon && <img src="/images/copy.svg" alt="Copy" />
+                          showCopyIcon && <img src="/images/copy.svg" alt="Minimal gray stylized E-mail address copy icon." />
                         )}
                         <span aria-live="polite" aria-atomic="true">{copyButtonText}</span>
                       </span>
@@ -239,7 +243,7 @@ const Footer: React.FC = () => {
 
         <div className="footer-bottom">
           <div className="footer-brand">
-            <img src="/images/logo-grey.svg" alt="Your Logo" /> Raoul Martens © 2025
+            <img src="/images/logo-grey.svg" alt="Minimal gray stylized letter R logo." /> Raoul Martens © 2025
           </div>
 
           <a
@@ -261,7 +265,7 @@ const Footer: React.FC = () => {
             Back to top
             <img
               src="/images/chevron-top.svg"
-              alt=""
+              alt="Minimal gray stylized up-pointing chevron icon."
               style={{
                 transform: isScrollHovered ? 'translateY(-8px)' : 'translateY(0)',
               }}

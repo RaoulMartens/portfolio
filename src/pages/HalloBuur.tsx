@@ -122,13 +122,13 @@ const LottieBox: React.FC<{
     if (prefersReducedMotion) {
       setPreloaded(true);
       setReadyToShow(true);
-      return () => {};
+      return () => { };
     }
 
     const warm = async () => {
       try {
         if (!jsonWarmCache.has(src)) {
-          await fetch(src, { cache: "force-cache" }).catch(() => {});
+          await fetch(src, { cache: "force-cache" }).catch(() => { });
           jsonWarmCache.add(src);
         }
         if (isDot) {
@@ -141,7 +141,7 @@ const LottieBox: React.FC<{
           else lottieModule.setQuality("high");
         }
         if (mounted) setPreloaded(true);
-      } catch {}
+      } catch { }
     };
 
     warmObs = new IntersectionObserver(
@@ -190,12 +190,12 @@ const LottieBox: React.FC<{
                 player.play?.();
                 setTimeout(() => player.pause?.(), 24);
                 setTimeout(() => player.play?.(), 48);
-              } catch {}
+              } catch { }
             } else {
               requestAnimationFrame(() => {
                 try {
                   player.play?.();
-                } catch {}
+                } catch { }
               });
             }
 
@@ -238,7 +238,7 @@ const LottieBox: React.FC<{
             requestAnimationFrame(() => {
               try {
                 instRef.current?.play?.();
-              } catch {}
+              } catch { }
             });
             instRef.current?.removeEventListener?.("DOMLoaded", onDomLoaded);
           };
@@ -284,7 +284,7 @@ const LottieBox: React.FC<{
         instRef.current.destroy?.(); // lottie-web only; webcomponent negeert dit
         try {
           (holderRef.current as any)?.removeChild?.(instRef.current);
-        } catch {}
+        } catch { }
         instRef.current = null;
       }
     };
@@ -439,7 +439,7 @@ const HalloBuur: React.FC = () => {
                 <AnimatedContent {...heroImgAnim}>
                   <img
                     src="/images/hallo-buur/preview.jpg"
-                    alt="Hallo Buur — hero"
+                    alt="An older man interacts with a large touchscreen displaying a digital community board where residents can view and create activity cards for shared events and help requests."
                     decoding="async"
                     loading="eager"
                     fetchPriority="high"
@@ -478,7 +478,7 @@ const HalloBuur: React.FC = () => {
               <AnimatedContent {...lottieReveal}>
                 <img
                   src="/images/hallo-buur/problem.jpg"
-                  alt="Hallo Buur — follow up visual"
+                  alt="Two women sit back to back against a neutral background. One is elderly with short gray hair, the other is younger with long brown hair. Both have serious expressions and look away from each other, suggesting distance or disagreement."
                   decoding="async"
                   loading="lazy"
                   fetchPriority="low"

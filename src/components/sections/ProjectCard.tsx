@@ -126,7 +126,7 @@ const LinkWithHover: React.FC<{ link: string; className?: string }> = ({ link, c
   return (
     <a href={link} className={`project-link ${className ?? ''}`} aria-label="Read story">
       <span>Read story</span>
-      <img className="active-icon" src={chevronSrc} alt="" />
+      <img className="active-icon" src={chevronSrc} alt="Read story" />
     </a>
   );
 };
@@ -144,8 +144,8 @@ const ProjectInfo: React.FC<ProjectInfoProps> = memo(({ title, meta, link, headi
   const [inView, setInView] = useState(false);
 
   const playedTitle = hasPlayed(`${link}::title`);
-  const playedMeta  = hasPlayed(`${link}::meta`);
-  const playedCta   = hasPlayed(`${link}::cta`);
+  const playedMeta = hasPlayed(`${link}::meta`);
+  const playedCta = hasPlayed(`${link}::cta`);
 
   // Gate: only IO triggers first play (and only after some scroll)
   useEffect(() => {
@@ -330,7 +330,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   ) : (
                     <img
                       src={imageProps.src}
-                      alt={imageProps.alt}
+                      alt={imageProps.alt || `Image of ${title}`}
                       className="project-image"
                     />
                   )}
