@@ -201,7 +201,7 @@ const Footer: React.FC = () => {
                         ) : (
                           showCopyIcon && <img src="/images/copy.svg" alt="Copy" />
                         )}
-                        <span>{copyButtonText}</span>
+                        <span aria-live="polite" aria-atomic="true">{copyButtonText}</span>
                       </span>
                     </a>
                   </Magnet>
@@ -243,10 +243,16 @@ const Footer: React.FC = () => {
           </div>
 
           <a
-            href="#top"
+            href="#site-top"
             onClick={(e) => {
+              const target = document.getElementById('site-top');
+              if (!target) return;
+
               e.preventDefault();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              if (typeof (target as HTMLElement).focus === 'function') {
+                (target as HTMLElement).focus({ preventScroll: true });
+              }
             }}
             className="scroll-to-top body-sm-medium"
             onMouseEnter={() => setIsScrollHovered(true)}

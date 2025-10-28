@@ -393,6 +393,48 @@ body { color: var(--text-body); } /* ✅ forceer globale body-tekstkleur */
 * { box-sizing: border-box; }
 .grid-container { max-width: 105rem; margin: 0 auto; padding: 0 1rem; }
 
+/* Accessible skip link */
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--surface-action, #0080FF);
+  color: var(--text-on-action, #FFF);
+  font-weight: 600;
+  border-radius: 999px;
+  transform: translateY(-150%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  box-shadow: 0 0 0 4px rgba(0, 128, 255, 0.35);
+}
+
+#main-content:focus {
+  outline: var(--border-width-md, 2px) solid var(--border-focus, #40A0FF);
+  outline-offset: 0.5rem;
+}
+
+.navbar:focus-visible {
+  outline: var(--border-width-md, 2px) solid var(--border-focus, #40A0FF);
+  outline-offset: 0.5rem;
+}
+
+.home-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.work-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
 .page-title {
   font-family: var(--type-font-family-headings);
   font-size: 3.75rem;
@@ -892,6 +934,10 @@ html, body { width: 100%; overflow-x: clip; }
   display: flex;
   align-items: center;
 }
+.switch-shell:focus-visible {
+  outline: var(--border-width-md, 2px) solid var(--border-focus, #40A0FF);
+  outline-offset: 0.35rem;
+}
 .switch-shell.is-mobile { border: none; }
 
 .switch-visual {
@@ -1090,7 +1136,6 @@ html, body { width: 100%; overflow-x: clip; }
    Uses a CSS var set by JS for consistent offset under the sticky nav */
 .work-anchor {
   position: relative;
-  height: 1px;
   scroll-margin-top: var(--nav-height, 80px);
 }
 
