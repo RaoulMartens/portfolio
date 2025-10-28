@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 
 // Home page pieces (local components)
 import Navigation from "./components/common/Navigation";
+import SkipLink from "./components/common/SkipLink";
 import Hero from "./components/sections/Hero";
 import ProjectCard from "./components/sections/ProjectCard";
 import Footer from "./components/common/Footer";
@@ -95,6 +96,7 @@ const Home: React.FC = () => {
   const location = useLocation();
   const workRef = useRef<HTMLDivElement | null>(null);
   const lastSectionRef = useRef<Section>("home");
+  const heroHeadingId = "home-hero-heading";
 
   const computeWorkTop = () => {
     const el = workRef.current || (document.getElementById("work") as HTMLDivElement | null);
@@ -236,9 +238,25 @@ const Home: React.FC = () => {
   return (
     <div className="viewport-wrapper">
       <Navigation />
-      <Hero />
-      <div id="work" ref={workRef} className="work-anchor" />
-      {cards}
+      <main
+        id="main-content"
+        className="home-main"
+        tabIndex={-1}
+        aria-labelledby={heroHeadingId}
+      >
+        <Hero headingId={heroHeadingId} />
+        <section
+          id="work"
+          ref={workRef}
+          className="work-section work-anchor"
+          aria-labelledby="work-heading"
+        >
+          <h2 id="work-heading" className="sr-only">
+            Featured work
+          </h2>
+          {cards}
+        </section>
+      </main>
       <Footer />
     </div>
   );
@@ -248,6 +266,7 @@ const Home: React.FC = () => {
 const App: React.FC = () => {
   return (
     <BrowserRouter>
+      <SkipLink />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />

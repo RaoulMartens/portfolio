@@ -77,16 +77,24 @@ const PECZwolle: React.FC = () => {
   };
   const STAGGER = 0.18;
 
+  const headingId = "pec-zwolle-heading";
+
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main aria-label="PEC Zwolle case study" className="pz-main">
+      <main
+        id="main-content"
+        aria-label="PEC Zwolle case study"
+        className="pz-main"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
         <section className="pz-container">
           {/* HEADER */}
           <div className="pz-grid">
             <div className="pz-content">
-              <h5 className="pz-title">
+              <h1 id={headingId} className="pz-title">
                 <SplitText
                   text="PEC Zwolle"
                   splitType="words"
@@ -98,7 +106,7 @@ const PECZwolle: React.FC = () => {
                   threshold={0.1}
                   textAlign="left"
                 />
-              </h5>
+              </h1>
 
               <p className="pz-subtitle">
                 <SplitText

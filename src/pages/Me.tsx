@@ -142,16 +142,24 @@ const Me: React.FC = () => {
 
   if (!bp) return null;
   const isMobile = bp === "mobile";
+  const headingId = "me-heading";
 
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main aria-label="Me page" className="me-main">
+      <main
+        id="main-content"
+        aria-label="Me page"
+        className="me-main"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
         <div className="grid-container me-grid">
           {/* Title — same sizes as Hero, but left-aligned */}
           <div className="me-title-col">
             <h1
+              id={headingId}
               className={
                 isMobile
                   ? "page-title hero-title hero-title--mobile me-title"

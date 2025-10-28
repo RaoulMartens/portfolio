@@ -95,7 +95,11 @@ function useBreakpoint(): BP | null {
 /* ----------------------------- */
 /* Hero                          */
 /* ----------------------------- */
-const Hero: React.FC = () => {
+interface HeroProps {
+  headingId?: string;
+}
+
+const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
   const bp = useBreakpoint();
   const [viewportHeight, setViewportHeight] = useState<string>('100vh');
 
@@ -143,7 +147,12 @@ const Hero: React.FC = () => {
   if (!bp) return null;
 
   return (
-    <header id="top" className="site-header" style={{ minHeight: viewportHeight }}>
+    <header
+      id="home-hero"
+      className="site-header"
+      style={{ minHeight: viewportHeight }}
+      aria-labelledby={headingId}
+    >
       <div className="grid-container hero-center-wrap">
         {/* ---------------- Desktop ---------------- */}
         {bp === 'desktop' && (
@@ -152,7 +161,7 @@ const Hero: React.FC = () => {
               <div className="hero-title-row">
                 <div className="hero-title-wrapper">
                   <div className="hero-desktop-title-container">
-                    <div className="page-title hero-title">
+                    <h1 id={headingId} className="page-title hero-title">
                       <SplitText
                         text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
                         delay={0.06}
@@ -167,7 +176,7 @@ const Hero: React.FC = () => {
                         onLetterAnimationComplete={handleAnimationComplete}
                         groupPhrase={heroGroupPhrase}
                       />
-                    </div>
+                    </h1>
 
                     <div className="subtitle-row">
                       <AnimatedContent {...fadeUp} delay={iconDelay}>
@@ -216,7 +225,7 @@ const Hero: React.FC = () => {
             </AnimatedContent>
 
             <div className="text-container" style={{ width: '100%' }}>
-              <div className="page-title hero-title hero-title--tablet">
+              <h1 id={headingId} className="page-title hero-title hero-title--tablet">
                 <SplitText
                   text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
                   delay={0.06}
@@ -231,7 +240,7 @@ const Hero: React.FC = () => {
                   onLetterAnimationComplete={handleAnimationComplete}
                   groupPhrase={heroGroupPhrase}
                 />
-              </div>
+              </h1>
 
               <div className="subtitle-row">
                 <AnimatedContent {...fadeUp} delay={iconDelay}>
@@ -266,7 +275,7 @@ const Hero: React.FC = () => {
             </AnimatedContent>
 
             <div className="text-container" style={{ width: '100%' }}>
-              <div className="page-title hero-title hero-title--mobile">
+              <h1 id={headingId} className="page-title hero-title hero-title--mobile">
                 <SplitText
                   text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
                   delay={0.06}
@@ -281,7 +290,7 @@ const Hero: React.FC = () => {
                   onLetterAnimationComplete={handleAnimationComplete}
                   groupPhrase={heroGroupPhrase}
                 />
-              </div>
+              </h1>
 
               <div className="subtitle-row">
                 <AnimatedContent {...fadeUp} delay={iconDelay}>
