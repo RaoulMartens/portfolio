@@ -132,7 +132,14 @@ const LinkWithHover: React.FC<{ link: string; className?: string }> = ({ link, c
 };
 
 /* ---------- Project header ---------- */
-const ProjectInfo: React.FC<{ title: string; meta: string; link: string }> = memo(({ title, meta, link }) => {
+interface ProjectInfoProps {
+  title: string;
+  meta: string;
+  link: string;
+  headingId: string;
+}
+
+const ProjectInfo: React.FC<ProjectInfoProps> = memo(({ title, meta, link, headingId }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -186,7 +193,7 @@ const ProjectInfo: React.FC<{ title: string; meta: string; link: string }> = mem
   return (
     <div className="project-header" ref={ref}>
       <div className="project-info">
-        <h2 className="project-title">
+        <h2 id={headingId} className="project-title">
           {playedTitle ? (
             <span className="static">{title}</span>
           ) : inView ? (
@@ -296,12 +303,24 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       ? { src: (media as any).poster as string, alt: (media as any).alt as string }
       : (media as ImageMedia);
 
+  const headingId = useMemo(
+    () =>
+      `project-${link
+        .replace(/[^a-z0-9]+/gi, "-")
+        .replace(/(^-|-$)/g, "")
+        .toLowerCase()}`,
+    [link]
+  );
+
   return (
     <section className="project-background">
       <div className="grid-container">
         <div className="grid-x project-background-row">
-          <section className="project-card cell small-12 medium-10 medium-offset-1 large-8 large-offset-2">
-            <ProjectInfo title={title} meta={meta} link={link} />
+          <article
+            className="project-card cell small-12 medium-10 medium-offset-1 large-8 large-offset-2"
+            aria-labelledby={headingId}
+          >
+            <ProjectInfo title={title} meta={meta} link={link} headingId={headingId} />
 
             <div className="project-image-wrapper">
               <a href={link} aria-label={`Open ${title}`} className="media-link">
@@ -329,7 +348,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 </AnimatedContent>
               )}
             </div>
-          </section>
+          </article>
         </div>
       </div>
     </section>

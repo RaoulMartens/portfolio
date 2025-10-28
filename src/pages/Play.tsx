@@ -107,17 +107,24 @@ const Play: React.FC = () => {
 
   // compute once per render (fine for progressive delays)
   const colsMain = getCols();
+  const headingId = "play-heading";
 
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main aria-label="Play page" className="play-main">
+      <main
+        id="main-content"
+        aria-label="Play page"
+        className="play-main"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
         {/* Title */}
         <section className="play-container">
           <div className="title-grid">
             <div className="title-col">
-              <h1 className={titleClass}>
+              <h1 id={headingId} className={titleClass}>
                 <SplitText
                   text="Made with nothing but curiosity. Browse, enjoy, and see where creativity runs free."
                   splitType="words"

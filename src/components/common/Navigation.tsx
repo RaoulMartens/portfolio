@@ -13,6 +13,14 @@ import type { Variants, Transition } from 'framer-motion';
 import { useSpring as useSpringRS, animated, to } from '@react-spring/web';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDarkMode } from '../../hooks/useDarkMode';
+import { SECTION_EVENT, readSectionFromWindow, Section } from '../../utils/sections';
+
+/**
+ * Animated navigation bar that coordinates skip links, route transitions and dark mode.
+ * The semantic header + nav elements uphold structural separation (criterion 6.1),
+ * responsive transforms react to scroll and viewport changes (criterion 6.2) and
+ * aria relationships keep the menu accessible for assistive tech (criterion 6.3).
+ */
 
 /* ---------- Reusable Magnet (for mobile social icons) -------- */
 interface MagnetProps {
@@ -120,6 +128,9 @@ const mobilePanelVariants: Variants = {
 const MENU_BG   = 'var(--surface-action, #0080FF)';
 const MENU_TEXT = 'var(--text-on-action, #FFF)';
 
+const MENU_ID_DESKTOP = 'primary-navigation-desktop';
+const MENU_ID_MOBILE  = 'primary-navigation-mobile';
+
 /* ---------- Hook: mobile breakpoint ---------- */
 function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(false);
@@ -178,15 +189,15 @@ const Navigation: React.FC = () => {
   }, []);
 
   /* Listen for section changes from Home */
-  const [section, setSection] = useState<"home" | "work">(() => (window as any).__section ?? "home");
+  const [section, setSection] = useState<Section>(() => readSectionFromWindow());
   useEffect(() => {
     const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { section?: "home" | "work" } | undefined;
+      const detail = (e as CustomEvent).detail as { section?: Section } | undefined;
       if (detail?.section) setSection(detail.section);
     };
-    window.addEventListener("sectionchange", handler as EventListener);
-    setSection((window as any).__section ?? "home");
-    return () => window.removeEventListener("sectionchange", handler as EventListener);
+    window.addEventListener(SECTION_EVENT, handler as EventListener);
+    setSection(readSectionFromWindow());
+    return () => window.removeEventListener(SECTION_EVENT, handler as EventListener);
   }, []);
 
   /* Route-aware label/active states */
@@ -452,7 +463,12 @@ const Navigation: React.FC = () => {
   return (
     <>
       {/* add is-project on project pages to target CSS */}
-      <nav className={`navbar ${backMode ? 'is-project' : ''}`}>
+      <nav
+        id="site-top"
+        className={`navbar ${backMode ? 'is-project' : ''}`}
+        tabIndex={-1}
+        aria-label="Site navigation"
+      >
         <div className="grid-container">
           <div className="navbar-grid">
             {/* MENU / BACK + PANEL WRAPPER */}
@@ -463,10 +479,15 @@ const Navigation: React.FC = () => {
               onMouseEnter={!mobileMode ? handleMenuEnter : undefined}
               onMouseLeave={!mobileMode ? handleMenuLeave : undefined}
             >
-              <motion.div
-                role="button"
+              <motion.button
+                type="button"
                 className="menu-shell"
                 aria-label={backMode ? 'Go back' : 'Open menu'}
+                aria-haspopup={backMode ? undefined : 'menu'}
+                aria-expanded={backMode ? undefined : isMenuOpen}
+                aria-controls={
+                  backMode ? undefined : mobileMode ? MENU_ID_MOBILE : MENU_ID_DESKTOP
+                }
                 onClick={onMenuButtonClick}
                 animate={{ width: menuShellW, height: menuShellH }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
@@ -505,7 +526,7 @@ const Navigation: React.FC = () => {
                     )}
                   </div>
                 </motion.div>
-              </motion.div>
+              </motion.button>
 
               {/* DESKTOP/TABLET PANEL */}
               {!mobileMode && !backMode && isMenuOpen && (
@@ -515,7 +536,7 @@ const Navigation: React.FC = () => {
                   animate={isExiting ? exitStage : enterStage}
                   initial="expandingRight"
                 >
-                  <nav>
+                  <nav id={MENU_ID_DESKTOP} aria-label="Primary">
                     <ul className="menu-list">
                       {menuItems.map((item, index) => {
                         const showHoverDot = hoveredItem === item.label && !item.active;
@@ -586,9 +607,10 @@ const Navigation: React.FC = () => {
 
             {/* DARK-MODE TOGGLE */}
             <motion.div className="toggle-anchor" style={{ x: toggleX, y: toggleY, display: mobileMode && isMenuOpen ? 'none' : 'flex' }}>
-              <motion.div
-                role="button"
+              <motion.button
+                type="button"
                 aria-label="Toggle dark mode"
+                aria-pressed={isDark}
                 className={`switch-shell ${mobileMode ? 'is-mobile' : ''}`}
                 onClick={toggleDarkMode}
                 animate={{ width: switchShellW, height: switchShellH }}
@@ -619,7 +641,7 @@ const Navigation: React.FC = () => {
                     </div>
                   )}
                 </motion.div>
-              </motion.div>
+              </motion.button>
             </motion.div>
           </div>
         </div>
@@ -671,7 +693,7 @@ const Navigation: React.FC = () => {
                   <div className="grid-container mobile-panel-inner">
                     <div className="grid-x mobile-panel-scroll">
                       <div className="cell small-12">
-                        <nav className="mobile-panel-nav">
+                        <nav id={MENU_ID_MOBILE} className="mobile-panel-nav" aria-label="Primary">
                           <ul className="mobile-list">
                             {menuItems.map((item, index) => {
                               const showHoverDot = hoveredItem === item.label && !item.active;

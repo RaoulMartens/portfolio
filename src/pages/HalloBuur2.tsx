@@ -84,16 +84,24 @@ const HalloBuur2: React.FC = () => {
   };
   const STAGGER = 0.18;
 
+  const headingId = "hallo-buur-2-heading";
+
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main aria-label="Hallo Buur 2 case study" className="hb2-main">
+      <main
+        id="main-content"
+        aria-label="Hallo Buur 2 case study"
+        className="hb2-main"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
         <section className="hb2-container">
           {/* HEADER */}
           <div className="hb2-grid">
             <div className="hb2-content">
-              <h5 className="hb2-title">
+              <h1 id={headingId} className="hb2-title">
                 <SplitText
                   text="Understanding community change"
                   splitType="words"
@@ -105,7 +113,7 @@ const HalloBuur2: React.FC = () => {
                   threshold={0.1}
                   textAlign="left"
                 />
-              </h5>
+              </h1>
 
               <p className="hb2-subtitle">
                 <SplitText
