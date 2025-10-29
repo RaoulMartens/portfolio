@@ -6,8 +6,9 @@ import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
 
 /* ----------------------------- */
-/* Breakpoint hook (match Hero)  */
+/* Breakpoint hook (zelfde als Hero) */
 /* ----------------------------- */
+// Zorgt dat de layout meebeweegt met de schermgrootte (6.2).
 type BP = "mobile" | "tablet" | "desktop";
 function useBreakpoint(): BP | null {
   const [bp, setBp] = useState<BP | null>(null);
@@ -26,11 +27,12 @@ function useBreakpoint(): BP | null {
 /* ----------------------------- */
 /* In-view title hook            */
 /* ----------------------------- */
+// Geeft door wanneer een sectietitel zichtbaar is zodat animaties starten.
 function useInViewTitle(options?: {
   rootMargin?: string;
   thresholds?: number[];
   minRatio?: number;
-  minTopRatio?: number; // fraction of viewport from top (e.g., 0.2 = 20%)
+  minTopRatio?: number; // deel van het scherm vanaf de bovenkant (bijv. 0.2 = 20%)
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
@@ -95,7 +97,7 @@ function useInViewTitle(options?: {
 const Me: React.FC = () => {
   const bp = useBreakpoint();
 
-  // Scroll-triggered titles (match ProjectCard behavior)
+  // Titels komen pas tot leven als ze in beeld komen (zelfde gevoel als projectkaarten).
   const approach = useInViewTitle({
     rootMargin: "0px 0px -35% 0px",
     thresholds: [0, 0.25, 0.5, 0.6, 0.75, 0.9, 1],
@@ -110,7 +112,7 @@ const Me: React.FC = () => {
     minTopRatio: 0.2,
   });
 
-  // Image animation (same as hero)
+  // Afbeeldingsanimatie: hetzelfde gedrag als in de hero.
   const heroImgAnim = {
     distance: 80,
     direction: "vertical" as const,
@@ -123,13 +125,13 @@ const Me: React.FC = () => {
     delay: 0.18,
   };
 
-  // Body appears noticeably later than the image
+  // Tekst verschijnt iets later zodat de focus eerst op de foto ligt.
   const heroBodyAnim = {
     ...heroImgAnim,
-    delay: 0.9, // clear gap after the image
+    delay: 0.9, // duidelijke pauze na de afbeelding
   };
 
-  // Card reveal
+  // Kaarten schuiven omhoog wanneer je scrollt.
   const cardReveal = {
     distance: 80,
     direction: "vertical" as const,
@@ -156,7 +158,7 @@ const Me: React.FC = () => {
         aria-labelledby={headingId}
       >
         <div className="grid-container me-grid">
-          {/* Title — same sizes as Hero, but left-aligned */}
+          {/* Titel met dezelfde groottes als de Hero maar links uitgelijnd. */}
           <div className="me-title-col">
             <h1
               id={headingId}
@@ -176,7 +178,7 @@ const Me: React.FC = () => {
                 to={{ opacity: 1, y: 0 }}
                 threshold={0.1}
                 rootMargin="-100px"
-                textAlign="left" // ← keep left on all breakpoints
+                textAlign="left" // altijd links uitlijnen
                 groupPhrase={{ tokens: ["digital", "products"], className: "gradient-group" }}
               />
             </h1>

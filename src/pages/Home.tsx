@@ -11,10 +11,10 @@ import { Section, emitSection } from "../utils/sections";
 import { getNavHeight, scrollToY, updateNavHeightVar } from "../utils/layout";
 
 /**
- * Home page composition that wires together the hero, project list and footer.
- * - Semantic layout tags and ARIA wiring demonstrate clean structure (criterion 6.1).
- * - Scroll logic adapts to viewport changes for responsiveness (criterion 6.2).
- * - Keyboard focus management and headings keep the page accessible (criterion 6.3).
+ * Deze pagina plakt de hero, projecten en footer netjes aan elkaar.
+ * - Semantische HTML + aria laten de structuur zien → criterium 6.1.
+ * - Scroll-logica reageert op schermbreedtes en nav-hoogte → criterium 6.2.
+ * - Focusbeheer en headings maken alles bruikbaar met toetsenbord → criterium 6.3.
  */
 const Home: React.FC = () => {
   const location = useLocation();
@@ -22,6 +22,7 @@ const Home: React.FC = () => {
   const lastSectionRef = useRef<Section>("home");
   const heroHeadingId = "home-hero-heading";
 
+  // Hulpfunctie: bereken waar het werk-gedeelte begint (rekening met hoogte van navigatie).
   const computeWorkTop = () => {
     const el = workRef.current || (document.getElementById("work") as HTMLDivElement | null);
     if (!el) return 0;
@@ -29,6 +30,7 @@ const Home: React.FC = () => {
     return Math.max(rectTop - getNavHeight(), 0);
   };
 
+  // Bij laden en resizen meten we de navigatiehoogte zodat de CSS variabele klopt (6.1 + 6.2).
   useEffect(() => {
     updateNavHeightVar();
     const onResize = () => updateNavHeightVar();
@@ -37,6 +39,7 @@ const Home: React.FC = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // Reageer op router-state: spring naar werk of top, en vergeet oude hashes voor nette URL.
   useEffect(() => {
     if (location.pathname !== "/") return;
 
@@ -101,6 +104,7 @@ const Home: React.FC = () => {
     requestAnimationFrame(tick);
   }, [location.pathname, location.hash, location.state]);
 
+  // Houd bij of je scrolt in het werk-gedeelte zodat de navigatie de juiste sectie kan tonen.
   useEffect(() => {
     if (location.pathname !== "/") return;
 
@@ -136,6 +140,7 @@ const Home: React.FC = () => {
     };
   }, [location.pathname]);
 
+  // Maak de projectkaarten één keer aan; dit scheidt data van presentatie (6.1).
   const cards = useMemo(
     () =>
       homeProjects.map((project) => {
@@ -167,6 +172,7 @@ const Home: React.FC = () => {
         tabIndex={-1}
         aria-labelledby={heroHeadingId}
       >
+        {/* Hero-sectie: intro en snelle uitleg over wie je bent. */}
         <Hero headingId={heroHeadingId} />
         <section
           id="work"
@@ -174,9 +180,11 @@ const Home: React.FC = () => {
           className="work-section work-anchor"
           aria-labelledby="work-heading"
         >
+          {/* Visueel verstopte titel zodat screenreaders snappen dat dit het werkoverzicht is. */}
           <h2 id="work-heading" className="sr-only">
             Featured work
           </h2>
+          {/* Alle projecten krijgen dezelfde semantische opmaak via ProjectCard. */}
           {cards}
         </section>
       </main>

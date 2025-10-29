@@ -1,8 +1,7 @@
 /**
- * Simple helpers to coordinate which section of the home page is active. Emitting a
- * custom event keeps navigation and scrolling behaviour in sync without mixing
- * responsibilities inside a single component, supporting clean structure (criterion 6.1)
- * and allowing responsive listeners to react to scroll changes (criterion 6.2).
+ * Hulpfuncties om bij te houden welke sectie van de homepage actief is.
+ * Via een custom event blijft de navigatie gesynchroniseerd met het scrollgedrag.
+ * Dit houdt de verantwoordelijkheid gescheiden (structuur → 6.1) en blijft responsief → 6.2.
  */
 export type Section = "home" | "work";
 export const SECTION_EVENT = "sectionchange";

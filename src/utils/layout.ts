@@ -1,7 +1,6 @@
 /**
- * Layout utilities that keep DOM measurements and imperative scroll logic out of
- * the React components. This separation keeps the structural JSX clean (criterion 6.1)
- * while still letting us reuse the same helpers on every page.
+ * Layout-hulpen die de DOM-metingen buiten de componenten houden.
+ * Daarmee blijft de structuur (JSX) netjes gescheiden van gedrag → criterium 6.1.
  */
 export function getNavHeight(): number {
   if (typeof document === "undefined") {
@@ -19,9 +18,8 @@ export function scrollToY(y: number, behavior: ScrollBehavior = "smooth") {
 }
 
 /**
- * Keep the `--nav-height` CSS variable in sync with the rendered header. Using a CSS
- * variable means the spacing is handled in pure styling code (criterion 6.1) while
- * still supporting responsive scroll offsets (criterion 6.2).
+ * Houd de CSS-variabele `--nav-height` gelijk aan de echte headerhoogte.
+ * Zo regelt CSS de afstand (scheiding structuur/styling → 6.1) en blijft scrollen responsive → 6.2.
  */
 export function updateNavHeightVar() {
   if (typeof document === "undefined") {

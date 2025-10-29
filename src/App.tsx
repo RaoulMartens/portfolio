@@ -15,10 +15,10 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Analytics } from "@vercel/analytics/react";
 
 /**
- * Top-level router that wires global behaviour once and keeps each page focused
- * on its own structure. This organisation highlights the separation between
- * structure (routing/landmarks for 6.1), responsive navigation (6.2) and
- * accessibility helpers such as the skip link (6.3).
+ * Deze component maakt alle routes aan voor de site.
+ * Zo blijft de structuur (routering = HTML) apart van de opmaak (CSS) → criterium 6.1.
+ * De router laadt ook de responsive navigatie → criterium 6.2.
+ * De skiplink en scroll-reset zorgen voor toetsenbordtoegankelijkheid → criterium 6.3.
  */
 const App: React.FC = () => {
   return (

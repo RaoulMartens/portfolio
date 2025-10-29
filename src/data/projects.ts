@@ -1,21 +1,20 @@
 /**
- * Structured data describing the projects that appear on the home page.
- * Keeping content separate from components means the JSX focuses on semantic
- * structure (criterion 6.1) while the data can be reused in responsive contexts
- * or alternative layouts (criterion 6.2).
+ * Geordende data voor de projecten op de homepage.
+ * Door content apart te houden kan JSX zich op semantiek richten (criterium 6.1)
+ * en kan dezelfde data hergebruikt worden in responsive layouts (criterium 6.2).
  */
 export type HomeProjectMedia =
   | {
-    kind: "video";
-    alt: string;
-    poster: string;
-    sources: { webm: string; mp4: string };
-  }
+      kind: "video";
+      alt: string;
+      poster: string;
+      sources: { webm: string; mp4: string };
+    }
   | {
-    kind: "image";
-    alt: string;
-    src: string;
-  };
+      kind: "image";
+      alt: string;
+      src: string;
+    };
 
 export interface HomeProject {
   title: string;
@@ -56,7 +55,7 @@ export const homeProjects: HomeProject[] = [
     media: {
       kind: "image",
       src: "/images/peczwolle-cover.jpg",
-      alt: "Street scene in Zwolle with the Sassenpoort gate in the background and a bus stop poster showing a father and son looking at a collage of PEC Zwolle football memories.",
+      alt: "A showcase of your third project",
     },
   },
   {
@@ -66,7 +65,7 @@ export const homeProjects: HomeProject[] = [
     media: {
       kind: "image",
       src: "/images/hallo-buur2-cover.jpg",
-      alt: "Poster titled ‘De Aubade Waardeplaat’ displayed in a hallway, showing icons and text about activities, social connections, facilities, and the neighborhood environment in a residential building.",
+      alt: "A showcase of your fourth project",
     },
   },
 ];
