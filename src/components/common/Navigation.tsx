@@ -100,14 +100,18 @@ const springTransition: Transition = { type: 'spring', stiffness: 400, damping: 
 
 const panelEnterVariants: Variants = {
   expandingRight: { opacity: 1, scaleX: 1, scaleY: 0, transformOrigin: 'top left', transition: { duration: 0.2, ease: 'easeOut' } },
-  expandingDown:  { opacity: 1, scaleX: 1, scaleY: 1, transformOrigin: 'top left', transition: { duration: 0.2, ease: 'easeOut' } },
-  open:           { opacity: 1, scaleX: 1, scaleY: 1, transformOrigin: 'top left',
-                    transition: { duration: 0.1, when: 'beforeChildren', staggerChildren: 0.15, delayChildren: 0.2 } },
+  expandingDown: { opacity: 1, scaleX: 1, scaleY: 1, transformOrigin: 'top left', transition: { duration: 0.2, ease: 'easeOut' } },
+  open: {
+    opacity: 1, scaleX: 1, scaleY: 1, transformOrigin: 'top left',
+    transition: { duration: 0.1, when: 'beforeChildren', staggerChildren: 0.15, delayChildren: 0.2 }
+  },
 };
 const panelExitVariants: Variants = {
-  itemsOut:       { opacity: 1, scaleX: 1, scaleY: 1, transformOrigin: 'top left',
-                    transition: { when: 'afterChildren', staggerChildren: 0.1, staggerDirection: -1 } },
-  collapsingUp:   { opacity: 1, scaleX: 1, scaleY: 0, transformOrigin: 'top left', transition: { duration: 0.2, ease: 'easeIn' } },
+  itemsOut: {
+    opacity: 1, scaleX: 1, scaleY: 1, transformOrigin: 'top left',
+    transition: { when: 'afterChildren', staggerChildren: 0.1, staggerDirection: -1 }
+  },
+  collapsingUp: { opacity: 1, scaleX: 1, scaleY: 0, transformOrigin: 'top left', transition: { duration: 0.2, ease: 'easeIn' } },
   collapsingLeft: { opacity: 0, scaleX: 0, scaleY: 0, transformOrigin: 'top left', transition: { duration: 0.2, ease: 'easeIn' } },
 };
 const itemVariants: Variants = {
@@ -116,18 +120,18 @@ const itemVariants: Variants = {
   exit: (i: number = 0) => ({ opacity: 0, x: -20, transition: { x: springTransition, opacity: { duration: 0.15 }, delay: 0.02 * i } }),
 };
 const mobileBgVariants: Variants = {
-  hidden:  { x: '-100%' },
+  hidden: { x: '-100%' },
   visible: { x: 0, transition: { type: 'spring', stiffness: 460, damping: 42, mass: 0.9 } },
-  exit:    { x: '-100%', transition: { duration: 0.25, ease: 'easeIn' } },
+  exit: { x: '-100%', transition: { duration: 0.25, ease: 'easeIn' } },
 };
 const mobilePanelVariants: Variants = {
-  hidden:  { x: '-100%' },
+  hidden: { x: '-100%' },
   visible: { x: 0, transition: { type: 'spring', stiffness: 420, damping: 38, mass: 0.8, delay: 0.02 } },
-  exit:    { x: '-100%', transition: { duration: 0.25, ease: 'easeIn' } },
+  exit: { x: '-100%', transition: { duration: 0.25, ease: 'easeIn' } },
 };
 
 /* ---------- Theme refs ---------- */
-const MENU_BG   = 'var(--surface-action, #0080FF)';
+const MENU_BG = 'var(--surface-action, #0080FF)';
 const MENU_TEXT = 'var(--text-on-action, #FFF)';
 
 const MENU_ID_DESKTOP = 'primary-navigation-desktop';
@@ -157,8 +161,8 @@ const Navigation: React.FC = () => {
   // State die bijhoudt of het menu open is en in welke animatiefase we zitten.
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [enterStage, setEnterStage] = useState<'expandingRight' | 'expandingDown' | 'open'>('expandingRight');
-  const [exitStage, setExitStage]   = useState<'itemsOut' | 'collapsingUp' | 'collapsingLeft'>('itemsOut');
-  const [isExiting, setIsExiting]   = useState(false);
+  const [exitStage, setExitStage] = useState<'itemsOut' | 'collapsingUp' | 'collapsingLeft'>('itemsOut');
+  const [isExiting, setIsExiting] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -209,41 +213,41 @@ const Navigation: React.FC = () => {
 
   /* Controleer welke route actief is voor duidelijke labels en aria-states. */
   const { pathname } = location;
-  const onHome    = pathname === "/";
-  const onPlay    = pathname === "/play";
-  const onMe      = pathname === "/me";
-  const onHallo   = pathname === "/hallo-buur";
-  const onHallo2  = pathname === "/hallo-buur-2";
-  const onNieuws  = pathname === "/nieuwsbegrip";
-  const onPEC     = pathname === "/pec-zwolle";
+  const onHome = pathname === "/";
+  const onPlay = pathname === "/play";
+  const onMe = pathname === "/me";
+  const onHallo = pathname === "/hallo-buur";
+  const onHallo2 = pathname === "/hallo-buur-2";
+  const onNieuws = pathname === "/nieuwsbegrip";
+  const onPEC = pathname === "/pec-zwolle";
 
   /* Detailpagina's dwingen het mobiele menu zodat alles leesbaar blijft op kleine schermen. */
   const forceMobile = onHallo || onHallo2 || onNieuws || onPEC;
-  const mobileMode  = isMobile || forceMobile;
-  const backMode    = forceMobile;
+  const mobileMode = isMobile || forceMobile;
+  const backMode = forceMobile;
 
   const menuButtonLabel =
-    onPlay    ? "Play" :
-    onMe      ? "Me"   :
-    (onHallo || onHallo2 || onNieuws || onPEC) ? "Work" :
-    onHome    ? (section === "work" ? "Work" : "Home") :
-    "Home";
+    onPlay ? "Play" :
+      onMe ? "Me" :
+        (onHallo || onHallo2 || onNieuws || onPEC) ? "Work" :
+          onHome ? (section === "work" ? "Work" : "Home") :
+            "Home";
 
   // Menu-items voor de primaire navigatie (structuur → 6.1).
   const menuItems: MenuItem[] = [
-    { href: '/',     icon: '/images/home.svg',       label: 'Home', active: onHome && section === 'home' },
-    { href: '#work', icon: '/images/work.svg',       label: 'Work', active: (onHome && section === 'work') || onHallo || onHallo2 || onNieuws || onPEC },
+    { href: '/', icon: '/images/home.svg', label: 'Home', active: onHome && section === 'home' },
+    { href: '#work', icon: '/images/work.svg', label: 'Work', active: (onHome && section === 'work') || onHallo || onHallo2 || onNieuws || onPEC },
     { href: '/play', icon: '/images/playground.svg', label: 'Play', active: onPlay },
-    { href: '/me',   icon: '/images/emoji.svg',      label: 'Me',   active: onMe },
+    { href: '/me', icon: '/images/emoji.svg', label: 'Me', active: onMe },
   ];
 
   const socialBaseIndex = menuItems.length;
   // Sociale links: apart lijstje zodat je ziet dat dit externe bestemmingen zijn.
   const socialLinks = [
-    { href: 'https://www.behance.net/Raoulgraphics',    icon: '/images/behance.svg',   alt: 'Behance',   label: 'Behance' },
+    { href: 'https://www.behance.net/Raoulgraphics', icon: '/images/behance.svg', alt: 'Behance', label: 'Behance' },
     { href: 'https://www.instagram.com/raoulgraphics/', icon: '/images/instagram.svg', alt: 'Instagram', label: 'Instagram' },
-    { href: 'https://www.youtube.com/@RaoulGraphics',   icon: '/images/youtube.svg',   alt: 'YouTube',   label: 'YouTube' },
-    { href: 'https://www.tiktok.com/@raoulgraphics',    icon: '/images/tiktok.svg',    alt: 'TikTok',    label: 'TikTok' },
+    { href: 'https://www.youtube.com/@RaoulGraphics', icon: '/images/youtube.svg', alt: 'YouTube', label: 'YouTube' },
+    { href: 'https://www.tiktok.com/@raoulgraphics', icon: '/images/tiktok.svg', alt: 'TikTok', label: 'TikTok' },
   ];
 
   // Terugknop voor detailpagina's: ga terug in de geschiedenis of naar home.
@@ -329,7 +333,7 @@ const Navigation: React.FC = () => {
     setIsMenuOpen(true);
     setEnterStage('expandingRight');
     addTimeout(() => isHoveringRef.current && setEnterStage('expandingDown'), 200);
-    addTimeout(() => isHoveringRef.current && setEnterStage('open'),          400);
+    addTimeout(() => isHoveringRef.current && setEnterStage('open'), 400);
   }, [mobileMode, isMenuOpen, enterStage, addTimeout, clearAllTimeouts]);
 
   const handleMenuLeave = useCallback(() => {
@@ -337,7 +341,7 @@ const Navigation: React.FC = () => {
     isHoveringRef.current = false;
     clearAllTimeouts();
     setIsExiting(true);
-    addTimeout(() => !isHoveringRef.current && setExitStage('collapsingUp'),   300);
+    addTimeout(() => !isHoveringRef.current && setExitStage('collapsingUp'), 300);
     addTimeout(() => !isHoveringRef.current && setExitStage('collapsingLeft'), 500);
     addTimeout(() => {
       if (!isHoveringRef.current) {
@@ -407,8 +411,8 @@ const Navigation: React.FC = () => {
   const dist = useSpring(0, { stiffness: 320, damping: 32, mass: 0.6 });
   useEffect(() => { dist.set(isScrolled ? shiftPx : 0); }, [isScrolled, shiftPx, dist]);
 
-  const menuX   = dist;
-  const menuY   = dist;
+  const menuX = dist;
+  const menuY = dist;
   const toggleX = useTransform(dist, v => -v);
   const toggleY = dist;
 
@@ -417,18 +421,18 @@ const Navigation: React.FC = () => {
   const { scrollY }  = useScroll();
   const logoYRaw     = useTransform(scrollY, [0, 160], [0, -80]);
   const logoScaleRaw = useTransform(scrollY, [0, 120], [1, 0.97]);
-  const logoY        = useSpring(logoYRaw,    { stiffness: 140, damping: 22, mass: 0.4 });
-  const logoScale    = useSpring(logoScaleRaw,{ stiffness: 140, damping: 22, mass: 0.4 });
+  const logoY = useSpring(logoYRaw, { stiffness: 140, damping: 22, mass: 0.4 });
+  const logoScale = useSpring(logoScaleRaw, { stiffness: 140, damping: 22, mass: 0.4 });
 
   const logoSrc = isDark ? '/images/logo-dark.svg' : '/images/logo.svg';
   const hoverDotSrcDesktop = isDark ? '/images/hover-dot-dark.svg' : '/images/hover-dot.svg';
-  const activeDotSrc       = isDark ? '/images/active-dot-dark.svg' : '/images/active-dot.svg';
-  const hoverDotSrcMobile  = isDark ? '/images/hover-dot-dark.svg' : '/images/hover-dot.svg';
+  const activeDotSrc = isDark ? '/images/active-dot-dark.svg' : '/images/active-dot.svg';
+  const hoverDotSrcMobile = isDark ? '/images/hover-dot-dark.svg' : '/images/hover-dot.svg';
 
   /* Sizes */
   const MOBILE_WH = 40, TARGET_H = 40;
   const desktopClosedW = Math.round(7.5625 * 16);
-  const desktopOpenW   = Math.round(11.0625 * 16);
+  const desktopOpenW = Math.round(11.0625 * 16);
 
   // Breedte van de menuschil volgt de staat; visuele laag vult de ruimte op.
   const menuShellW  = (mobileMode ? MOBILE_WH : (isMenuOpen ? desktopOpenW : desktopClosedW));
@@ -440,8 +444,8 @@ const Navigation: React.FC = () => {
   const SWITCH_DESKTOP_W = Math.round(5.5 * 16); // 88px breedte op desktop.
   const SWITCH_DESKTOP_H = Math.round(2.5 * 16); // 40px hoogte op desktop.
 
-  const switchShellW  = mobileMode ? SWITCH_MOBILE_WH : SWITCH_DESKTOP_W;
-  const switchShellH  = mobileMode ? SWITCH_MOBILE_WH : SWITCH_DESKTOP_H;
+  const switchShellW = mobileMode ? SWITCH_MOBILE_WH : SWITCH_DESKTOP_W;
+  const switchShellH = mobileMode ? SWITCH_MOBILE_WH : SWITCH_DESKTOP_H;
   const switchVisualW = switchShellW;
 
   /* Body lock op mobiel menu */
@@ -528,7 +532,7 @@ const Navigation: React.FC = () => {
                       <>
                         <motion.img
                           src="/images/menu.svg"
-                          alt=""
+                          alt="Close menu"
                           className="menu-icon-img"
                           initial={false}
                           animate={isMenuOpen ? { opacity: 0, rotate: 90, scale: 0 } : { opacity: 1, rotate: 0, scale: 1 }}
@@ -536,7 +540,7 @@ const Navigation: React.FC = () => {
                         />
                         <motion.img
                           src="/images/menu-open.svg"
-                          alt=""
+                          alt="Open menu"
                           className="menu-icon-img"
                           initial={false}
                           animate={isMenuOpen ? { opacity: 1, rotate: 0, scale: 1 } : { opacity: 0, rotate: 90, scale: 0 }}
@@ -600,7 +604,7 @@ const Navigation: React.FC = () => {
                                 />
                               </motion.div>
                               <motion.span className="menu-text" initial={false}>
-                                <img src={item.icon} alt="" /> {item.label}
+                                <img src={item.icon} alt={item.label} /> {item.label}
                               </motion.span>
                             </a>
                           </motion.li>
@@ -617,7 +621,7 @@ const Navigation: React.FC = () => {
               <motion.img
                 key={isDark ? 'logo-dark' : 'logo-light'}
                 src={logoSrc}
-                alt="Raoul Martens logo"
+                alt="“Stylized blue letter R logo."
                 style={{ y: logoY, scale: logoScale, willChange: 'transform' }}
                 initial={{ opacity: 0.9 }}
                 animate={{ opacity: 1 }}
@@ -641,8 +645,8 @@ const Navigation: React.FC = () => {
                     <div className="grid switch-mobile-face">
                       <div className="switch-flip-24">
                         <motion.div initial={false} animate={{ rotateY: isDark ? 0 : 180 }} transition={{ type: 'tween', duration: 0.42, ease: [0.22, 1, 0.36, 1] }} className="flip-3d">
-                          <img src="/images/moon.svg" alt="" className="flip-face front" />
-                          <img src="/images/sun.svg"  alt="" className="flip-face back" />
+                          <img src="/images/moon.svg" alt="Dark mode" className="flip-face front" />
+                          <img src="/images/sun.svg" alt="Light mode" className="flip-face back" />
                         </motion.div>
                       </div>
                     </div>
@@ -651,8 +655,8 @@ const Navigation: React.FC = () => {
                       <motion.div className="switch-fill" style={{ left: fillLeftPx }}>
                         <div className="switch-fill-center">
                           <motion.div initial={false} className="flip-3d" style={{ rotateY }} transition={{ type: 'tween', duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-                            <img src="/images/moon.svg" alt="" className="flip-face front" />
-                            <img src="/images/sun.svg"  alt="" className="flip-face back" />
+                            <img src="/images/moon.svg" alt="Dark mode" className="flip-face front" />
+                            <img src="/images/sun.svg" alt="Light mode" className="flip-face back" />
                           </motion.div>
                         </div>
                       </motion.div>
@@ -695,12 +699,12 @@ const Navigation: React.FC = () => {
                   onClick={() => { setIsClosingIcon(true); addTimeout(() => { setIsMenuOpen(false); setBgReady(false); setIsClosingIcon(false); }, 280); }}
                 >
                   <motion.div className="mobile-close-anim" style={{ x: menuX, y: menuY }}>
-                    <motion.img src="/images/menu.svg"  alt="" className="mobile-close-img"
+                    <motion.img src="/images/menu.svg" alt="Open menu" className="mobile-close-img"
                       initial={{ opacity: 1, rotate: 0, scale: 1 }}
                       animate={{ opacity: isClosingIcon ? 1 : 0, rotate: isClosingIcon ? 0 : 90, scale: isClosingIcon ? 1 : 0 }}
                       transition={{ duration: 0.28, ease: 'easeInOut', opacity: { duration: 0.18 } }}
                     />
-                    <motion.img src="/images/close.svg" alt="" className="mobile-close-img"
+                    <motion.img src="/images/close.svg" alt="Close menu" className="mobile-close-img"
                       initial={{ opacity: 0, rotate: -90, scale: 0.95 }}
                       animate={{ opacity: isClosingIcon ? 0 : 1, rotate: isClosingIcon ? -90 : 0, scale: isClosingIcon ? 0.95 : 1 }}
                       transition={{ duration: 0.28, ease: 'easeInOut', opacity: { duration: 0.18, delay: isClosingIcon ? 0 : 0.05 } }}
@@ -735,13 +739,13 @@ const Navigation: React.FC = () => {
                                     onMouseLeave={() => setHoveredItem(null)}
                                     aria-current={item.active ? 'page' : undefined}
                                   >
-                                    <img src={item.icon} alt="" className="mobile-icon" />
+                                    <img src={item.icon} alt={item.label} className="mobile-icon" />
                                     <h3 className="mobile-label">{item.label}</h3>
                                     <span className="mobile-dot-wrap">
                                       {/* theme-aware hover dot on mobile */}
                                       <motion.img
                                         src={hoverDotSrcMobile}
-                                        alt=""
+                                        alt={`Hover dot for ${item.label}`}
                                         className="mobile-dot"
                                         initial={false}
                                         animate={{ opacity: showHoverDot ? 1 : 0 }}
@@ -749,7 +753,7 @@ const Navigation: React.FC = () => {
                                       />
                                       <motion.img
                                         src={activeDotSrc}
-                                        alt=""
+                                        alt={`Active dot for ${item.label}`}
                                         className="mobile-dot"
                                         initial={false}
                                         animate={{ opacity: item.active ? 1 : 0, rotate: item.active ? 0 : -90, scale: item.active ? 1 : 0.95 }}

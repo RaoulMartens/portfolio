@@ -150,8 +150,8 @@ const ProjectInfo: React.FC<ProjectInfoProps> = memo(({ title, meta, link, headi
   const [inView, setInView] = useState(false);
 
   const playedTitle = hasPlayed(`${link}::title`);
-  const playedMeta  = hasPlayed(`${link}::meta`);
-  const playedCta   = hasPlayed(`${link}::cta`);
+  const playedMeta = hasPlayed(`${link}::meta`);
+  const playedCta = hasPlayed(`${link}::cta`);
 
   // Start animaties pas als de kaart in beeld komt (performant en toegankelijk).
   useEffect(() => {
@@ -342,7 +342,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   ) : (
                     <img
                       src={imageProps.src}
-                      alt={imageProps.alt}
+                      alt={imageProps.alt || `Image of ${title}`}
                       className="project-image"
                     />
                   )}

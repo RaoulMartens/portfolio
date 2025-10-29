@@ -160,8 +160,8 @@ const PECZwolle: React.FC = () => {
                   <AnimatedContent key={n} {...imageReveal} delay={n * 0.08}>
                     <figure className="pz-img-vert" aria-label={`Portrait ${n}`}>
                       <img
-                        src={`/images/pec-zwolle/vert-${n}.jpg`}
-                        alt={`PEC Zwolle portrait ${n}`}
+                        src={img.src}
+                        alt={img.alt}
                         loading="lazy"
                         decoding="async"
                       />
@@ -171,6 +171,7 @@ const PECZwolle: React.FC = () => {
               </div>
             </div>
           </div>
+
 
           {/* DIVIDER — grow left → right */}
           <div className="grid pz-grid">
@@ -218,10 +219,10 @@ const PECZwolle: React.FC = () => {
                 <div className="grid pz-mosaic-right">
                   {[1, 2].map((i) => (
                     <AnimatedContent key={i} {...imageReveal} delay={i * 0.08}>
-                      <figure className="pz-img-horz" aria-label={`Horizontal ${i}`}>
+                      <figure className="pz-img-horz">
                         <img
-                          src={`/images/pec-zwolle/horz-${i}.jpg`}
-                          alt={`PEC Zwolle horizontal ${i}`}
+                          src={img.src}
+                          alt={img.alt}
                           loading="lazy"
                           decoding="async"
                         />
@@ -229,6 +230,7 @@ const PECZwolle: React.FC = () => {
                     </AnimatedContent>
                   ))}
                 </div>
+
               </div>
             </div>
           </div>
@@ -240,7 +242,7 @@ const PECZwolle: React.FC = () => {
                 <figure className="pz-wide-figure" aria-label="Full width horizontal">
                   <img
                     src="/images/pec-zwolle/wide-1.jpg"
-                    alt="PEC Zwolle full-width visual"
+                    alt="A street view near a historic city gate shows a bus stop poster featuring two football fans, an adult and a child, looking toward a brightly lit stadium scene filled with team colors and supporters."
                     loading="lazy"
                     decoding="async"
                   />
