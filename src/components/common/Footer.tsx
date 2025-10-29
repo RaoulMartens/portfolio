@@ -160,7 +160,7 @@ const Footer: React.FC = () => {
     <footer className="main-footer">
       <div className="footer-container grid-container">
         <div className="footer-main-content">
-          <div className="footer-row grid-x align-stretch">
+          <div className="grid footer-row align-stretch">
             <div className="cell small-12">
               {/* Achtergrondbeeld dat zich aanpast aan licht/donker thema. */}
               <img
@@ -184,7 +184,7 @@ const Footer: React.FC = () => {
                   <span className="footer-title-gradient gradient-clip">Work with me.</span>
                 </h3>
 
-                <div className="footer-cta">
+                <div className="grid footer-cta">
                   {/* Mailknop met magneet-effect en klembordfunctie. */}
                   <Magnet
                     padding={30}

@@ -123,7 +123,7 @@ const Play: React.FC = () => {
       >
         {/* Titelblok met animatie en duidelijke H1. */}
         <section className="play-container">
-          <div className="title-grid">
+          <div className="grid title-grid">
             <div className="title-col">
               <h1 id={headingId} className={titleClass}>
                 <SplitText
@@ -145,8 +145,8 @@ const Play: React.FC = () => {
         </section>
 
         {/* Hoofdgalerij met responsieve afbeeldingen. */}
-        <section className="play-container gallery-container" aria-label="Image gallery">
-          <div className="gallery">
+        <section className="play-container grid gallery-container" aria-label="Image gallery">
+          <div className="grid gallery">
             {GALLERY_MAIN.map(({ src, alt }, i) => {
               const isFirstRow = i < colsMain;
               const perRowIndex = i % colsMain;
@@ -177,7 +177,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Wide */}
-        <section className="play-container gallery-wide" aria-label="Wide image gallery">
+        <section className="play-container grid gallery-wide" aria-label="Wide image gallery">
           {GALLERY_WIDE.map(({ src, alt }, i) => (
             <div key={i} className="tile-wide">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={(i % 2) * STAGGER_COL}>
@@ -188,7 +188,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Squares */}
-        <section className="play-container gallery-square" aria-label="Square image gallery">
+        <section className="play-container grid gallery-square" aria-label="Square image gallery">
           {GALLERY_SQUARE.map(({ src, alt }, i) => (
             <div key={i} className="tile-square">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={i * 0.18}>
@@ -199,7 +199,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Mix */}
-        <section className="play-container gallery-mix" aria-label="Mixed image row">
+        <section className="play-container grid gallery-mix" aria-label="Mixed image row">
           <div className="mix-empty" />
           <div className="tile-mix mix-horizontal">
             <AnimatedContent {...imgAnim} rootMarginBottomPct={14}>
@@ -214,7 +214,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Verticals */}
-        <section className="play-container gallery-verticals" aria-label="Vertical image gallery">
+        <section className="play-container grid gallery-verticals" aria-label="Vertical image gallery">
           {GALLERY_VERTICALS.map(({ src, alt }, i) => (
             <div key={i} className="tile-vertical">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={i * 0.18}>
@@ -235,7 +235,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Square + Horizontal */}
-        <section className="play-container gallery-sq-wide" aria-label="Square + Horizontal row">
+        <section className="play-container grid gallery-sq-wide" aria-label="Square + Horizontal row">
           <div className="tile-sqw sqw-square">
             <AnimatedContent {...imgAnim} rootMarginBottomPct={14}>
               <img
@@ -260,7 +260,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Extra Wide */}
-        <section className="play-container gallery-wide-2" aria-label="Extra wide image gallery">
+        <section className="play-container grid gallery-wide-2" aria-label="Extra wide image gallery">
           {GALLERY_WIDE_2.map(({ src, alt }, i) => (
             <div key={i} className="tile-wide-2">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={i * 0.22}>

@@ -93,7 +93,7 @@ const Nieuwsbegrip: React.FC = () => {
       >
         <section className="np-container">
           {/* HEADER */}
-          <div className="np-grid">
+          <div className="grid np-grid">
             <div className="np-content">
               <h1 id={headingId} className="np-title">
                 <SplitText
@@ -127,7 +127,7 @@ const Nieuwsbegrip: React.FC = () => {
           </div>
 
           {/* DIVIDER 1 */}
-          <div className="np-grid np-divider-wrap">
+          <div className="grid np-grid np-divider-wrap">
             <div className="np-divider">
               <RuleGrow />
             </div>
@@ -135,7 +135,7 @@ const Nieuwsbegrip: React.FC = () => {
 
           {/* INTRODUCTION */}
           <div className="np-block">
-            <div className="np-block-grid">
+            <div className="grid np-block-grid">
               <div className="np-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Introduction</h5>
@@ -159,7 +159,7 @@ const Nieuwsbegrip: React.FC = () => {
           </div>
 
           {/* DIVIDER 2 */}
-          <div className="np-grid">
+          <div className="grid np-grid">
             <div className="np-divider">
               <RuleGrow />
             </div>
@@ -167,7 +167,7 @@ const Nieuwsbegrip: React.FC = () => {
 
           {/* CONTEXT */}
           <div className="np-block">
-            <div className="np-block-grid">
+            <div className="grid np-block-grid">
               <div className="np-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Context</h5>
@@ -184,16 +184,9 @@ const Nieuwsbegrip: React.FC = () => {
           </div>
 
           {/* STACKED IMAGES */}
-          <div className="np-grid">
-            <div className="np-images">
-              {[
-                { num: 1, alt: "Laptop mockup showing the redesigned Nieuwsbegrip interface with the ‘Week 17’ lesson overview and navigation menu on the left side." },
-                { num: 2, alt: "Laptop mockup displaying the redesigned Nieuwsbegrip dashboard with quick access tiles for lessons, digital board, and workflows." },
-                { num: 3, alt: "Two laptops showing the redesigned Nieuwsbegrip student management pages, with class lists and settings for individual learners." },
-                { num: 4, alt: "Laptop mockup showing the redesigned Nieuwsbegrip archive page with a list of past lessons and filters for strategies and saved materials." },
-                { num: 5, alt: "Laptop mockup displaying the redesigned Nieuwsbegrip results page with performance graphs showing student test scores over time." },
-                { num: 6, alt: "Two laptops showing redesigned Nieuwsbegrip pages: one with student test results for a speed test block, and the other with extra lesson materials and quizzes." },
-              ].map(({ num, alt }) => (
+          <div className="grid np-grid">
+            <div className="grid np-images">
+              {[1, 2, 3, 4, 5, 6].map((num) => (
                 <AnimatedContent key={num} {...imageReveal} delay={num * 0.1}>
                   <figure className="np-image">
                     <img

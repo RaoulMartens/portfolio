@@ -157,7 +157,7 @@ const Me: React.FC = () => {
         tabIndex={-1}
         aria-labelledby={headingId}
       >
-        <div className="grid-container me-grid">
+        <div className="grid-container grid me-grid">
           {/* Titel met dezelfde groottes als de Hero maar links uitgelijnd. */}
           <div className="me-title-col">
             <h1
@@ -229,7 +229,7 @@ const Me: React.FC = () => {
 
           {/* Process Cards */}
           <div
-            className="me-cards-wrap"
+            className="grid me-cards-wrap"
             aria-label="Design process steps (grid on tablet & stacked on mobile)"
           >
             {[
@@ -275,7 +275,7 @@ const Me: React.FC = () => {
           </div>
 
           {/* Favorites Cards */}
-          <div className="me-favorites-cards">
+          <div className="grid me-favorites-cards">
             {[
               {
                 title: "Football’s rhythm",

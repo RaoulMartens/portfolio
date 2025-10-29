@@ -99,7 +99,7 @@ const HalloBuur2: React.FC = () => {
       >
         <section className="hb2-container">
           {/* HEADER */}
-          <div className="hb2-grid">
+          <div className="grid hb2-grid">
             <div className="hb2-content">
               <h1 id={headingId} className="hb2-title">
                 <SplitText
@@ -147,7 +147,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT BLOCK #1 */}
           <div className="hb2-block">
-            <div className="hb2-block-grid">
+            <div className="grid hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Introduction</h5>
@@ -167,7 +167,7 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH IMAGE #1 */}
-          <div className="hb2-grid">
+          <div className="grid hb2-grid">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img
@@ -181,7 +181,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT BLOCK #2 */}
           <div className="hb2-block">
-            <div className="hb2-block-grid">
+            <div className="grid hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Context</h5>
@@ -203,7 +203,7 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* DIVIDER — grow left → right */}
-          <div className="hb2-grid">
+          <div className="grid hb2-grid">
             <div className="hb2-divider">
               <RuleGrow />
             </div>
@@ -211,7 +211,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TITLE + TWO CARDS */}
           <div className="hb2-block hb2-title-only">
-            <div className="hb2-block-grid">
+            <div className="grid hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Why a Co-Creation?</h5>
@@ -220,8 +220,8 @@ const HalloBuur2: React.FC = () => {
             </div>
           </div>
 
-          <div className="hb2-grid">
-            <div className="hb2-cards-right">
+          <div className="grid hb2-grid">
+            <div className="grid hb2-cards-right">
               {[
                 {
                   title: "Needs and desires",
@@ -250,7 +250,7 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* DIVIDER — grow left → right */}
-          <div className="hb2-grid">
+          <div className="grid hb2-grid">
             <div className="hb2-divider">
               <RuleGrow />
             </div>
@@ -258,7 +258,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT BLOCK #3 */}
           <div className="hb2-block">
-            <div className="hb2-block-grid">
+            <div className="grid hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>The Co-Creation</h5>
@@ -280,7 +280,7 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH IMAGE #2 */}
-          <div className="hb2-grid">
+          <div className="grid hb2-grid">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img
@@ -294,7 +294,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT (no title) #4 */}
           <div className="hb2-block">
-            <div className="hb2-block-grid">
+            <div className="grid hb2-block-grid">
               <div className="hb2-block-text">
                 <AnimatedContent {...textReveal}>
                   <p>
@@ -313,7 +313,7 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH IMAGE #3 (hairline fix via CSS) */}
-          <div className="hb2-grid">
+          <div className="grid hb2-grid">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img
@@ -327,7 +327,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT (no title) #5 */}
           <div className="hb2-block">
-            <div className="hb2-block-grid">
+            <div className="grid hb2-block-grid">
               <div className="hb2-block-text">
                 <AnimatedContent {...textReveal}>
                   <p>
@@ -342,7 +342,7 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH IMAGE #4 */}
-          <div className="hb2-grid">
+          <div className="grid hb2-grid">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img
@@ -356,7 +356,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT BLOCK #6 */}
           <div className="hb2-block">
-            <div className="hb2-block-grid">
+            <div className="grid hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Result</h5>
@@ -376,7 +376,7 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH IMAGE #5 — bottom gap to match other pages */}
-          <div className="hb2-grid hb2-bottom-gap">
+          <div className="grid hb2-grid hb2-bottom-gap">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img

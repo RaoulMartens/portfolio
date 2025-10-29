@@ -494,7 +494,7 @@ const Navigation: React.FC = () => {
         aria-label="Site navigation"
       >
         <div className="grid-container">
-          <div className="navbar-grid">
+          <div className="grid navbar-grid">
             {/* MENU / BACK + PANEL WRAPPER */}
             <motion.div
               key={`menu-anchor-${mobileMode ? 'm' : 'd'}`}
@@ -525,7 +525,7 @@ const Navigation: React.FC = () => {
                 >
                   {!mobileMode && <motion.span className="menu-label" initial={false}>{menuButtonLabel}</motion.span>}
 
-                  <div className={`menu-icon-box ${mobileMode ? 'is-mobile' : ''}`}>
+                  <div className={`grid menu-icon-box ${mobileMode ? 'is-mobile' : ''}`}>
                     {backMode ? (
                       <img src="/images/chevron-left.svg" alt="" className="menu-icon-img" />
                     ) : (
@@ -642,7 +642,7 @@ const Navigation: React.FC = () => {
               >
                 <motion.div className="switch-visual" animate={{ width: switchVisualW }} transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}>
                   {mobileMode ? (
-                    <div className="switch-mobile-face">
+                    <div className="grid switch-mobile-face">
                       <div className="switch-flip-24">
                         <motion.div initial={false} animate={{ rotateY: isDark ? 0 : 180 }} transition={{ type: 'tween', duration: 0.42, ease: [0.22, 1, 0.36, 1] }} className="flip-3d">
                           <img src="/images/moon.svg" alt="Dark mode" className="flip-face front" />
@@ -695,7 +695,7 @@ const Navigation: React.FC = () => {
                 {/* CLOSE */}
                 <motion.button
                   aria-label="Close menu"
-                  className="mobile-close"
+                  className="grid mobile-close"
                   onClick={() => { setIsClosingIcon(true); addTimeout(() => { setIsMenuOpen(false); setBgReady(false); setIsClosingIcon(false); }, 280); }}
                 >
                   <motion.div className="mobile-close-anim" style={{ x: menuX, y: menuY }}>
@@ -715,7 +715,7 @@ const Navigation: React.FC = () => {
                 {/* PANEL */}
                 <motion.div key="mobile-panel" className="mobile-panel" variants={mobilePanelVariants} initial="hidden" animate="visible" exit="exit">
                   <div className="grid-container mobile-panel-inner">
-                    <div className="grid-x mobile-panel-scroll">
+                    <div className="grid mobile-panel-scroll">
                       <div className="cell small-12">
                         <nav id={MENU_ID_MOBILE} className="mobile-panel-nav" aria-label="Primary">
                           <ul className="mobile-list">

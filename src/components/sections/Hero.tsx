@@ -168,9 +168,9 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
         {/* ---------------- Desktop ---------------- */}
         {bp === 'desktop' && (
           <div className="hero-desktop-layout">
-            <div className="hero-grid">
+            <div className="grid hero-grid">
               <div className="hero-title-row">
-                <div className="hero-title-wrapper">
+                <div className="grid hero-title-wrapper">
                   <div className="hero-desktop-title-container">
                     <h1 id={headingId} className="page-title hero-title">
                       {/* SplitText animeren de woorden zodat de intro rustig leesbaar binnenkomt. */}
