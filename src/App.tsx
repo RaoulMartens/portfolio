@@ -23,6 +23,14 @@ import { Analytics } from "@vercel/analytics/react";
 const App: React.FC = () => {
   return (
     <BrowserRouter>
+      {/* Anchor for Back to Top button */}
+      <div
+        id="site-top"
+        tabIndex={-1}
+        style={{ position: "absolute", top: 0, left: 0, width: "1px", height: "1px" }}
+        aria-hidden="true"
+      />
+
       <SkipLink />
       <ScrollToTop />
       <Routes>

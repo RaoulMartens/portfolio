@@ -254,12 +254,30 @@ const Footer: React.FC = () => {
           <a
             href="#site-top"
             onClick={(e) => {
-              const target = document.getElementById('site-top');
-              if (!target) return;
-
               e.preventDefault();
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              if (typeof (target as HTMLElement).focus === 'function') {
+
+              // 1) Probeer een custom scrollcontainer
+              const scroller =
+                document.querySelector('.viewport-wrapper') as HTMLElement | null;
+
+              // 2) Target element
+              const target = document.getElementById('site-top');
+
+              // 3) Scroll logica
+              const doScroll = (el: Element | Window) => {
+                if ('scrollTo' in el) {
+                  (el as Window | HTMLElement).scrollTo({ top: 0, behavior: 'smooth' });
+                } else if (target?.scrollIntoView) {
+                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              };
+
+              if (scroller) doScroll(scroller);
+              else if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              else doScroll(window);
+
+              // Focus voor a11y
+              if (target && typeof (target as HTMLElement).focus === 'function') {
                 (target as HTMLElement).focus({ preventScroll: true });
               }
             }}
@@ -267,15 +285,14 @@ const Footer: React.FC = () => {
             onMouseEnter={() => setIsScrollHovered(true)}
             onMouseLeave={() => setIsScrollHovered(false)}
           >
-            Scroll to top
+            Back to top
             <img
               src="/images/chevron-top.svg"
               alt="Scroll to top"
-              style={{
-                transform: isScrollHovered ? 'translateY(-8px)' : 'translateY(0)',
-              }}
+              style={{ transform: isScrollHovered ? 'translateY(-8px)' : 'translateY(0)' }}
             />
           </a>
+
         </div>
       </div>
     </footer>

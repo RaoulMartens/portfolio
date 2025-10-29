@@ -4666,4 +4666,9 @@ body {
     display: block;
     object-fit: cover;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
 }
