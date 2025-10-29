@@ -250,36 +250,13 @@ const Footer: React.FC = () => {
             <img src="/images/logo-grey.svg" alt="Grey R logo" /> Raoul Martens © 2025
           </div>
 
-          {/* Terug naar boven knop voor toetsenbord- en muisgebruikers. */}
+          {/* Footer: "Back to top" knop */}
           <a
-            href="#site-top"
+            href="#top"
             onClick={(e) => {
               e.preventDefault();
-
-              // 1) Probeer een custom scrollcontainer
-              const scroller =
-                document.querySelector('.viewport-wrapper') as HTMLElement | null;
-
-              // 2) Target element
-              const target = document.getElementById('site-top');
-
-              // 3) Scroll logica
-              const doScroll = (el: Element | Window) => {
-                if ('scrollTo' in el) {
-                  (el as Window | HTMLElement).scrollTo({ top: 0, behavior: 'smooth' });
-                } else if (target?.scrollIntoView) {
-                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-              };
-
-              if (scroller) doScroll(scroller);
-              else if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              else doScroll(window);
-
-              // Focus voor a11y
-              if (target && typeof (target as HTMLElement).focus === 'function') {
-                (target as HTMLElement).focus({ preventScroll: true });
-              }
+              // Scroll soepel naar boven van het hele document
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             className="scroll-to-top body-sm-medium"
             onMouseEnter={() => setIsScrollHovered(true)}
@@ -289,9 +266,13 @@ const Footer: React.FC = () => {
             <img
               src="/images/chevron-top.svg"
               alt="Scroll to top"
-              style={{ transform: isScrollHovered ? 'translateY(-8px)' : 'translateY(0)' }}
+              style={{
+                transform: isScrollHovered ? 'translateY(-8px)' : 'translateY(0)',
+              }}
             />
           </a>
+
+
 
         </div>
       </div>
