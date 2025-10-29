@@ -141,11 +141,11 @@ const Footer: React.FC = () => {
     const email = 'Raoulma4@gmail.com';
     try {
       await navigator.clipboard.writeText(email);
-      setCopyButtonText('Gekopieerd');
+      setCopyButtonText('Copied');
       setShowCopyIcon(false);
       setEmailCopied(true);
       setTimeout(() => {
-        setCopyButtonText('Kopieer e-mailadres');
+        setCopyButtonText('Copy email address');
         setShowCopyIcon(true);
         setEmailCopied(false);
       }, 2000);
@@ -192,7 +192,7 @@ const Footer: React.FC = () => {
                       onClick={handleCopyEmail}
                       onMouseEnter={() => setEmailHovered(true)}
                       onMouseLeave={() => setEmailHovered(false)}
-                      aria-label="Mail naar Raoulma4@gmail.com"
+                      aria-label="Mail to Raoulma4@gmail.com"
                       tabIndex={0}
                       className="btn-email"
                     >
@@ -267,10 +267,10 @@ const Footer: React.FC = () => {
             onMouseEnter={() => setIsScrollHovered(true)}
             onMouseLeave={() => setIsScrollHovered(false)}
           >
-            Terug naar boven
+            Back to top
             <img
               src="/images/chevron-top.svg"
-              alt=""
+              alt="Scroll to top"
               style={{
                 transform: isScrollHovered ? 'translateY(-8px)' : 'translateY(0)',
               }}

@@ -130,7 +130,7 @@ const LinkWithHover: React.FC<{ link: string; className?: string }> = ({ link, c
   );
 
   return (
-    <a href={link} className={`project-link ${className ?? ''}`} aria-label="Lees de case">
+    <a href={link} className={`project-link ${className ?? ''}`} aria-label="Read story">
       <span>Lees de case</span>
       <img className="active-icon" src={chevronSrc} alt="" />
     </a>
