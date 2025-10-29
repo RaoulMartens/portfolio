@@ -186,20 +186,31 @@ const Nieuwsbegrip: React.FC = () => {
           {/* STACKED IMAGES */}
           <div className="grid np-grid">
             <div className="grid np-images">
-              {[1, 2, 3, 4, 5, 6].map((num) => (
-                <AnimatedContent key={num} {...imageReveal} delay={num * 0.1}>
-                  <figure className="np-image">
-                    <img
-                      src={`/images/nieuwsbegrip/image-${num}.jpg`}
-                      alt={alt}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </figure>
-                </AnimatedContent>
-              ))}
+              {[1, 2, 3, 4, 5, 6].map((num) => {
+                const alts = [
+                  "Laptop mockup showing the redesigned Nieuwsbegrip interface with the ‘Week 17’ lesson overview and navigation menu on the left side.",
+                  "Laptop mockup displaying the redesigned Nieuwsbegrip dashboard with quick access tiles for lessons, digital board, and workflows.",
+                  "Two laptops showing the redesigned Nieuwsbegrip student management pages, with class lists and settings for individual learners.",
+                  "Laptop mockup showing the redesigned Nieuwsbegrip archive page with a list of past lessons and filters for strategies and saved materials.",
+                  "Laptop mockup displaying the redesigned Nieuwsbegrip results page with performance graphs showing student test scores over time.",
+                  "Two laptops showing redesigned Nieuwsbegrip pages: one with student test results for a speed test block, and the other with extra lesson materials and quizzes."
+                ];
+                return (
+                  <AnimatedContent key={num} {...imageReveal} delay={num * 0.1}>
+                    <figure className="np-image">
+                      <img
+                        src={`/images/nieuwsbegrip/image-${num}.jpg`}
+                        alt={alts[num - 1]}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </figure>
+                  </AnimatedContent>
+                );
+              })}
             </div>
           </div>
+
 
         </section>
       </main>
