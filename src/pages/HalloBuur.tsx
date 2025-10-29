@@ -389,16 +389,24 @@ const HalloBuur: React.FC = () => {
 
   const STAGGER = 0.18;
 
+  const headingId = "hallo-buur-heading";
+
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main className="hb-main" aria-label="Hallo Buur case study">
+      <main
+        id="main-content"
+        className="hb-main"
+        aria-label="Hallo Buur case study"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
         <section className="hb-container">
           {/* HEADER */}
           <div className="hb-grid cv-auto">
             <div className="hb-content">
-              <h5 className="hb-title">
+              <h1 id={headingId} className="hb-title">
                 <SplitText
                   text="Hallo Buur"
                   splitType="words"
@@ -410,7 +418,7 @@ const HalloBuur: React.FC = () => {
                   threshold={0.1}
                   textAlign="left"
                 />
-              </h5>
+              </h1>
 
               <p className="hb-subtitle">
                 <SplitText

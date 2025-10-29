@@ -78,16 +78,24 @@ const Nieuwsbegrip: React.FC = () => {
 
   const STAGGER = 0.18;
 
+  const headingId = "nieuwsbegrip-heading";
+
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main aria-label="Nieuwsbegrip case study" className="np-main">
+      <main
+        id="main-content"
+        aria-label="Nieuwsbegrip case study"
+        className="np-main"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
         <section className="np-container">
           {/* HEADER */}
           <div className="np-grid">
             <div className="np-content">
-              <h5 className="np-title">
+              <h1 id={headingId} className="np-title">
                 <SplitText
                   text="Nieuwsbegrip"
                   splitType="words"
@@ -99,7 +107,7 @@ const Nieuwsbegrip: React.FC = () => {
                   threshold={0.1}
                   textAlign="left"
                 />
-              </h5>
+              </h1>
 
               <p className="np-subtitle">
                 <SplitText

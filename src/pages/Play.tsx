@@ -7,8 +7,9 @@ import SplitText from "../components/common/SplitText";
 type GalleryItem = { src: string; alt: string };
 
 /* ----------------------------- */
-/* Breakpoint hook (match Hero)  */
+/* Breakpoint hook (zelfde als Hero) */
 /* ----------------------------- */
+// Houd bij welke schermgrootte actief is zodat de layout zich aanpast (6.2).
 type BP = "mobile" | "tablet" | "desktop";
 function useBreakpoint(): BP | null {
   const [bp, setBp] = React.useState<BP | null>(null);
@@ -69,7 +70,7 @@ const GALLERY_WIDE_2: GalleryItem[] = [
   { src: "/images/play/friet-scootmobiel.jpg", alt: "Extra horizontal image 2" },
 ];
 
-/** Returns 1/2/3 columns to match CSS (<=767:1, 768–1024:2, >=1025:3) */
+/** Berekent 1/2/3 kolommen zodat het aansluit op de CSS breakpoints. */
 function getCols(): number {
   if (typeof window === "undefined") return 1;
   if (window.matchMedia("(min-width: 1025px)").matches) return 3;
@@ -84,7 +85,7 @@ const Play: React.FC = () => {
   const isMobile = bp === "mobile";
   const isTablet = bp === "tablet";
 
-  // Use the exact same Hero classes per breakpoint, but keep LEFT alignment
+  // Gebruik dezelfde hero-klassen per breakpoint maar houd de tekst links.
   const titleClass =
     bp === "desktop"
       ? "page-title hero-title play-title"
@@ -105,19 +106,26 @@ const Play: React.FC = () => {
   const LATE = new Set([3, 4, 5]);
   const VERY_LATE = new Set([6, 7, 8]);
 
-  // compute once per render (fine for progressive delays)
+  // Eén keer per render berekenen is genoeg voor de animatievertragingen.
   const colsMain = getCols();
+  const headingId = "play-heading";
 
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main aria-label="Play page" className="play-main">
-        {/* Title */}
+      <main
+        id="main-content"
+        aria-label="Play page"
+        className="play-main"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
+        {/* Titelblok met animatie en duidelijke H1. */}
         <section className="play-container">
           <div className="title-grid">
             <div className="title-col">
-              <h1 className={titleClass}>
+              <h1 id={headingId} className={titleClass}>
                 <SplitText
                   text="Made with nothing but curiosity. Browse, enjoy, and see where creativity runs free."
                   splitType="words"
@@ -128,7 +136,7 @@ const Play: React.FC = () => {
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.2}
                   rootMargin="0px 0px -10% 0px"
-                  textAlign="left" // always left aligned
+                  textAlign="left" // altijd links uitgelijnd voor leesbaarheid
                   groupPhrase={{ tokens: ["curiosity"], className: "gradient-group" }}
                 />
               </h1>
@@ -136,7 +144,7 @@ const Play: React.FC = () => {
           </div>
         </section>
 
-        {/* Main */}
+        {/* Hoofdgalerij met responsieve afbeeldingen. */}
         <section className="play-container gallery-container" aria-label="Image gallery">
           <div className="gallery">
             {GALLERY_MAIN.map(({ src, alt }, i) => {

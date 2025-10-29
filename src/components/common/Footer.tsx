@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSpring, animated, to } from '@react-spring/web';
 
 /* ---------- Magnet ---------- */
+// Zelfde magneet-effect als in de navigatie voor speelse icoon-animaties (responsief → 6.2).
 interface MagnetProps {
   children: React.ReactNode;
   padding?: number;
@@ -73,6 +74,7 @@ const Magnet: React.FC<MagnetProps> = ({
 };
 
 /* ---------- Footer ---------- */
+// Deze footer bundelt contact, socials en terug-naar-boven in semantische HTML → 6.1.
 interface SocialLink {
   href: string;
   icon: string;
@@ -86,7 +88,8 @@ const readIsDarkFromDOM = () =>
     document.body.classList.contains('dark'));
 
 const Footer: React.FC = () => {
-  const [copyButtonText, setCopyButtonText] = useState('Copy E-mail address');
+  // UI-state voor de interactieve onderdelen van de footer.
+  const [copyButtonText, setCopyButtonText] = useState('Kopieer e-mailadres');
   const [showCopyIcon, setShowCopyIcon] = useState(true);
   const [isScrollHovered, setIsScrollHovered] = useState(false);
   const [emailHovered, setEmailHovered] = useState(false);
@@ -124,7 +127,7 @@ const Footer: React.FC = () => {
     { href: 'https://www.tiktok.com/@raoulgraphics', icon: '/images/tiktok.svg', alt: 'TikTok', label: 'TikTok' },
   ];
 
-  // Preload footer images
+  // Afbeeldingen vooraf laden zodat de achtergrond niet flikkert.
   useEffect(() => {
     ['/images/confirm.svg', '/images/footer.jpg', '/images/footer-dark.jpg'].forEach((src) => {
       const i = new Image();
@@ -132,16 +135,17 @@ const Footer: React.FC = () => {
     });
   }, []);
 
+  // Kopieer de e-mail naar het klembord (toegankelijk alternatief voor mailto).
   const handleCopyEmail = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const email = 'Raoulma4@gmail.com';
     try {
       await navigator.clipboard.writeText(email);
-      setCopyButtonText('Copied');
+      setCopyButtonText('Gekopieerd');
       setShowCopyIcon(false);
       setEmailCopied(true);
       setTimeout(() => {
-        setCopyButtonText('Copy E-mail address');
+        setCopyButtonText('Kopieer e-mailadres');
         setShowCopyIcon(true);
         setEmailCopied(false);
       }, 2000);
@@ -158,6 +162,7 @@ const Footer: React.FC = () => {
         <div className="footer-main-content">
           <div className="footer-row grid-x align-stretch">
             <div className="cell small-12">
+              {/* Achtergrondbeeld dat zich aanpast aan licht/donker thema. */}
               <img
                 key={isDark ? 'footer-dark' : 'footer-light'}
                 src={footerImgSrc}
@@ -169,12 +174,14 @@ const Footer: React.FC = () => {
 
             <div className="cell small-12">
               <div className="footer-color-block">
+                {/* Headline met duidelijke call-to-action (structuur → 6.1). */}
                 <h3 className="footer-title">
                   Quiet interfaces, loud impact.{' '}
                   <span className="footer-title-gradient gradient-clip">Work with me.</span>
                 </h3>
 
                 <div className="footer-cta">
+                  {/* Mailknop met magneet-effect en klembordfunctie. */}
                   <Magnet
                     padding={30}
                     magnetStrength={8}
@@ -185,7 +192,7 @@ const Footer: React.FC = () => {
                       onClick={handleCopyEmail}
                       onMouseEnter={() => setEmailHovered(true)}
                       onMouseLeave={() => setEmailHovered(false)}
-                      aria-label="Email me at Raoulma4@gmail.com"
+                      aria-label="Mail naar Raoulma4@gmail.com"
                       tabIndex={0}
                       className="btn-email"
                     >
@@ -201,11 +208,12 @@ const Footer: React.FC = () => {
                         ) : (
                           showCopyIcon && <img src="/images/copy.svg" alt="Copy" />
                         )}
-                        <span>{copyButtonText}</span>
+                        <span aria-live="polite" aria-atomic="true">{copyButtonText}</span>
                       </span>
                     </a>
                   </Magnet>
 
+                  {/* Social media lijst met hover-animaties en duidelijke aria-labels. */}
                   <ul className="social-list">
                     {socialLinks.map((link) => (
                       <li key={link.label}>
@@ -242,17 +250,24 @@ const Footer: React.FC = () => {
             <img src="/images/logo-grey.svg" alt="Your Logo" /> Raoul Martens © 2025
           </div>
 
+          {/* Terug naar boven knop voor toetsenbord- en muisgebruikers. */}
           <a
-            href="#top"
+            href="#site-top"
             onClick={(e) => {
+              const target = document.getElementById('site-top');
+              if (!target) return;
+
               e.preventDefault();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              if (typeof (target as HTMLElement).focus === 'function') {
+                (target as HTMLElement).focus({ preventScroll: true });
+              }
             }}
             className="scroll-to-top body-sm-medium"
             onMouseEnter={() => setIsScrollHovered(true)}
             onMouseLeave={() => setIsScrollHovered(false)}
           >
-            Back to top
+            Terug naar boven
             <img
               src="/images/chevron-top.svg"
               alt=""

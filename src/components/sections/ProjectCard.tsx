@@ -4,6 +4,7 @@ import AnimatedContent from '../common/AnimatedContent';
 import { hasPlayed, markPlayed } from '../../utils/animationMemory';
 
 /* ---------- dotLottie web component wrapper ---------- */
+// Wrapper zodat we het custom element in React kunnen gebruiken.
 const DotlottiePlayer = React.forwardRef<any, any>((props, ref) =>
   React.createElement('dotlottie-player' as any, { ...props, ref })
 );
@@ -22,6 +23,7 @@ interface ProjectCardProps {
 }
 
 /* ---------- Small Lottie wrapper ---------- */
+// Verpakt het dotLottie-element en respecteert "reduced motion" (criterium 6.3).
 const LottieAnim: React.FC<{
   src: string;
   loop?: boolean;
@@ -33,6 +35,7 @@ const LottieAnim: React.FC<{
   const playerRef = useRef<any>(null);
 
   useEffect(() => {
+    // Zet animaties uit als de gebruiker minder beweging wil zien.
     const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     if (mq?.matches) setShouldAutoplay(false);
   }, [autoplay]);
@@ -51,7 +54,7 @@ const LottieAnim: React.FC<{
       .catch(() => setReady(true));
   }, []);
 
-  // Force svg cover behavior once shadow DOM exists
+  // Zorg dat de animatie altijd de volledige kaart opvult.
   useEffect(() => {
     if (!ready || !playerRef.current) return;
     let raf = 0;
@@ -84,7 +87,9 @@ const LottieAnim: React.FC<{
 };
 
 /* ---------- Theme sync (DOM class watch) ---------- */
+// Lees het thema rechtstreeks uit de DOM zodat de kaartkleur mee wisselt (6.1/6.3).
 function useIsDarkFromDOM() {
+  // Controleer of het donkere thema actief is via classnames op html/body.
   const getIsDark = () =>
     document.documentElement.classList.contains('dark') ||
     document.documentElement.classList.contains('mapped--dark') ||
@@ -116,6 +121,7 @@ function useIsDarkFromDOM() {
 }
 
 /* ---------- Link ---------- */
+// CTA-link met pijl die thema volgt en aria-label heeft.
 const LinkWithHover: React.FC<{ link: string; className?: string }> = ({ link, className }) => {
   const isDark = useIsDarkFromDOM();
   const chevronSrc = useMemo(
@@ -124,15 +130,22 @@ const LinkWithHover: React.FC<{ link: string; className?: string }> = ({ link, c
   );
 
   return (
-    <a href={link} className={`project-link ${className ?? ''}`} aria-label="Read story">
-      <span>Read story</span>
+    <a href={link} className={`project-link ${className ?? ''}`} aria-label="Lees de case">
+      <span>Lees de case</span>
       <img className="active-icon" src={chevronSrc} alt="" />
     </a>
   );
 };
 
 /* ---------- Project header ---------- */
-const ProjectInfo: React.FC<{ title: string; meta: string; link: string }> = memo(({ title, meta, link }) => {
+interface ProjectInfoProps {
+  title: string;
+  meta: string;
+  link: string;
+  headingId: string;
+}
+
+const ProjectInfo: React.FC<ProjectInfoProps> = memo(({ title, meta, link, headingId }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -140,7 +153,7 @@ const ProjectInfo: React.FC<{ title: string; meta: string; link: string }> = mem
   const playedMeta  = hasPlayed(`${link}::meta`);
   const playedCta   = hasPlayed(`${link}::cta`);
 
-  // Gate: only IO triggers first play (and only after some scroll)
+  // Start animaties pas als de kaart in beeld komt (performant en toegankelijk).
   useEffect(() => {
     if (inView || (playedTitle && playedMeta && playedCta)) return;
     const obs = new IntersectionObserver(
@@ -162,19 +175,19 @@ const ProjectInfo: React.FC<{ title: string; meta: string; link: string }> = mem
     return () => obs.disconnect();
   }, [inView, playedTitle, playedMeta, playedCta]);
 
-  // Title timing
-  const titleDelay = 0.06;      // seconds per word
+  // Animatievertraging per woord.
+  const titleDelay = 0.06;      // seconden per woord
   const titleDuration = 0.8;
   const titleWordCount = title.trim().split(/\s+/).length;
 
-  // Subtitle starts earlier: ~half the title + small buffer
+  // Ondertitel start iets eerder dan de titel klaar is.
   const subtitleStartDelay = titleWordCount * titleDelay * 0.5 + 0.1;
 
-  // Desktop CTA timing
+  // CTA komt als laatste binnen.
   const ctaDelay = subtitleStartDelay + 0.3;
   const ctaDuration = 0.8;
 
-  // Mark CTA as played after its animation would finish (desktop)
+  // Markeer dat de CTA-animatie al afgespeeld is na de eerste keer.
   useEffect(() => {
     if (!inView || playedCta) return;
     const t = window.setTimeout(() => {
@@ -186,7 +199,7 @@ const ProjectInfo: React.FC<{ title: string; meta: string; link: string }> = mem
   return (
     <div className="project-header" ref={ref}>
       <div className="project-info">
-        <h2 className="project-title">
+        <h2 id={headingId} className="project-title">
           {playedTitle ? (
             <span className="static">{title}</span>
           ) : inView ? (
@@ -235,6 +248,7 @@ const ProjectInfo: React.FC<{ title: string; meta: string; link: string }> = mem
       </div>
 
       <div className="project-link-desktop">
+        {/* Desktop CTA schuift in beeld voor een duidelijke call-to-action. */}
         {playedCta ? (
           <LinkWithHover link={link} />
         ) : inView && (
@@ -259,6 +273,7 @@ const ProjectInfo: React.FC<{ title: string; meta: string; link: string }> = mem
 ProjectInfo.displayName = 'ProjectInfo';
 
 /* ---------- Project card ---------- */
+// Eén projectkaart met artikelstructuur + animatie, helpt bij criteria 6.1-6.3.
 const ProjectCard: React.FC<ProjectCardProps> = ({
   title,
   meta,
@@ -266,9 +281,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   media,
   isVideo = false,
 }) => {
+  // Animatie die we tonen bij videoprojecten.
   const lottieSrc = '/videos/hallo-buur.lottie';
 
-  // Mobile CTA: mark played once it appears in viewport
+  // Mobiele CTA: markeer wanneer hij in beeld is geweest.
   const mobileCtaRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (hasPlayed(`${link}::cta`)) return;
@@ -278,7 +294,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       (entries) => {
         for (const e of entries) {
           if (e.isIntersecting) {
-            // small delay to approximate animation end
+            // Kleine vertraging zodat het lijkt alsof de animatie afspeelt.
             setTimeout(() => markPlayed(`${link}::cta`), 800);
             obs.disconnect();
             break;
@@ -291,19 +307,34 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     return () => obs.disconnect();
   }, [link]);
 
+  // Kies een posterafbeelding als het project een video heeft, anders de gewone afbeelding.
   const imageProps =
     isVideo
       ? { src: (media as any).poster as string, alt: (media as any).alt as string }
       : (media as ImageMedia);
 
+  const headingId = useMemo(
+    () =>
+      `project-${link
+        .replace(/[^a-z0-9]+/gi, "-")
+        .replace(/(^-|-$)/g, "")
+        .toLowerCase()}`,
+    [link]
+  );
+
+  // Gebruik het projectlink-pad om een uniek heading-id te maken (structuur → 6.1).
   return (
     <section className="project-background">
       <div className="grid-container">
         <div className="grid-x project-background-row">
-          <section className="project-card cell small-12 medium-10 medium-offset-1 large-8 large-offset-2">
-            <ProjectInfo title={title} meta={meta} link={link} />
+          <article
+            className="project-card cell small-12 medium-10 medium-offset-1 large-8 large-offset-2"
+            aria-labelledby={headingId}
+          >
+            <ProjectInfo title={title} meta={meta} link={link} headingId={headingId} />
 
             <div className="project-image-wrapper">
+              {/* Klikbare media: ondersteunt zowel afbeeldingen als lottie-animatie. */}
               <a href={link} aria-label={`Open ${title}`} className="media-link">
                 <div className="media-inner">
                   {isVideo ? (
@@ -319,7 +350,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               </a>
             </div>
 
-            {/* mobile-only CTA */}
+            {/* Mobiele CTA zodat telefoongebruikers ook een duidelijke knop zien. */}
             <div className="project-link-mobile" ref={mobileCtaRef}>
               {hasPlayed(`${link}::cta`) ? (
                 <LinkWithHover link={link} />
@@ -329,7 +360,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 </AnimatedContent>
               )}
             </div>
-          </section>
+          </article>
         </div>
       </div>
     </section>
