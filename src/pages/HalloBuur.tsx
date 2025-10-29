@@ -439,7 +439,7 @@ const HalloBuur: React.FC = () => {
                 <AnimatedContent {...heroImgAnim}>
                   <img
                     src="/images/hallo-buur/preview.jpg"
-                    alt="Hallo Buur — hero"
+                    alt="An older man interacts with a large touchscreen displaying a digital community board where residents can view and create activity cards for shared events and help requests."
                     decoding="async"
                     loading="eager"
                     fetchPriority="high"
@@ -478,7 +478,7 @@ const HalloBuur: React.FC = () => {
               <AnimatedContent {...lottieReveal}>
                 <img
                   src="/images/hallo-buur/problem.jpg"
-                  alt="Hallo Buur — follow up visual"
+                  alt="Two women sit back to back against a neutral background. One is elderly with short gray hair, the other is younger with long brown hair. Both have serious expressions and look away from each other, suggesting distance or disagreement."
                   decoding="async"
                   loading="lazy"
                   fetchPriority="low"

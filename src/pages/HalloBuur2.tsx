@@ -135,7 +135,7 @@ const HalloBuur2: React.FC = () => {
                   <img
                     className="hb2-hero-img"
                     src="/images/hallo-buur2/hero.jpg"
-                    alt="Hallo Buur 2 — hero"
+                    alt="Group of elderly residents sitting together at a community table having coffee and conversation, with handwritten observation notes visible in the foreground."
                     decoding="async"
                     loading="eager"
                     fetchPriority="high"
@@ -173,7 +173,7 @@ const HalloBuur2: React.FC = () => {
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-1.jpg"
-                  alt="Hallo Buur 2 — board overview"
+                  alt="Simple black-and-white illustration of a frowning man with text above him that reads ‘This is all pointless, those people won’t show up anyway."
                 />
               </AnimatedContent>
             </div>
@@ -286,7 +286,7 @@ const HalloBuur2: React.FC = () => {
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-2.jpg"
-                  alt="Hallo Buur 2 — posting flow"
+                  alt="Two groups of colorful sticky notes labeled ‘Why not?’ and ‘Why yes?’ showing reasons for and against participating in community coffee gatherings."
                 />
               </AnimatedContent>
             </div>
@@ -319,7 +319,7 @@ const HalloBuur2: React.FC = () => {
                 <img
                   className="hb2-image hb2-image--hairline-fix"
                   src="/images/hallo-buur2/wide-3.jpg"
-                  alt="Hallo Buur 2 — sorting and filters"
+                  alt="Black-and-white illustration of a man with a slight smile looking upward, with handwritten text above him that reads: ‘On the 3rd and 5th floors, everyone knows each other, it’s really cozy there."
                 />
               </AnimatedContent>
             </div>
@@ -348,7 +348,7 @@ const HalloBuur2: React.FC = () => {
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-4.jpg"
-                  alt="Hallo Buur 2 — responses and confirmations"
+                  alt="Illustration of an apartment building surrounded by icons and short phrases representing things residents appreciate about their community, such as ‘Music is part of it,’ ‘Well-maintained garden,’ ‘Being together is cozy,’ ‘Bingo,’ and ‘Beautiful walking area.’ The image highlights positive aspects of shared living like social events, greenery, and nearby facilities."
                 />
               </AnimatedContent>
             </div>
@@ -382,7 +382,7 @@ const HalloBuur2: React.FC = () => {
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-5.jpg"
-                  alt="Hallo Buur 2 — accessible patterns"
+                  alt="A colorful poster titled ‘De Aubade Waardeplaat’ hanging on a beige wall near an elevator. The poster visualizes what residents value about their building, featuring icons and categories such as ‘Activiteiten,’ ‘Sociaal,’ ‘Feesten,’ ‘Voorzieningen,’ and ‘Omgeving.’ Illustrations show themes like bingo, coffee gatherings, helping each other, greenery, and local shops."
                 />
               </AnimatedContent>
             </div>

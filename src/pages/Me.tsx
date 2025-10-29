@@ -187,7 +187,7 @@ const Me: React.FC = () => {
           {/* Image */}
           <div className="me-image-col">
             <AnimatedContent {...heroImgAnim}>
-              <img className="me-image" src="/images/me/me.jpg" alt="Raoul Martens" />
+              <img className="me-image" src="/images/me/me.jpg" alt="Raoul Martens standing and smiling on a bridge between two modern buildings, with a geometric green-covered high-rise in the background under a partly cloudy sky." />
             </AnimatedContent>
           </div>
 

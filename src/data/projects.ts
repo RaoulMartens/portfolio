@@ -5,16 +5,16 @@
  */
 export type HomeProjectMedia =
   | {
-      kind: "video";
-      alt: string;
-      poster: string;
-      sources: { webm: string; mp4: string };
-    }
+    kind: "video";
+    alt: string;
+    poster: string;
+    sources: { webm: string; mp4: string };
+  }
   | {
-      kind: "image";
-      alt: string;
-      src: string;
-    };
+    kind: "image";
+    alt: string;
+    src: string;
+  };
 
 export interface HomeProject {
   title: string;
@@ -55,7 +55,7 @@ export const homeProjects: HomeProject[] = [
     media: {
       kind: "image",
       src: "/images/peczwolle-cover.jpg",
-      alt: "A showcase of your third project",
+      alt: "A street view near a historic city gate shows a bus stop poster featuring two football fans, an adult and a child, looking toward a brightly lit stadium scene filled with team colors and supporters.",
     },
   },
   {
@@ -65,7 +65,7 @@ export const homeProjects: HomeProject[] = [
     media: {
       kind: "image",
       src: "/images/hallo-buur2-cover.jpg",
-      alt: "A showcase of your fourth project",
+      alt: "An elderly man uses a large interactive screen displaying activity cards for residents, such as a game afternoon and help with a drill.",
     },
   },
 ];

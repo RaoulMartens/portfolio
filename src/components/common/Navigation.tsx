@@ -621,7 +621,7 @@ const Navigation: React.FC = () => {
               <motion.img
                 key={isDark ? 'logo-dark' : 'logo-light'}
                 src={logoSrc}
-                alt="Raoul Martens logo"
+                alt="Stylized blue letter R logo."
                 style={{ y: logoY, scale: logoScale, willChange: 'transform' }}
                 initial={{ opacity: 0.9 }}
                 animate={{ opacity: 1 }}

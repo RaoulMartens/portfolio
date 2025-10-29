@@ -191,20 +191,41 @@ const Nieuwsbegrip: React.FC = () => {
           {/* STACKED IMAGES */}
           <div className="np-grid">
             <div className="np-images">
-              {[1, 2, 3, 4, 5, 6].map((num) => (
-                <AnimatedContent key={num} {...imageReveal} delay={num * 0.1}>
-                  <figure className="np-image">
-                    <img
-                      src={`/images/nieuwsbegrip/image-${num}.jpg`}
-                      alt={`Project image ${num}`}
-                      loading="lazy"
-                      decoding="async"
-                    />
+              {[
+                {
+                  src: "/images/nieuwsbegrip/image-1.jpg",
+                  alt: "Laptop mockup showing the redesigned Nieuwsbegrip interface with the ‘Week 17’ lesson overview and navigation menu on the left side.",
+                },
+                {
+                  src: "/images/nieuwsbegrip/image-2.jpg",
+                  alt: "Laptop mockup displaying the redesigned Nieuwsbegrip dashboard with quick access tiles for lessons, digital board, and workflows",
+                },
+                {
+                  src: "/images/nieuwsbegrip/image-3.jpg",
+                  alt: "Two laptops showing the redesigned Nieuwsbegrip student management pages, with class lists and settings for individual learners.",
+                },
+                {
+                  src: "/images/nieuwsbegrip/image-4.jpg",
+                  alt: "Laptop mockup showing the redesigned Nieuwsbegrip archive page with a list of past lessons and filters for strategies and saved materials.",
+                },
+                {
+                  src: "/images/nieuwsbegrip/image-5.jpg",
+                  alt: "Laptop mockup displaying the redesigned Nieuwsbegrip results page with performance graphs showing student test scores over time.",
+                },
+                {
+                  src: "/images/nieuwsbegrip/image-6.jpg",
+                  alt: "Two laptops showing redesigned Nieuwsbegrip pages: one with student test results for a speed test block, and the other with extra lesson materials and quizzes.",
+                },
+              ].map(({ src, alt }, i) => (
+                <AnimatedContent key={i} {...imageReveal} delay={i * 0.1}>
+                  <figure className="np-image" aria-label={alt}>
+                    <img src={src} alt={alt} loading="lazy" decoding="async" />
                   </figure>
                 </AnimatedContent>
               ))}
             </div>
           </div>
+
         </section>
       </main>
 

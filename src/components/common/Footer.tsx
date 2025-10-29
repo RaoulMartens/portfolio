@@ -162,15 +162,20 @@ const Footer: React.FC = () => {
         <div className="footer-main-content">
           <div className="footer-row grid-x align-stretch">
             <div className="cell small-12">
-              {/* Achtergrondbeeld dat zich aanpast aan licht/donker thema. */}
+              {/* Footer image that switches between light and dark theme versions */}
               <img
                 key={isDark ? 'footer-dark' : 'footer-light'}
                 src={footerImgSrc}
-                alt="Footer illustration"
+                alt={
+                  isDark
+                    ? "Sunlight filtering through garden trees at sunset, casting a warm glow over the grass and surrounding plants."
+                    : "A quiet rural path curving through a line of trees beside plowed fields under a bright blue sky with scattered clouds."
+                }
                 className="footer-image"
                 loading="lazy"
               />
             </div>
+
 
             <div className="cell small-12">
               <div className="footer-color-block">
