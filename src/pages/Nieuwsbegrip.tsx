@@ -93,7 +93,7 @@ const Nieuwsbegrip: React.FC = () => {
       >
         <section className="np-container">
           {/* HEADER */}
-          <div className="grid np-grid">
+          <div className="np-grid">
             <div className="np-content">
               <h1 id={headingId} className="np-title">
                 <SplitText
@@ -127,7 +127,7 @@ const Nieuwsbegrip: React.FC = () => {
           </div>
 
           {/* DIVIDER 1 */}
-          <div className="grid np-grid np-divider-wrap">
+          <div className="np-grid np-divider-wrap">
             <div className="np-divider">
               <RuleGrow />
             </div>
@@ -135,7 +135,7 @@ const Nieuwsbegrip: React.FC = () => {
 
           {/* INTRODUCTION */}
           <div className="np-block">
-            <div className="grid np-block-grid">
+            <div className="np-block-grid">
               <div className="np-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Introduction</h5>
@@ -159,7 +159,7 @@ const Nieuwsbegrip: React.FC = () => {
           </div>
 
           {/* DIVIDER 2 */}
-          <div className="grid np-grid">
+          <div className="np-grid">
             <div className="np-divider">
               <RuleGrow />
             </div>
@@ -167,7 +167,7 @@ const Nieuwsbegrip: React.FC = () => {
 
           {/* CONTEXT */}
           <div className="np-block">
-            <div className="grid np-block-grid">
+            <div className="np-block-grid">
               <div className="np-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Context</h5>
@@ -176,7 +176,12 @@ const Nieuwsbegrip: React.FC = () => {
               <div className="np-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    The platform has plenty of great content, but many teachers find it hard to use. They run into issues with navigation, clutter, and a lack of clarity when preparing lessons. Our redesign focused on making things simpler, helping teachers move easily from logging in and choosing texts to planning and assigning lessons, so it fits better into their daily routine.
+                    While the platform is rich in content, many teachers experience friction when
+                    using it—citing difficulty navigating, a cluttered interface, and a lack of
+                    clarity when preparing lessons. Our redesign aimed to reduce this friction by
+                    simplifying the teacher’s journey: from logging in and selecting appropriate
+                    texts to planning and assigning lessons, streamlining the process to better
+                    support their daily workflow.
                   </p>
                 </AnimatedContent>
               </div>
@@ -184,34 +189,22 @@ const Nieuwsbegrip: React.FC = () => {
           </div>
 
           {/* STACKED IMAGES */}
-          <div className="grid np-grid">
-            <div className="grid np-images">
-              {[1, 2, 3, 4, 5, 6].map((num) => {
-                const alts = [
-                  "Laptop mockup showing the redesigned Nieuwsbegrip interface with the ‘Week 17’ lesson overview and navigation menu on the left side.",
-                  "Laptop mockup displaying the redesigned Nieuwsbegrip dashboard with quick access tiles for lessons, digital board, and workflows.",
-                  "Two laptops showing the redesigned Nieuwsbegrip student management pages, with class lists and settings for individual learners.",
-                  "Laptop mockup showing the redesigned Nieuwsbegrip archive page with a list of past lessons and filters for strategies and saved materials.",
-                  "Laptop mockup displaying the redesigned Nieuwsbegrip results page with performance graphs showing student test scores over time.",
-                  "Two laptops showing redesigned Nieuwsbegrip pages: one with student test results for a speed test block, and the other with extra lesson materials and quizzes."
-                ];
-                return (
-                  <AnimatedContent key={num} {...imageReveal} delay={num * 0.1}>
-                    <figure className="np-image">
-                      <img
-                        src={`/images/nieuwsbegrip/image-${num}.jpg`}
-                        alt={alts[num - 1]}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </figure>
-                  </AnimatedContent>
-                );
-              })}
+          <div className="np-grid">
+            <div className="np-images">
+              {[1, 2, 3, 4, 5, 6].map((num) => (
+                <AnimatedContent key={num} {...imageReveal} delay={num * 0.1}>
+                  <figure className="np-image">
+                    <img
+                      src={`/images/nieuwsbegrip/image-${num}.jpg`}
+                      alt={`Project image ${num}`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </figure>
+                </AnimatedContent>
+              ))}
             </div>
           </div>
-
-
         </section>
       </main>
 

@@ -197,7 +197,7 @@ const ProjectInfo: React.FC<ProjectInfoProps> = memo(({ title, meta, link, headi
   }, [inView, playedCta, link, ctaDelay, ctaDuration]);
 
   return (
-    <div className="grid project-header" ref={ref}>
+    <div className="project-header" ref={ref}>
       <div className="project-info">
         <h2 id={headingId} className="project-title">
           {playedTitle ? (
@@ -326,7 +326,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <section className="project-background">
       <div className="grid-container">
-        <div className="grid project-background-row">
+        <div className="grid-x project-background-row">
           <article
             className="project-card cell small-12 medium-10 medium-offset-1 large-8 large-offset-2"
             aria-labelledby={headingId}
@@ -342,7 +342,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   ) : (
                     <img
                       src={imageProps.src}
-                      alt={imageProps.alt || `Image of ${title}`}
+                      alt={imageProps.alt}
                       className="project-image"
                     />
                   )}

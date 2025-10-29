@@ -160,17 +160,13 @@ const Footer: React.FC = () => {
     <footer className="main-footer">
       <div className="footer-container grid-container">
         <div className="footer-main-content">
-          <div className="grid footer-row align-stretch">
+          <div className="footer-row grid-x align-stretch">
             <div className="cell small-12">
               {/* Achtergrondbeeld dat zich aanpast aan licht/donker thema. */}
               <img
-                key={isDark ? "footer-dark" : "footer-light"}
+                key={isDark ? 'footer-dark' : 'footer-light'}
                 src={footerImgSrc}
-                alt={
-                  isDark
-                    ? "Sunlight filtering through garden trees at sunset, casting a warm glow over the grass and surrounding plants."
-                    : "A quiet rural path curving through a line of trees beside plowed fields under a bright blue sky with scattered clouds."
-                }
+                alt="Footer illustration"
                 className="footer-image"
                 loading="lazy"
               />
@@ -184,7 +180,7 @@ const Footer: React.FC = () => {
                   <span className="footer-title-gradient gradient-clip">Work with me.</span>
                 </h3>
 
-                <div className="grid footer-cta">
+                <div className="footer-cta">
                   {/* Mailknop met magneet-effect en klembordfunctie. */}
                   <Magnet
                     padding={30}
@@ -210,7 +206,7 @@ const Footer: React.FC = () => {
                         {emailCopied ? (
                           <img src="/images/confirm.svg" alt="Copied" />
                         ) : (
-                          showCopyIcon && <img src="/images/copy.svg" alt="Minimal gray stylized E-mail address copy icon." />
+                          showCopyIcon && <img src="/images/copy.svg" alt="Copy" />
                         )}
                         <span aria-live="polite" aria-atomic="true">{copyButtonText}</span>
                       </span>
@@ -251,7 +247,7 @@ const Footer: React.FC = () => {
 
         <div className="footer-bottom">
           <div className="footer-brand">
-            <img src="/images/logo-grey.svg" alt="Minimal gray stylized letter R logo." /> Raoul Martens © 2025
+            <img src="/images/logo-grey.svg" alt="Your Logo" /> Raoul Martens © 2025
           </div>
 
           {/* Terug naar boven knop voor toetsenbord- en muisgebruikers. */}
@@ -274,7 +270,7 @@ const Footer: React.FC = () => {
             Terug naar boven
             <img
               src="/images/chevron-top.svg"
-              alt="Minimal gray stylized up-pointing chevron icon."
+              alt=""
               style={{
                 transform: isScrollHovered ? 'translateY(-8px)' : 'translateY(0)',
               }}

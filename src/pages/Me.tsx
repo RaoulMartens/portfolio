@@ -157,7 +157,7 @@ const Me: React.FC = () => {
         tabIndex={-1}
         aria-labelledby={headingId}
       >
-        <div className="grid-container grid me-grid">
+        <div className="grid-container me-grid">
           {/* Titel met dezelfde groottes als de Hero maar links uitgelijnd. */}
           <div className="me-title-col">
             <h1
@@ -187,7 +187,7 @@ const Me: React.FC = () => {
           {/* Image */}
           <div className="me-image-col">
             <AnimatedContent {...heroImgAnim}>
-              <img className="me-image" src="/images/me/me.jpg" alt="Raoul Martens standing and smiling on a bridge between two modern buildings, with a geometric green-covered high-rise in the background under a partly cloudy sky." />
+              <img className="me-image" src="/images/me/me.jpg" alt="Raoul Martens" />
             </AnimatedContent>
           </div>
 
@@ -195,7 +195,10 @@ const Me: React.FC = () => {
           <div className="me-body-col">
             <AnimatedContent {...heroBodyAnim}>
               <p className="me-body">
-                Since then, I’ve built my approach around design thinking, observing, reframing, prototyping and testing until the real problem becomes clear. Every project starts with listening and understanding people, their behaviours, emotions and motivations, before touching any pixels. From there I move quickly through sketches, wireframes and clickable prototypes, because ideas only matter once they connect with real users.
+                Since then I’ve centred my practice on design thinking: observing, reframing, prototyping and
+                testing until the problem is unmistakably clear. I begin every project by listening: mapping
+                behaviours, emotions instead of jumping straight to pixels. From there I iterate fast—sketch,
+                wireframe, clickable proof. Because ideas earn their keep only when real users respond to them.
               </p>
             </AnimatedContent>
           </div>
@@ -229,7 +232,7 @@ const Me: React.FC = () => {
 
           {/* Process Cards */}
           <div
-            className="grid me-cards-wrap"
+            className="me-cards-wrap"
             aria-label="Design process steps (grid on tablet & stacked on mobile)"
           >
             {[
@@ -275,24 +278,24 @@ const Me: React.FC = () => {
           </div>
 
           {/* Favorites Cards */}
-          <div className="grid me-favorites-cards">
+          <div className="me-favorites-cards">
             {[
               {
                 title: "Football’s rhythm",
                 body:
-                  "I grew up with a ball at my feet, and football still helps me switch off for a while. The strategy, the teamwork, the quick choices in the moment remind me why I enjoy solving problems, just without a screen in front of me.",
+                  "I grew up with a ball at my feet, and the sport still resets my head. Strategy, teamwork, split-second decisions, exactly the muscles I use in product design, just covered in grass stains and echoing with last-minute cheers.",
                 iconClass: "mask-football",
               },
               {
                 title: "Curious making",
                 body:
-                  "I like starting from nothing and building something people can feel. Turning half-formed ideas into visuals others can react to, whether it’s a small interaction in an app or a poster that ends up on someone’s wall.",
+                  "Give me a blank canvas, Figma frame, Blender scene and I’ll fill it. I love turning half formed ideas into visuals people can react to, whether that’s a micro interaction in an app or a poster that lives on a bedroom wall.",
                 iconClass: "mask-hammer",
               },
               {
                 title: "Stories on screen",
                 body:
-                  "I’ve always been hooked on films and story-driven games. I’m the kind of person who pauses and rewinds just to see how a scene works, the pacing, the colour, the sound. It keeps me curious about how stories are built.",
+                  "Films and narrative driven games fascinate me. I pause, rewind, dissect pacing, colour and sound design the way some people study code. It keeps my sense of storytelling sharp.",
                 iconClass: "mask-macbook",
               },
               {

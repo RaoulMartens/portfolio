@@ -124,7 +124,7 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
   }, []);
 
   // Placeholder voor eventuele vervolgacties wanneer de SplitText klaar is.
-  const handleAnimationComplete = () => {};
+  const handleAnimationComplete = () => { };
 
   // Basisconfig voor fade-up animaties zodat alles hetzelfde tempo volgt.
   const fadeUp = {
@@ -168,9 +168,9 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
         {/* ---------------- Desktop ---------------- */}
         {bp === 'desktop' && (
           <div className="hero-desktop-layout">
-            <div className="grid hero-grid">
+            <div className="hero-grid">
               <div className="hero-title-row">
-                <div className="grid hero-title-wrapper">
+                <div className="hero-title-wrapper">
                   <div className="hero-desktop-title-container">
                     <h1 id={headingId} className="page-title hero-title">
                       {/* SplitText animeren de woorden zodat de intro rustig leesbaar binnenkomt. */}
@@ -213,7 +213,7 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
                     <Magnet padding={50} magnetStrength={9}>
                       <img
                         src="/images/hero-image.jpg"
-                        alt="Raoul Martens sitting outside at a café, wearing a light cap and dark shirt, smiling at the camera."
+                        alt="Hero image"
                         className="hero-image hero-image--desktop"
                       />
                     </Magnet>

@@ -99,7 +99,7 @@ const HalloBuur2: React.FC = () => {
       >
         <section className="hb2-container">
           {/* HEADER */}
-          <div className="grid hb2-grid">
+          <div className="hb2-grid">
             <div className="hb2-content">
               <h1 id={headingId} className="hb2-title">
                 <SplitText
@@ -135,7 +135,7 @@ const HalloBuur2: React.FC = () => {
                   <img
                     className="hb2-hero-img"
                     src="/images/hallo-buur2/hero.jpg"
-                    alt="Group of elderly residents sitting together at a community table having coffee and conversation, with handwritten observation notes visible in the foreground."
+                    alt="Hallo Buur 2 — hero"
                     decoding="async"
                     loading="eager"
                     fetchPriority="high"
@@ -147,7 +147,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT BLOCK #1 */}
           <div className="hb2-block">
-            <div className="grid hb2-block-grid">
+            <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Introduction</h5>
@@ -167,13 +167,13 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH IMAGE #1 */}
-          <div className="grid hb2-grid">
+          <div className="hb2-grid">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-1.jpg"
-                  alt="Simple black-and-white illustration of a frowning man with text above him that reads ‘This is all pointless, those people won’t show up anyway."
+                  alt="Hallo Buur 2 — board overview"
                 />
               </AnimatedContent>
             </div>
@@ -181,7 +181,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT BLOCK #2 */}
           <div className="hb2-block">
-            <div className="grid hb2-block-grid">
+            <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Context</h5>
@@ -203,7 +203,7 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* DIVIDER — grow left → right */}
-          <div className="grid hb2-grid">
+          <div className="hb2-grid">
             <div className="hb2-divider">
               <RuleGrow />
             </div>
@@ -211,7 +211,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TITLE + TWO CARDS */}
           <div className="hb2-block hb2-title-only">
-            <div className="grid hb2-block-grid">
+            <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Why a Co-Creation?</h5>
@@ -220,8 +220,8 @@ const HalloBuur2: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid hb2-grid">
-            <div className="grid hb2-cards-right">
+          <div className="hb2-grid">
+            <div className="hb2-cards-right">
               {[
                 {
                   title: "Needs and desires",
@@ -250,7 +250,7 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* DIVIDER — grow left → right */}
-          <div className="grid hb2-grid">
+          <div className="hb2-grid">
             <div className="hb2-divider">
               <RuleGrow />
             </div>
@@ -258,7 +258,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT BLOCK #3 */}
           <div className="hb2-block">
-            <div className="grid hb2-block-grid">
+            <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>The Co-Creation</h5>
@@ -280,13 +280,13 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH IMAGE #2 */}
-          <div className="grid hb2-grid">
+          <div className="hb2-grid">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-2.jpg"
-                  alt="Alt text: “Two groups of colorful sticky notes labeled ‘Why not?’ and ‘Why yes?’ showing reasons for and against participating in community coffee gatherings. The pink notes list negative reasons like ‘They don’t feel like it’ and ‘The coffee is too expensive,’ while the blue notes list positive ones like ‘We still find drinking coffee enjoyable’ and ‘Contact must remain for everyone."
+                  alt="Hallo Buur 2 — posting flow"
                 />
               </AnimatedContent>
             </div>
@@ -294,7 +294,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT (no title) #4 */}
           <div className="hb2-block">
-            <div className="grid hb2-block-grid">
+            <div className="hb2-block-grid">
               <div className="hb2-block-text">
                 <AnimatedContent {...textReveal}>
                   <p>
@@ -313,13 +313,13 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH IMAGE #3 (hairline fix via CSS) */}
-          <div className="grid hb2-grid">
+          <div className="hb2-grid">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image hb2-image--hairline-fix"
                   src="/images/hallo-buur2/wide-3.jpg"
-                  alt="Black-and-white illustration of a man with a slight smile looking upward, with handwritten text above him that reads: ‘On the 3rd and 5th floors, everyone knows each other, it’s really cozy there."
+                  alt="Hallo Buur 2 — sorting and filters"
                 />
               </AnimatedContent>
             </div>
@@ -327,7 +327,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT (no title) #5 */}
           <div className="hb2-block">
-            <div className="grid hb2-block-grid">
+            <div className="hb2-block-grid">
               <div className="hb2-block-text">
                 <AnimatedContent {...textReveal}>
                   <p>
@@ -342,13 +342,13 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH IMAGE #4 */}
-          <div className="grid hb2-grid">
+          <div className="hb2-grid">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-4.jpg"
-                  alt="Illustration of an apartment building surrounded by icons and short phrases representing things residents appreciate about their community, such as ‘Music is part of it,’ ‘Well-maintained garden,’ ‘Being together is cozy,’ ‘Bingo,’ and ‘Beautiful walking area.’ The image highlights positive aspects of shared living like social events, greenery, and nearby facilities."
+                  alt="Hallo Buur 2 — responses and confirmations"
                 />
               </AnimatedContent>
             </div>
@@ -356,7 +356,7 @@ const HalloBuur2: React.FC = () => {
 
           {/* TEXT BLOCK #6 */}
           <div className="hb2-block">
-            <div className="grid hb2-block-grid">
+            <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Result</h5>
@@ -376,13 +376,13 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH IMAGE #5 — bottom gap to match other pages */}
-          <div className="grid hb2-grid hb2-bottom-gap">
+          <div className="hb2-grid hb2-bottom-gap">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-5.jpg"
-                  alt="A colorful poster titled ‘De Aubade Waardeplaat’ hanging on a beige wall near an elevator. The poster visualizes what residents value about their building, featuring icons and categories such as ‘Activiteiten,’ ‘Sociaal,’ ‘Feesten,’ ‘Voorzieningen,’ and ‘Omgeving.’ Illustrations show themes like bingo, coffee gatherings, helping each other, greenery, and local shops."
+                  alt="Hallo Buur 2 — accessible patterns"
                 />
               </AnimatedContent>
             </div>

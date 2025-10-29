@@ -135,7 +135,7 @@ const MENU_BG = 'var(--surface-action, #0080FF)';
 const MENU_TEXT = 'var(--text-on-action, #FFF)';
 
 const MENU_ID_DESKTOP = 'primary-navigation-desktop';
-const MENU_ID_MOBILE  = 'primary-navigation-mobile';
+const MENU_ID_MOBILE = 'primary-navigation-mobile';
 
 /* ---------- Hook: bekijk of we onder de mobiele breakpoint zitten ---------- */
 function useIsMobile(breakpoint = 768) {
@@ -178,7 +178,7 @@ const Navigation: React.FC = () => {
   const location = useLocation();
 
   // Timers voor animaties zodat we ze kunnen opruimen (scheidt logica van UI → 6.1).
-  const timeoutsRef   = useRef<number[]>([]);
+  const timeoutsRef = useRef<number[]>([]);
   const isHoveringRef = useRef(false);
 
   const clearAllTimeouts = useCallback(() => {
@@ -418,8 +418,8 @@ const Navigation: React.FC = () => {
 
   /* Logo parallax */
   // Kleine parallaxbeweging op het logo om scroll-feedback te geven.
-  const { scrollY }  = useScroll();
-  const logoYRaw     = useTransform(scrollY, [0, 160], [0, -80]);
+  const { scrollY } = useScroll();
+  const logoYRaw = useTransform(scrollY, [0, 160], [0, -80]);
   const logoScaleRaw = useTransform(scrollY, [0, 120], [1, 0.97]);
   const logoY = useSpring(logoYRaw, { stiffness: 140, damping: 22, mass: 0.4 });
   const logoScale = useSpring(logoScaleRaw, { stiffness: 140, damping: 22, mass: 0.4 });
@@ -435,8 +435,8 @@ const Navigation: React.FC = () => {
   const desktopOpenW = Math.round(11.0625 * 16);
 
   // Breedte van de menuschil volgt de staat; visuele laag vult de ruimte op.
-  const menuShellW  = (mobileMode ? MOBILE_WH : (isMenuOpen ? desktopOpenW : desktopClosedW));
-  const menuShellH  = TARGET_H;
+  const menuShellW = (mobileMode ? MOBILE_WH : (isMenuOpen ? desktopOpenW : desktopClosedW));
+  const menuShellH = TARGET_H;
   const menuVisualW: string | number = '100%';
 
   /* Toggle sizes */
@@ -494,7 +494,7 @@ const Navigation: React.FC = () => {
         aria-label="Site navigation"
       >
         <div className="grid-container">
-          <div className="grid navbar-grid">
+          <div className="navbar-grid">
             {/* MENU / BACK + PANEL WRAPPER */}
             <motion.div
               key={`menu-anchor-${mobileMode ? 'm' : 'd'}`}
@@ -525,14 +525,14 @@ const Navigation: React.FC = () => {
                 >
                   {!mobileMode && <motion.span className="menu-label" initial={false}>{menuButtonLabel}</motion.span>}
 
-                  <div className={`grid menu-icon-box ${mobileMode ? 'is-mobile' : ''}`}>
+                  <div className={`menu-icon-box ${mobileMode ? 'is-mobile' : ''}`}>
                     {backMode ? (
                       <img src="/images/chevron-left.svg" alt="" className="menu-icon-img" />
                     ) : (
                       <>
                         <motion.img
                           src="/images/menu.svg"
-                          alt="Close menu"
+                          alt=""
                           className="menu-icon-img"
                           initial={false}
                           animate={isMenuOpen ? { opacity: 0, rotate: 90, scale: 0 } : { opacity: 1, rotate: 0, scale: 1 }}
@@ -540,7 +540,7 @@ const Navigation: React.FC = () => {
                         />
                         <motion.img
                           src="/images/menu-open.svg"
-                          alt="Open menu"
+                          alt=""
                           className="menu-icon-img"
                           initial={false}
                           animate={isMenuOpen ? { opacity: 1, rotate: 0, scale: 1 } : { opacity: 0, rotate: 90, scale: 0 }}
@@ -604,7 +604,7 @@ const Navigation: React.FC = () => {
                                 />
                               </motion.div>
                               <motion.span className="menu-text" initial={false}>
-                                <img src={item.icon} alt={item.label} /> {item.label}
+                                <img src={item.icon} alt="" /> {item.label}
                               </motion.span>
                             </a>
                           </motion.li>
@@ -621,7 +621,7 @@ const Navigation: React.FC = () => {
               <motion.img
                 key={isDark ? 'logo-dark' : 'logo-light'}
                 src={logoSrc}
-                alt="“Stylized blue letter R logo."
+                alt="Raoul Martens logo"
                 style={{ y: logoY, scale: logoScale, willChange: 'transform' }}
                 initial={{ opacity: 0.9 }}
                 animate={{ opacity: 1 }}
@@ -642,11 +642,11 @@ const Navigation: React.FC = () => {
               >
                 <motion.div className="switch-visual" animate={{ width: switchVisualW }} transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}>
                   {mobileMode ? (
-                    <div className="grid switch-mobile-face">
+                    <div className="switch-mobile-face">
                       <div className="switch-flip-24">
                         <motion.div initial={false} animate={{ rotateY: isDark ? 0 : 180 }} transition={{ type: 'tween', duration: 0.42, ease: [0.22, 1, 0.36, 1] }} className="flip-3d">
-                          <img src="/images/moon.svg" alt="Dark mode" className="flip-face front" />
-                          <img src="/images/sun.svg" alt="Light mode" className="flip-face back" />
+                          <img src="/images/moon.svg" alt="" className="flip-face front" />
+                          <img src="/images/sun.svg" alt="" className="flip-face back" />
                         </motion.div>
                       </div>
                     </div>
@@ -655,8 +655,8 @@ const Navigation: React.FC = () => {
                       <motion.div className="switch-fill" style={{ left: fillLeftPx }}>
                         <div className="switch-fill-center">
                           <motion.div initial={false} className="flip-3d" style={{ rotateY }} transition={{ type: 'tween', duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-                            <img src="/images/moon.svg" alt="Dark mode" className="flip-face front" />
-                            <img src="/images/sun.svg" alt="Light mode" className="flip-face back" />
+                            <img src="/images/moon.svg" alt="" className="flip-face front" />
+                            <img src="/images/sun.svg" alt="" className="flip-face back" />
                           </motion.div>
                         </div>
                       </motion.div>
@@ -695,16 +695,16 @@ const Navigation: React.FC = () => {
                 {/* CLOSE */}
                 <motion.button
                   aria-label="Close menu"
-                  className="grid mobile-close"
+                  className="mobile-close"
                   onClick={() => { setIsClosingIcon(true); addTimeout(() => { setIsMenuOpen(false); setBgReady(false); setIsClosingIcon(false); }, 280); }}
                 >
                   <motion.div className="mobile-close-anim" style={{ x: menuX, y: menuY }}>
-                    <motion.img src="/images/menu.svg" alt="Open menu" className="mobile-close-img"
+                    <motion.img src="/images/menu.svg" alt="" className="mobile-close-img"
                       initial={{ opacity: 1, rotate: 0, scale: 1 }}
                       animate={{ opacity: isClosingIcon ? 1 : 0, rotate: isClosingIcon ? 0 : 90, scale: isClosingIcon ? 1 : 0 }}
                       transition={{ duration: 0.28, ease: 'easeInOut', opacity: { duration: 0.18 } }}
                     />
-                    <motion.img src="/images/close.svg" alt="Close menu" className="mobile-close-img"
+                    <motion.img src="/images/close.svg" alt="" className="mobile-close-img"
                       initial={{ opacity: 0, rotate: -90, scale: 0.95 }}
                       animate={{ opacity: isClosingIcon ? 0 : 1, rotate: isClosingIcon ? -90 : 0, scale: isClosingIcon ? 0.95 : 1 }}
                       transition={{ duration: 0.28, ease: 'easeInOut', opacity: { duration: 0.18, delay: isClosingIcon ? 0 : 0.05 } }}
@@ -715,7 +715,7 @@ const Navigation: React.FC = () => {
                 {/* PANEL */}
                 <motion.div key="mobile-panel" className="mobile-panel" variants={mobilePanelVariants} initial="hidden" animate="visible" exit="exit">
                   <div className="grid-container mobile-panel-inner">
-                    <div className="grid mobile-panel-scroll">
+                    <div className="grid-x mobile-panel-scroll">
                       <div className="cell small-12">
                         <nav id={MENU_ID_MOBILE} className="mobile-panel-nav" aria-label="Primary">
                           <ul className="mobile-list">
@@ -739,13 +739,13 @@ const Navigation: React.FC = () => {
                                     onMouseLeave={() => setHoveredItem(null)}
                                     aria-current={item.active ? 'page' : undefined}
                                   >
-                                    <img src={item.icon} alt={item.label} className="mobile-icon" />
+                                    <img src={item.icon} alt="" className="mobile-icon" />
                                     <h3 className="mobile-label">{item.label}</h3>
                                     <span className="mobile-dot-wrap">
                                       {/* theme-aware hover dot on mobile */}
                                       <motion.img
                                         src={hoverDotSrcMobile}
-                                        alt={`Hover dot for ${item.label}`}
+                                        alt=""
                                         className="mobile-dot"
                                         initial={false}
                                         animate={{ opacity: showHoverDot ? 1 : 0 }}
@@ -753,7 +753,7 @@ const Navigation: React.FC = () => {
                                       />
                                       <motion.img
                                         src={activeDotSrc}
-                                        alt={`Active dot for ${item.label}`}
+                                        alt=""
                                         className="mobile-dot"
                                         initial={false}
                                         animate={{ opacity: item.active ? 1 : 0, rotate: item.active ? 0 : -90, scale: item.active ? 1 : 0.95 }}

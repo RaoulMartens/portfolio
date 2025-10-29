@@ -92,7 +92,7 @@ const PECZwolle: React.FC = () => {
       >
         <section className="pz-container">
           {/* HEADER */}
-          <div className="grid pz-grid">
+          <div className="pz-grid">
             <div className="pz-content">
               <h1 id={headingId} className="pz-title">
                 <SplitText
@@ -126,7 +126,7 @@ const PECZwolle: React.FC = () => {
           </div>
 
           {/* DIVIDER — grow left → right */}
-          <div className="grid pz-grid pz-divider-wrap">
+          <div className="pz-grid pz-divider-wrap">
             <div className="pz-divider">
               <RuleGrow />
             </div>
@@ -134,7 +134,7 @@ const PECZwolle: React.FC = () => {
 
           {/* TEXT BLOCK 1 */}
           <div className="pz-block">
-            <div className="grid pz-block-grid">
+            <div className="pz-block-grid">
               <div className="pz-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Matchdays</h5>
@@ -153,20 +153,15 @@ const PECZwolle: React.FC = () => {
           </div>
 
           {/* 2x2 PORTRAIT GRID (4/5) */}
-          <div className="grid pz-grid">
+          <div className="pz-grid">
             <div className="pz-images-2x2">
-              <div className="grid pz-2x2">
-                {[
-                  { src: '/images/pec-zwolle/vert-1.jpg', alt: 'A young person lies on a bed in a dimly lit room decorated in PEC Zwolle colors, gazing at a wall covered with football photos and posters, with a view of a stadium visible through the window at dusk.' },
-                  { src: '/images/pec-zwolle/vert-2.jpg', alt: 'Four PEC Zwolle players decorate a glowing Christmas tree in the middle of a football stadium at night, with the moon and a starry sky above them.' },
-                  { src: '/images/pec-zwolle/vert-3.jpg', alt: 'Four PEC Zwolle players ride a roller coaster shaped like a fierce wolf soaring through the sky past a tall clock tower, under a dramatic twilight sky with the moon in the distance.' },
-                  { src: '/images/pec-zwolle/vert-4.jpg', alt: 'Two PEC Zwolle players lean over the barrier of the stadium, celebrating with a crowd of cheering fans waving blue and white flags and scarves in a sea of team colors.' },
-                ].map((img, n) => (
-                  <AnimatedContent key={n} {...imageReveal} delay={(n + 1) * 0.08}>
-                    <figure className="pz-img-vert" aria-label={img.alt}>
+              <div className="pz-2x2">
+                {[1, 2, 3, 4].map((n) => (
+                  <AnimatedContent key={n} {...imageReveal} delay={n * 0.08}>
+                    <figure className="pz-img-vert" aria-label={`Portrait ${n}`}>
                       <img
-                        src={img.src}
-                        alt={img.alt}
+                        src={`/images/pec-zwolle/vert-${n}.jpg`}
+                        alt={`PEC Zwolle portrait ${n}`}
                         loading="lazy"
                         decoding="async"
                       />
@@ -177,10 +172,8 @@ const PECZwolle: React.FC = () => {
             </div>
           </div>
 
-
-
           {/* DIVIDER — grow left → right */}
-          <div className="grid pz-grid">
+          <div className="pz-grid">
             <div className="pz-divider">
               <RuleGrow />
             </div>
@@ -188,7 +181,7 @@ const PECZwolle: React.FC = () => {
 
           {/* TEXT BLOCK 2 */}
           <div className="pz-block">
-            <div className="grid pz-block-grid">
+            <div className="pz-block-grid">
               <div className="pz-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Ticket Campaign</h5>
@@ -206,9 +199,9 @@ const PECZwolle: React.FC = () => {
           </div>
 
           {/* MOSAIC GRID: 1 TALL LEFT (portrait), 2 HORIZONTAL RIGHT */}
-          <div className="grid pz-grid">
+          <div className="pz-grid">
             <div className="pz-mosaic">
-              <div className="grid pz-mosaic-grid">
+              <div className="pz-mosaic-grid">
                 {/* Left tall portrait */}
                 <AnimatedContent {...imageReveal}>
                   <figure className="pz-mosaic-left" aria-label="Tall portrait">
@@ -222,41 +215,32 @@ const PECZwolle: React.FC = () => {
                 </AnimatedContent>
 
                 {/* Right stacked horizontals */}
-                <div className="grid pz-mosaic-right">
-                  {[1, 2].map((i) => {
-                    const alts = [
-                      "Screenshot of PEC Zwolle’s season ticket page showing two fans facing a wall of match photos with the text ‘De mooiste club van allemaal’ and buttons to choose season tickets for different age groups.",
-                      "Screenshot of PEC Zwolle’s news section showing three updates: the season ticket campaign launch, a match summary against Telstar, and a photo from the Almere City FC match."
-                    ];
-                    return (
-                      <AnimatedContent key={i} {...imageReveal} delay={i * 0.08}>
-                        <figure className="pz-img-horz">
-                          <img
-                            src={`/images/pec-zwolle/horz-${i}.jpg`}
-                            alt={alts[i - 1]}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        </figure>
-                      </AnimatedContent>
-                    );
-                  })}
+                <div className="pz-mosaic-right">
+                  {[1, 2].map((i) => (
+                    <AnimatedContent key={i} {...imageReveal} delay={i * 0.08}>
+                      <figure className="pz-img-horz" aria-label={`Horizontal ${i}`}>
+                        <img
+                          src={`/images/pec-zwolle/horz-${i}.jpg`}
+                          alt={`PEC Zwolle horizontal ${i}`}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </figure>
+                    </AnimatedContent>
+                  ))}
                 </div>
-
-
-
               </div>
             </div>
           </div>
 
           {/* FULL-WIDTH HORIZONTAL IMAGE */}
-          <div className="grid pz-grid">
+          <div className="pz-grid">
             <div className="pz-wide">
               <AnimatedContent {...imageReveal}>
                 <figure className="pz-wide-figure" aria-label="Full width horizontal">
                   <img
                     src="/images/pec-zwolle/wide-1.jpg"
-                    alt="A street view near a historic city gate shows a bus stop poster featuring two football fans, an adult and a child, looking toward a brightly lit stadium scene filled with team colors and supporters."
+                    alt="PEC Zwolle full-width visual"
                     loading="lazy"
                     decoding="async"
                   />
