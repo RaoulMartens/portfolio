@@ -144,13 +144,13 @@ const Nieuwsbegrip: React.FC = () => {
               <div className="np-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    How can we make teaching easier in an already demanding classroom environment? 
-                    That was the question my team and I set out to answer when we were challenged 
-                    to redesign Nieuwsbegrip. A widely used platform that helps teachers improve 
-                    students’ reading comprehension through weekly news-based lessons. Working in 
-                    a multidisciplinary team of five, we applied the IDEO design thinking process 
-                    to develop a renewed concept specifically tailored to teachers. Through multiple 
-                    iterations, co-creative sessions, and user testing with educators, we created a 
+                    How can we make teaching easier in an already demanding classroom environment?
+                    That was the question my team and I set out to answer when we were challenged
+                    to redesign Nieuwsbegrip. A widely used platform that helps teachers improve
+                    students’ reading comprehension through weekly news-based lessons. Working in
+                    a multidisciplinary team of five, we applied the IDEO design thinking process
+                    to develop a renewed concept specifically tailored to teachers. Through multiple
+                    iterations, co-creative sessions, and user testing with educators, we created a
                     more intuitive and efficient experience that helps teachers focus on what they do best: teaching.
                   </p>
                 </AnimatedContent>
@@ -176,12 +176,7 @@ const Nieuwsbegrip: React.FC = () => {
               <div className="np-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    While the platform is rich in content, many teachers experience friction when 
-                    using it—citing difficulty navigating, a cluttered interface, and a lack of 
-                    clarity when preparing lessons. Our redesign aimed to reduce this friction by 
-                    simplifying the teacher’s journey: from logging in and selecting appropriate 
-                    texts to planning and assigning lessons, streamlining the process to better 
-                    support their daily workflow.
+                    The platform has plenty of great content, but many teachers find it hard to use. They run into issues with navigation, clutter, and a lack of clarity when preparing lessons. Our redesign focused on making things simpler, helping teachers move easily from logging in and choosing texts to planning and assigning lessons, so it fits better into their daily routine.
                   </p>
                 </AnimatedContent>
               </div>
@@ -191,12 +186,19 @@ const Nieuwsbegrip: React.FC = () => {
           {/* STACKED IMAGES */}
           <div className="np-grid">
             <div className="np-images">
-              {[1, 2, 3, 4, 5, 6].map((num) => (
+              {[
+                { num: 1, alt: "Laptop mockup showing the redesigned Nieuwsbegrip interface with the ‘Week 17’ lesson overview and navigation menu on the left side." },
+                { num: 2, alt: "Laptop mockup displaying the redesigned Nieuwsbegrip dashboard with quick access tiles for lessons, digital board, and workflows." },
+                { num: 3, alt: "Two laptops showing the redesigned Nieuwsbegrip student management pages, with class lists and settings for individual learners." },
+                { num: 4, alt: "Laptop mockup showing the redesigned Nieuwsbegrip archive page with a list of past lessons and filters for strategies and saved materials." },
+                { num: 5, alt: "Laptop mockup displaying the redesigned Nieuwsbegrip results page with performance graphs showing student test scores over time." },
+                { num: 6, alt: "Two laptops showing redesigned Nieuwsbegrip pages: one with student test results for a speed test block, and the other with extra lesson materials and quizzes." },
+              ].map(({ num, alt }) => (
                 <AnimatedContent key={num} {...imageReveal} delay={num * 0.1}>
                   <figure className="np-image">
                     <img
                       src={`/images/nieuwsbegrip/image-${num}.jpg`}
-                      alt={`Project image ${num}`}
+                      alt={alt}
                       loading="lazy"
                       decoding="async"
                     />
@@ -205,6 +207,7 @@ const Nieuwsbegrip: React.FC = () => {
               ))}
             </div>
           </div>
+
         </section>
       </main>
 

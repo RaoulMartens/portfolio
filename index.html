@@ -1,116 +1,89 @@
 <!doctype html>
 <html lang="en" class="light">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
 
-    <!-- ========= Site Title ========= -->
-    <title>Raoul Martens | Designer</title>
-    <meta name="description" content="Portfolio of Raoul Martens" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-    <!-- Force light mode (color-scheme for UI chrome) -->
-    <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#ECECEC" />
+  <!-- ========= Site Title ========= -->
+  <title>Raoul Martens | UX & Product Designer</title>
+  <meta name="description" content="Portfolio of Raoul Martens" />
 
-    <!-- Favicons (use %BASE_URL% so it works under subpaths in Vite) -->
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="96x96"
-      href="%BASE_URL%images/favicon/favicon-96x96.png"
-    />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="%BASE_URL%images/favicon/favicon.svg"
-    />
-    <link
-      rel="shortcut icon"
-      href="%BASE_URL%images/favicon/favicon.ico"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="%BASE_URL%images/favicon/apple-touch-icon.png"
-    />
-    <meta name="apple-mobile-web-app-title" content="Raoul" />
+  <!-- Force light mode (color-scheme for UI chrome) -->
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#ECECEC" />
 
-    <!-- ======== Fonts (Google) ======== -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <!-- General Sans is loaded locally via @font-face in index.css -->
+  <!-- Favicons (use %BASE_URL% so it works under subpaths in Vite) -->
+  <link rel="icon" type="image/png" sizes="96x96" href="%BASE_URL%images/favicon/favicon-96x96.png" />
+  <link rel="icon" type="image/svg+xml" href="%BASE_URL%images/favicon/favicon.svg" />
+  <link rel="shortcut icon" href="%BASE_URL%images/favicon/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="%BASE_URL%images/favicon/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Raoul" />
 
-    <!-- ======== External libraries ======== -->
-    <!-- GSAP (non-blocking) -->
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
-    ></script>
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
-    ></script>
+  <!-- ======== Fonts (Google) ======== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+  <!-- General Sans is loaded locally via @font-face in index.css -->
 
-    <!-- dotLottie web component -->
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/@dotlottie/player-component@latest/dist/dotlottie-player.js"
-    ></script>
+  <!-- ======== External libraries ======== -->
+  <!-- GSAP (non-blocking) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-    <!-- ======== Persistent theme bootstrap (force LIGHT) ======== -->
-    <script>
-      (function () {
-        var STORAGE_KEY = "theme";
+  <!-- dotLottie web component -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@dotlottie/player-component@latest/dist/dotlottie-player.js"></script>
 
-        function applyLight() {
-          var root = document.documentElement;
-          var body = document.body;
-          root.classList.add("light");
-          root.classList.remove("dark");
-          body.classList.add("light");
-          body.classList.remove("dark");
-          root.style.colorScheme = "light";
-          try {
-            window.dispatchEvent(new CustomEvent("themechange", { detail: { mode: "light" } }));
-          } catch (_) {}
+  <!-- ======== Persistent theme bootstrap (force LIGHT) ======== -->
+  <script>
+    (function () {
+      var STORAGE_KEY = "theme";
+
+      function applyLight() {
+        var root = document.documentElement;
+        var body = document.body;
+        root.classList.add("light");
+        root.classList.remove("dark");
+        body.classList.add("light");
+        body.classList.remove("dark");
+        root.style.colorScheme = "light";
+        try {
+          window.dispatchEvent(new CustomEvent("themechange", { detail: { mode: "light" } }));
+        } catch (_) { }
+      }
+
+      // Always start light, overwrite storage
+      applyLight();
+      try { localStorage.setItem(STORAGE_KEY, "light"); } catch (_) { }
+
+      // Expose global setter if you want to toggle later
+      window.__setTheme = function (choice) {
+        if (choice === "dark") {
+          document.documentElement.classList.add("dark");
+          document.documentElement.classList.remove("light");
+          document.body.classList.add("dark");
+          document.body.classList.remove("light");
+          document.documentElement.style.colorScheme = "dark";
+          try { localStorage.setItem(STORAGE_KEY, "dark"); } catch (_) { }
+          try { window.dispatchEvent(new CustomEvent("themechange", { detail: { mode: "dark" } })); } catch (_) { }
+        } else {
+          applyLight();
+          try { localStorage.setItem(STORAGE_KEY, "light"); } catch (_) { }
         }
+      };
+    })();
+  </script>
+  <!-- =============================================================== -->
+</head>
 
-        // Always start light, overwrite storage
-        applyLight();
-        try { localStorage.setItem(STORAGE_KEY, "light"); } catch (_) {}
+<body>
+  <div id="root"></div>
 
-        // Expose global setter if you want to toggle later
-        window.__setTheme = function (choice) {
-          if (choice === "dark") {
-            document.documentElement.classList.add("dark");
-            document.documentElement.classList.remove("light");
-            document.body.classList.add("dark");
-            document.body.classList.remove("light");
-            document.documentElement.style.colorScheme = "dark";
-            try { localStorage.setItem(STORAGE_KEY, "dark"); } catch (_) {}
-            try { window.dispatchEvent(new CustomEvent("themechange", { detail: { mode: "dark" } })); } catch (_) {}
-          } else {
-            applyLight();
-            try { localStorage.setItem(STORAGE_KEY, "light"); } catch (_) {}
-          }
-        };
-      })();
-    </script>
-    <!-- =============================================================== -->
-  </head>
-  <body>
-    <div id="root"></div>
+  <!-- Vite entry -->
+  <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Vite entry -->
-    <script type="module" src="/src/main.tsx"></script>
+  <noscript>Please enable JavaScript to view this website.</noscript>
+</body>
 
-    <noscript>Please enable JavaScript to view this website.</noscript>
-  </body>
 </html>

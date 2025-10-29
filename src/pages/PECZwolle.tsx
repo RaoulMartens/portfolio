@@ -156,12 +156,29 @@ const PECZwolle: React.FC = () => {
           <div className="pz-grid">
             <div className="pz-images-2x2">
               <div className="pz-2x2">
-                {[1, 2, 3, 4].map((n) => (
-                  <AnimatedContent key={n} {...imageReveal} delay={n * 0.08}>
-                    <figure className="pz-img-vert" aria-label={`Portrait ${n}`}>
+                {[
+                  {
+                    src: "/images/pec-zwolle/vert-1.jpg",
+                    alt: "“A boy lies on his bed in a dimly lit room decorated with PEC Zwolle posters, dreaming while looking at photos of football players and matches on the wall.",
+                  },
+                  {
+                    src: "/images/pec-zwolle/vert-2.jpg",
+                    alt: "Four PEC Zwolle players decorate a glowing Christmas tree on the football field under a starry night sky with a full moon.",
+                  },
+                  {
+                    src: "/images/pec-zwolle/vert-3.jpg",
+                    alt: "PEC Zwolle players ride a roller coaster shaped like a fierce wolf high above the city, passing a tall clock tower under a dramatic sky.",
+                  },
+                  {
+                    src: "/images/pec-zwolle/vert-4.jpg",
+                    alt: "Two PEC Zwolle players stand on the barrier facing a crowd of cheering fans waving blue and white flags and scarves in the stadium.",
+                  },
+                ].map((img, i) => (
+                  <AnimatedContent key={i} {...imageReveal} delay={i * 0.08}>
+                    <figure className="pz-img-vert">
                       <img
-                        src={`/images/pec-zwolle/vert-${n}.jpg`}
-                        alt={`PEC Zwolle portrait ${n}`}
+                        src={img.src}
+                        alt={img.alt}
                         loading="lazy"
                         decoding="async"
                       />
@@ -171,6 +188,7 @@ const PECZwolle: React.FC = () => {
               </div>
             </div>
           </div>
+
 
           {/* DIVIDER — grow left → right */}
           <div className="pz-grid">
@@ -216,12 +234,21 @@ const PECZwolle: React.FC = () => {
 
                 {/* Right stacked horizontals */}
                 <div className="pz-mosaic-right">
-                  {[1, 2].map((i) => (
+                  {[
+                    {
+                      src: "/images/pec-zwolle/horz-1.jpg",
+                      alt: "Screenshot of PEC Zwolle’s season ticket page showing two fans facing a wall of match photos with the text ‘De mooiste club van allemaal’ and buttons to choose season tickets for different age groups.",
+                    },
+                    {
+                      src: "/images/pec-zwolle/horz-2.jpg",
+                      alt: "“Screenshot of PEC Zwolle’s news section showing three updates: the season ticket campaign launch, a match summary against Telstar, and a photo from the Almere City FC match.",
+                    },
+                  ].map((img, i) => (
                     <AnimatedContent key={i} {...imageReveal} delay={i * 0.08}>
-                      <figure className="pz-img-horz" aria-label={`Horizontal ${i}`}>
+                      <figure className="pz-img-horz">
                         <img
-                          src={`/images/pec-zwolle/horz-${i}.jpg`}
-                          alt={`PEC Zwolle horizontal ${i}`}
+                          src={img.src}
+                          alt={img.alt}
                           loading="lazy"
                           decoding="async"
                         />
@@ -229,6 +256,7 @@ const PECZwolle: React.FC = () => {
                     </AnimatedContent>
                   ))}
                 </div>
+
               </div>
             </div>
           </div>
@@ -240,7 +268,7 @@ const PECZwolle: React.FC = () => {
                 <figure className="pz-wide-figure" aria-label="Full width horizontal">
                   <img
                     src="/images/pec-zwolle/wide-1.jpg"
-                    alt="PEC Zwolle full-width visual"
+                    alt="A street view near a historic city gate shows a bus stop poster featuring two football fans, an adult and a child, looking toward a brightly lit stadium scene filled with team colors and supporters."
                     loading="lazy"
                     decoding="async"
                   />
