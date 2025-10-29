@@ -89,7 +89,7 @@ const readIsDarkFromDOM = () =>
 
 const Footer: React.FC = () => {
   // UI-state voor de interactieve onderdelen van de footer.
-  const [copyButtonText, setCopyButtonText] = useState('Kopieer e-mailadres');
+  const [copyButtonText, setCopyButtonText] = useState('Copy email address');
   const [showCopyIcon, setShowCopyIcon] = useState(true);
   const [isScrollHovered, setIsScrollHovered] = useState(false);
   const [emailHovered, setEmailHovered] = useState(false);
@@ -206,7 +206,7 @@ const Footer: React.FC = () => {
                         {emailCopied ? (
                           <img src="/images/confirm.svg" alt="Copied" />
                         ) : (
-                          showCopyIcon && <img src="/images/copy.svg" alt="Copy" />
+                          showCopyIcon && <img src="/images/copy.svg" alt="Copy email address" />
                         )}
                         <span aria-live="polite" aria-atomic="true">{copyButtonText}</span>
                       </span>
@@ -247,7 +247,7 @@ const Footer: React.FC = () => {
 
         <div className="footer-bottom">
           <div className="footer-brand">
-            <img src="/images/logo-grey.svg" alt="Your Logo" /> Raoul Martens © 2025
+            <img src="/images/logo-grey.svg" alt="Grey R logo" /> Raoul Martens © 2025
           </div>
 
           {/* Terug naar boven knop voor toetsenbord- en muisgebruikers. */}
@@ -267,7 +267,7 @@ const Footer: React.FC = () => {
             onMouseEnter={() => setIsScrollHovered(true)}
             onMouseLeave={() => setIsScrollHovered(false)}
           >
-            Back to top
+            Scroll to top
             <img
               src="/images/chevron-top.svg"
               alt="Scroll to top"
