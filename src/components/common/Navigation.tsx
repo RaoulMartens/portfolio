@@ -532,7 +532,7 @@ const Navigation: React.FC = () => {
                       <>
                         <motion.img
                           src="/images/menu.svg"
-                          alt=""
+                          alt="Menu icon"
                           className="menu-icon-img"
                           initial={false}
                           animate={isMenuOpen ? { opacity: 0, rotate: 90, scale: 0 } : { opacity: 1, rotate: 0, scale: 1 }}
@@ -540,7 +540,7 @@ const Navigation: React.FC = () => {
                         />
                         <motion.img
                           src="/images/menu-open.svg"
-                          alt=""
+                          alt="Open menu icon"
                           className="menu-icon-img"
                           initial={false}
                           animate={isMenuOpen ? { opacity: 1, rotate: 0, scale: 1 } : { opacity: 0, rotate: 90, scale: 0 }}
@@ -588,7 +588,7 @@ const Navigation: React.FC = () => {
                               >
                                 <motion.img
                                   src={hoverDotSrcDesktop}
-                                  alt=""
+                                  alt="Hover dot"
                                   className="menu-dot"
                                   initial={false}
                                   animate={{ x: showHoverDot ? 0 : -24, opacity: showHoverDot ? 1 : 0 }}
@@ -596,7 +596,7 @@ const Navigation: React.FC = () => {
                                 />
                                 <motion.img
                                   src={activeDotSrc}
-                                  alt=""
+                                  alt="Active dot"
                                   className="menu-dot"
                                   initial={false}
                                   animate={{ x: 0, opacity: item.active ? 1 : 0 }}
@@ -621,7 +621,7 @@ const Navigation: React.FC = () => {
               <motion.img
                 key={isDark ? 'logo-dark' : 'logo-light'}
                 src={logoSrc}
-                alt="Stylized blue letter R logo."
+                alt="Stylized letter R logo."
                 style={{ y: logoY, scale: logoScale, willChange: 'transform' }}
                 initial={{ opacity: 0.9 }}
                 animate={{ opacity: 1 }}
