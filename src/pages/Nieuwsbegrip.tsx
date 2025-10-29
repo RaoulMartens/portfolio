@@ -78,16 +78,24 @@ const Nieuwsbegrip: React.FC = () => {
 
   const STAGGER = 0.18;
 
+  const headingId = "nieuwsbegrip-heading";
+
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main aria-label="Nieuwsbegrip case study" className="np-main">
+      <main
+        id="main-content"
+        aria-label="Nieuwsbegrip case study"
+        className="np-main"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
         <section className="np-container">
           {/* HEADER */}
-          <div className="np-grid">
+          <div className="grid np-grid">
             <div className="np-content">
-              <h5 className="np-title">
+              <h1 id={headingId} className="np-title">
                 <SplitText
                   text="Nieuwsbegrip"
                   splitType="words"
@@ -99,7 +107,7 @@ const Nieuwsbegrip: React.FC = () => {
                   threshold={0.1}
                   textAlign="left"
                 />
-              </h5>
+              </h1>
 
               <p className="np-subtitle">
                 <SplitText
@@ -119,7 +127,7 @@ const Nieuwsbegrip: React.FC = () => {
           </div>
 
           {/* DIVIDER 1 */}
-          <div className="np-grid np-divider-wrap">
+          <div className="grid np-grid np-divider-wrap">
             <div className="np-divider">
               <RuleGrow />
             </div>
@@ -127,7 +135,7 @@ const Nieuwsbegrip: React.FC = () => {
 
           {/* INTRODUCTION */}
           <div className="np-block">
-            <div className="np-block-grid">
+            <div className="grid np-block-grid">
               <div className="np-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Introduction</h5>
@@ -151,7 +159,7 @@ const Nieuwsbegrip: React.FC = () => {
           </div>
 
           {/* DIVIDER 2 */}
-          <div className="np-grid">
+          <div className="grid np-grid">
             <div className="np-divider">
               <RuleGrow />
             </div>
@@ -159,7 +167,7 @@ const Nieuwsbegrip: React.FC = () => {
 
           {/* CONTEXT */}
           <div className="np-block">
-            <div className="np-block-grid">
+            <div className="grid np-block-grid">
               <div className="np-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Context</h5>
@@ -181,8 +189,8 @@ const Nieuwsbegrip: React.FC = () => {
           </div>
 
           {/* STACKED IMAGES */}
-          <div className="np-grid">
-            <div className="np-images">
+          <div className="grid np-grid">
+            <div className="grid np-images">
               {[1, 2, 3, 4, 5, 6].map((num) => (
                 <AnimatedContent key={num} {...imageReveal} delay={num * 0.1}>
                   <figure className="np-image">

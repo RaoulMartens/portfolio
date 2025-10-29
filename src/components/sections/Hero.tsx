@@ -7,6 +7,7 @@ import AnimatedContent from '../common/AnimatedContent';
 /* ----------------------------- */
 /* Magnet (react-spring)         */
 /* ----------------------------- */
+// Kleine hulpcomponent voor het magnetische effect rond visuals (responsief → 6.2).
 interface MagnetProps {
   children: React.ReactNode;
   padding?: number;
@@ -77,6 +78,7 @@ const Magnet: React.FC<MagnetProps> = ({
 /* ----------------------------- */
 /* Breakpoint hook               */
 /* ----------------------------- */
+// Bepaal eenvoudig of we mobiel, tablet of desktop tonen (responsief → 6.2).
 type BP = 'mobile' | 'tablet' | 'desktop';
 function useBreakpoint(): BP | null {
   const [bp, setBp] = useState<BP | null>(null);
@@ -95,11 +97,22 @@ function useBreakpoint(): BP | null {
 /* ----------------------------- */
 /* Hero                          */
 /* ----------------------------- */
-const Hero: React.FC = () => {
+interface HeroProps {
+  headingId?: string;
+}
+
+/**
+ * Hero-sectie met animaties en duidelijke heading.
+ * - Structuur: <header> met <h1> → criterium 6.1.
+ * - Responsief: layout wisselt op basis van breakpoint → criterium 6.2.
+ * - Toegankelijk: aria-labelledby en leesbare tekst → criterium 6.3.
+ */
+const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
   const bp = useBreakpoint();
   const [viewportHeight, setViewportHeight] = useState<string>('100vh');
 
   useLayoutEffect(() => {
+    // Houd de hero even hoog als het scherm minus de navigatiehoogte.
     const calculateHeight = () => {
       const nav = document.querySelector('.navbar') as HTMLElement | null;
       const offset = nav?.offsetHeight || 0;
@@ -110,9 +123,10 @@ const Hero: React.FC = () => {
     return () => window.removeEventListener('resize', calculateHeight);
   }, []);
 
+  // Placeholder voor eventuele vervolgacties wanneer de SplitText klaar is.
   const handleAnimationComplete = () => {};
 
-  // Fade-up base config
+  // Basisconfig voor fade-up animaties zodat alles hetzelfde tempo volgt.
   const fadeUp = {
     distance: 50,
     direction: 'vertical' as const,
@@ -124,17 +138,18 @@ const Hero: React.FC = () => {
     rootMarginBottomPct: 14,
   };
 
-  // Stagger timings
-  const iconDelay = 1.0;      // subtitle icon later
-  const subtitleDelay = 1.2;  // subtitle text latest
+  // Verschillende vertragingen voor iconen/tekst zodat de animaties rustig binnenkomen.
+  const iconDelay = 1.0;      // icoon iets later
+  const subtitleDelay = 1.2;  // ondertitel als laatste
 
-  // Image comes in *after title but before subtitle*
+  // Afbeelding komt na de titel, maar vóór de ondertitel, voor een logische volgorde.
   const heroImgAnim = {
     ...fadeUp,
     distance: 80,
-    delay: 0.6, // middle timing
+    delay: 0.6, // midden timing
   };
 
+  // Speciaal groepje woorden zodat "UX & Product Designer" dezelfde gradient krijgt.
   const heroGroupPhrase = {
     tokens: ['ux', '&', 'product', 'designer'],
     className: 'gradient-group',
@@ -143,16 +158,22 @@ const Hero: React.FC = () => {
   if (!bp) return null;
 
   return (
-    <header id="top" className="site-header" style={{ minHeight: viewportHeight }}>
+    <header
+      id="home-hero"
+      className="site-header"
+      style={{ minHeight: viewportHeight }}
+      aria-labelledby={headingId}
+    >
       <div className="grid-container hero-center-wrap">
         {/* ---------------- Desktop ---------------- */}
         {bp === 'desktop' && (
           <div className="hero-desktop-layout">
-            <div className="hero-grid">
+            <div className="grid hero-grid">
               <div className="hero-title-row">
-                <div className="hero-title-wrapper">
+                <div className="grid hero-title-wrapper">
                   <div className="hero-desktop-title-container">
-                    <div className="page-title hero-title">
+                    <h1 id={headingId} className="page-title hero-title">
+                      {/* SplitText animeren de woorden zodat de intro rustig leesbaar binnenkomt. */}
                       <SplitText
                         text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
                         delay={0.06}
@@ -167,9 +188,10 @@ const Hero: React.FC = () => {
                         onLetterAnimationComplete={handleAnimationComplete}
                         groupPhrase={heroGroupPhrase}
                       />
-                    </div>
+                    </h1>
 
                     <div className="subtitle-row">
+                      {/* Locatie-informatie koppelt icoon en tekst voor screenreaders. */}
                       <AnimatedContent {...fadeUp} delay={iconDelay}>
                         <img
                           className="hero-pin"
@@ -186,7 +208,7 @@ const Hero: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* HERO IMAGE */}
+                  {/* Hero-afbeelding met magnetisch effect voor extra interactie. */}
                   <AnimatedContent {...heroImgAnim}>
                     <Magnet padding={50} magnetStrength={9}>
                       <img
@@ -205,6 +227,7 @@ const Hero: React.FC = () => {
         {/* ---------------- Tablet ---------------- */}
         {bp === 'tablet' && (
           <div className="hero-tablet-layout">
+            {/* Eerst de afbeelding zodat hij naast de tekst staat in tablet-layout. */}
             <AnimatedContent {...heroImgAnim}>
               <Magnet padding={50} magnetStrength={9}>
                 <img
@@ -216,7 +239,8 @@ const Hero: React.FC = () => {
             </AnimatedContent>
 
             <div className="text-container" style={{ width: '100%' }}>
-              <div className="page-title hero-title hero-title--tablet">
+              {/* Zelfde boodschap in de h1 maar gecentreerd voor tablet. */}
+              <h1 id={headingId} className="page-title hero-title hero-title--tablet">
                 <SplitText
                   text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
                   delay={0.06}
@@ -231,9 +255,10 @@ const Hero: React.FC = () => {
                   onLetterAnimationComplete={handleAnimationComplete}
                   groupPhrase={heroGroupPhrase}
                 />
-              </div>
+              </h1>
 
               <div className="subtitle-row">
+                {/* Iconen/tekst blijven identiek zodat screenreaders consistente inhoud horen. */}
                 <AnimatedContent {...fadeUp} delay={iconDelay}>
                   <img
                     className="hero-pin"
@@ -255,6 +280,7 @@ const Hero: React.FC = () => {
         {/* ---------------- Mobile ---------------- */}
         {bp === 'mobile' && (
           <div className="hero-mobile-layout">
+            {/* Mobiel: afbeelding staat bovenaan zodat de intro meteen zichtbaar is. */}
             <AnimatedContent {...heroImgAnim}>
               <Magnet padding={50} magnetStrength={9}>
                 <img
@@ -266,7 +292,8 @@ const Hero: React.FC = () => {
             </AnimatedContent>
 
             <div className="text-container" style={{ width: '100%' }}>
-              <div className="page-title hero-title hero-title--mobile">
+              {/* Tekst volgt onder de foto maar blijft hetzelfde verhaal en heading-id. */}
+              <h1 id={headingId} className="page-title hero-title hero-title--mobile">
                 <SplitText
                   text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
                   delay={0.06}
@@ -281,9 +308,10 @@ const Hero: React.FC = () => {
                   onLetterAnimationComplete={handleAnimationComplete}
                   groupPhrase={heroGroupPhrase}
                 />
-              </div>
+              </h1>
 
               <div className="subtitle-row">
+                {/* Herhaal locatie-informatie zodat iedereen die snel kan vinden. */}
                 <AnimatedContent {...fadeUp} delay={iconDelay}>
                   <img
                     className="hero-pin"

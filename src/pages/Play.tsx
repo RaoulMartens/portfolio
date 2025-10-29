@@ -7,8 +7,9 @@ import SplitText from "../components/common/SplitText";
 type GalleryItem = { src: string; alt: string };
 
 /* ----------------------------- */
-/* Breakpoint hook (match Hero)  */
+/* Breakpoint hook (zelfde als Hero) */
 /* ----------------------------- */
+// Houd bij welke schermgrootte actief is zodat de layout zich aanpast (6.2).
 type BP = "mobile" | "tablet" | "desktop";
 function useBreakpoint(): BP | null {
   const [bp, setBp] = React.useState<BP | null>(null);
@@ -69,7 +70,7 @@ const GALLERY_WIDE_2: GalleryItem[] = [
   { src: "/images/play/friet-scootmobiel.jpg", alt: "Extra horizontal image 2" },
 ];
 
-/** Returns 1/2/3 columns to match CSS (<=767:1, 768–1024:2, >=1025:3) */
+/** Berekent 1/2/3 kolommen zodat het aansluit op de CSS breakpoints. */
 function getCols(): number {
   if (typeof window === "undefined") return 1;
   if (window.matchMedia("(min-width: 1025px)").matches) return 3;
@@ -84,7 +85,7 @@ const Play: React.FC = () => {
   const isMobile = bp === "mobile";
   const isTablet = bp === "tablet";
 
-  // Use the exact same Hero classes per breakpoint, but keep LEFT alignment
+  // Gebruik dezelfde hero-klassen per breakpoint maar houd de tekst links.
   const titleClass =
     bp === "desktop"
       ? "page-title hero-title play-title"
@@ -105,19 +106,26 @@ const Play: React.FC = () => {
   const LATE = new Set([3, 4, 5]);
   const VERY_LATE = new Set([6, 7, 8]);
 
-  // compute once per render (fine for progressive delays)
+  // Eén keer per render berekenen is genoeg voor de animatievertragingen.
   const colsMain = getCols();
+  const headingId = "play-heading";
 
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main aria-label="Play page" className="play-main">
-        {/* Title */}
+      <main
+        id="main-content"
+        aria-label="Play page"
+        className="play-main"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
+        {/* Titelblok met animatie en duidelijke H1. */}
         <section className="play-container">
-          <div className="title-grid">
+          <div className="grid title-grid">
             <div className="title-col">
-              <h1 className={titleClass}>
+              <h1 id={headingId} className={titleClass}>
                 <SplitText
                   text="Made with nothing but curiosity. Browse, enjoy, and see where creativity runs free."
                   splitType="words"
@@ -128,7 +136,7 @@ const Play: React.FC = () => {
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.2}
                   rootMargin="0px 0px -10% 0px"
-                  textAlign="left" // always left aligned
+                  textAlign="left" // altijd links uitgelijnd voor leesbaarheid
                   groupPhrase={{ tokens: ["curiosity"], className: "gradient-group" }}
                 />
               </h1>
@@ -136,9 +144,9 @@ const Play: React.FC = () => {
           </div>
         </section>
 
-        {/* Main */}
-        <section className="play-container gallery-container" aria-label="Image gallery">
-          <div className="gallery">
+        {/* Hoofdgalerij met responsieve afbeeldingen. */}
+        <section className="play-container grid gallery-container" aria-label="Image gallery">
+          <div className="grid gallery">
             {GALLERY_MAIN.map(({ src, alt }, i) => {
               const isFirstRow = i < colsMain;
               const perRowIndex = i % colsMain;
@@ -169,7 +177,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Wide */}
-        <section className="play-container gallery-wide" aria-label="Wide image gallery">
+        <section className="play-container grid gallery-wide" aria-label="Wide image gallery">
           {GALLERY_WIDE.map(({ src, alt }, i) => (
             <div key={i} className="tile-wide">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={(i % 2) * STAGGER_COL}>
@@ -180,7 +188,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Squares */}
-        <section className="play-container gallery-square" aria-label="Square image gallery">
+        <section className="play-container grid gallery-square" aria-label="Square image gallery">
           {GALLERY_SQUARE.map(({ src, alt }, i) => (
             <div key={i} className="tile-square">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={i * 0.18}>
@@ -191,7 +199,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Mix */}
-        <section className="play-container gallery-mix" aria-label="Mixed image row">
+        <section className="play-container grid gallery-mix" aria-label="Mixed image row">
           <div className="mix-empty" />
           <div className="tile-mix mix-horizontal">
             <AnimatedContent {...imgAnim} rootMarginBottomPct={14}>
@@ -206,7 +214,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Verticals */}
-        <section className="play-container gallery-verticals" aria-label="Vertical image gallery">
+        <section className="play-container grid gallery-verticals" aria-label="Vertical image gallery">
           {GALLERY_VERTICALS.map(({ src, alt }, i) => (
             <div key={i} className="tile-vertical">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={i * 0.18}>
@@ -227,7 +235,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Square + Horizontal */}
-        <section className="play-container gallery-sq-wide" aria-label="Square + Horizontal row">
+        <section className="play-container grid gallery-sq-wide" aria-label="Square + Horizontal row">
           <div className="tile-sqw sqw-square">
             <AnimatedContent {...imgAnim} rootMarginBottomPct={14}>
               <img
@@ -252,7 +260,7 @@ const Play: React.FC = () => {
         </section>
 
         {/* Extra Wide */}
-        <section className="play-container gallery-wide-2" aria-label="Extra wide image gallery">
+        <section className="play-container grid gallery-wide-2" aria-label="Extra wide image gallery">
           {GALLERY_WIDE_2.map(({ src, alt }, i) => (
             <div key={i} className="tile-wide-2">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={i * 0.22}>

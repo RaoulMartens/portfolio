@@ -77,16 +77,24 @@ const PECZwolle: React.FC = () => {
   };
   const STAGGER = 0.18;
 
+  const headingId = "pec-zwolle-heading";
+
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main aria-label="PEC Zwolle case study" className="pz-main">
+      <main
+        id="main-content"
+        aria-label="PEC Zwolle case study"
+        className="pz-main"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
         <section className="pz-container">
           {/* HEADER */}
-          <div className="pz-grid">
+          <div className="grid pz-grid">
             <div className="pz-content">
-              <h5 className="pz-title">
+              <h1 id={headingId} className="pz-title">
                 <SplitText
                   text="PEC Zwolle"
                   splitType="words"
@@ -98,7 +106,7 @@ const PECZwolle: React.FC = () => {
                   threshold={0.1}
                   textAlign="left"
                 />
-              </h5>
+              </h1>
 
               <p className="pz-subtitle">
                 <SplitText
@@ -118,7 +126,7 @@ const PECZwolle: React.FC = () => {
           </div>
 
           {/* DIVIDER — grow left → right */}
-          <div className="pz-grid pz-divider-wrap">
+          <div className="grid pz-grid pz-divider-wrap">
             <div className="pz-divider">
               <RuleGrow />
             </div>
@@ -126,7 +134,7 @@ const PECZwolle: React.FC = () => {
 
           {/* TEXT BLOCK 1 */}
           <div className="pz-block">
-            <div className="pz-block-grid">
+            <div className="grid pz-block-grid">
               <div className="pz-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Matchdays</h5>
@@ -145,9 +153,9 @@ const PECZwolle: React.FC = () => {
           </div>
 
           {/* 2x2 PORTRAIT GRID (4/5) */}
-          <div className="pz-grid">
+          <div className="grid pz-grid">
             <div className="pz-images-2x2">
-              <div className="pz-2x2">
+              <div className="grid pz-2x2">
                 {[1, 2, 3, 4].map((n) => (
                   <AnimatedContent key={n} {...imageReveal} delay={n * 0.08}>
                     <figure className="pz-img-vert" aria-label={`Portrait ${n}`}>
@@ -165,7 +173,7 @@ const PECZwolle: React.FC = () => {
           </div>
 
           {/* DIVIDER — grow left → right */}
-          <div className="pz-grid">
+          <div className="grid pz-grid">
             <div className="pz-divider">
               <RuleGrow />
             </div>
@@ -173,7 +181,7 @@ const PECZwolle: React.FC = () => {
 
           {/* TEXT BLOCK 2 */}
           <div className="pz-block">
-            <div className="pz-block-grid">
+            <div className="grid pz-block-grid">
               <div className="pz-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Ticket Campaign</h5>
@@ -191,9 +199,9 @@ const PECZwolle: React.FC = () => {
           </div>
 
           {/* MOSAIC GRID: 1 TALL LEFT (portrait), 2 HORIZONTAL RIGHT */}
-          <div className="pz-grid">
+          <div className="grid pz-grid">
             <div className="pz-mosaic">
-              <div className="pz-mosaic-grid">
+              <div className="grid pz-mosaic-grid">
                 {/* Left tall portrait */}
                 <AnimatedContent {...imageReveal}>
                   <figure className="pz-mosaic-left" aria-label="Tall portrait">
@@ -207,7 +215,7 @@ const PECZwolle: React.FC = () => {
                 </AnimatedContent>
 
                 {/* Right stacked horizontals */}
-                <div className="pz-mosaic-right">
+                <div className="grid pz-mosaic-right">
                   {[1, 2].map((i) => (
                     <AnimatedContent key={i} {...imageReveal} delay={i * 0.08}>
                       <figure className="pz-img-horz" aria-label={`Horizontal ${i}`}>
@@ -226,7 +234,7 @@ const PECZwolle: React.FC = () => {
           </div>
 
           {/* FULL-WIDTH HORIZONTAL IMAGE */}
-          <div className="pz-grid">
+          <div className="grid pz-grid">
             <div className="pz-wide">
               <AnimatedContent {...imageReveal}>
                 <figure className="pz-wide-figure" aria-label="Full width horizontal">

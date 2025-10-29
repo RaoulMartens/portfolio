@@ -389,16 +389,24 @@ const HalloBuur: React.FC = () => {
 
   const STAGGER = 0.18;
 
+  const headingId = "hallo-buur-heading";
+
   return (
     <div className="viewport-wrapper">
       <Navigation />
 
-      <main className="hb-main" aria-label="Hallo Buur case study">
+      <main
+        id="main-content"
+        className="hb-main"
+        aria-label="Hallo Buur case study"
+        tabIndex={-1}
+        aria-labelledby={headingId}
+      >
         <section className="hb-container">
           {/* HEADER */}
-          <div className="hb-grid cv-auto">
+          <div className="grid hb-grid cv-auto">
             <div className="hb-content">
-              <h5 className="hb-title">
+              <h1 id={headingId} className="hb-title">
                 <SplitText
                   text="Hallo Buur"
                   splitType="words"
@@ -410,7 +418,7 @@ const HalloBuur: React.FC = () => {
                   threshold={0.1}
                   textAlign="left"
                 />
-              </h5>
+              </h1>
 
               <p className="hb-subtitle">
                 <SplitText
@@ -444,7 +452,7 @@ const HalloBuur: React.FC = () => {
 
           {/* INTRODUCTION */}
           <div className="hb-block cv-auto">
-            <div className="hb-block-grid">
+            <div className="grid hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Introduction</h5>
@@ -465,7 +473,7 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* IMAGE */}
-          <div className="hb-grid cv-media">
+          <div className="grid hb-grid cv-media">
             <div className="hb-followup">
               <AnimatedContent {...lottieReveal}>
                 <img
@@ -482,7 +490,7 @@ const HalloBuur: React.FC = () => {
 
           {/* PROBLEM */}
           <div className="hb-block cv-auto">
-            <div className="hb-block-grid">
+            <div className="grid hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Problem</h5>
@@ -500,7 +508,7 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* DIVIDER */}
-          <div className="hb-grid">
+          <div className="grid hb-grid">
             <div className="hb-divider">
               <RuleGrow />
             </div>
@@ -508,7 +516,7 @@ const HalloBuur: React.FC = () => {
 
           {/* RESEARCH */}
           <div className="hb-block cv-auto">
-            <div className="hb-block-grid">
+            <div className="grid hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Research</h5>
@@ -527,8 +535,8 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* CARDS (group 1) */}
-          <div className="hb-grid cv-auto">
-            <div className="hb-cards">
+          <div className="grid hb-grid cv-auto">
+            <div className="grid hb-cards">
               {[
                 {
                   title: "Conversation anxiety",
@@ -561,7 +569,7 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* DIVIDER 2 */}
-          <div className="hb-grid">
+          <div className="grid hb-grid">
             <div className="hb-divider-2">
               <RuleGrow />
             </div>
@@ -569,7 +577,7 @@ const HalloBuur: React.FC = () => {
 
           {/* SOLUTION */}
           <div className="hb-block cv-auto">
-            <div className="hb-block-grid">
+            <div className="grid hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Solution</h5>
@@ -586,7 +594,7 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* DIVIDER 3 */}
-          <div className="hb-grid">
+          <div className="grid hb-grid">
             <div className="hb-divider-3">
               <RuleGrow />
             </div>
@@ -594,7 +602,7 @@ const HalloBuur: React.FC = () => {
 
           {/* TEXT + LOTTIES */}
           <div className="hb-block cv-auto">
-            <div className="hb-block-grid">
+            <div className="grid hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Create an Account</h5>
@@ -610,7 +618,7 @@ const HalloBuur: React.FC = () => {
             </div>
           </div>
 
-          <div className="hb-grid cv-media">
+          <div className="grid hb-grid cv-media">
             <div className="hb-lottie">
               <AnimatedContent {...lottieReveal}>
                 <div className="hb-lottie-wrap" aria-label="Create an account animation">
@@ -624,7 +632,7 @@ const HalloBuur: React.FC = () => {
           </div>
 
           <div className="hb-block cv-auto">
-            <div className="hb-block-grid">
+            <div className="grid hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Post an Activity</h5>
@@ -640,7 +648,7 @@ const HalloBuur: React.FC = () => {
             </div>
           </div>
 
-          <div className="hb-grid cv-media">
+          <div className="grid hb-grid cv-media">
             <div className="hb-lottie hb-lottie-2">
               <AnimatedContent {...lottieReveal}>
                 <div className="hb-lottie-wrap" aria-label="Post a note animation">
@@ -654,7 +662,7 @@ const HalloBuur: React.FC = () => {
           </div>
 
           <div className="hb-block cv-auto">
-            <div className="hb-block-grid">
+            <div className="grid hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Responding to a Request</h5>
@@ -670,7 +678,7 @@ const HalloBuur: React.FC = () => {
             </div>
           </div>
 
-          <div className="hb-grid cv-media">
+          <div className="grid hb-grid cv-media">
             <div className="hb-lottie hb-lottie-3">
               <AnimatedContent {...lottieReveal}>
                 <div className="hb-lottie-wrap" aria-label="Join an activity animation">
@@ -684,7 +692,7 @@ const HalloBuur: React.FC = () => {
           </div>
 
           <div className="hb-block cv-auto">
-            <div className="hb-block-grid">
+            <div className="grid hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Manage Profile Settings</h5>
@@ -700,7 +708,7 @@ const HalloBuur: React.FC = () => {
             </div>
           </div>
 
-          <div className="hb-grid cv-media">
+          <div className="grid hb-grid cv-media">
             <div className="hb-lottie hb-lottie-4">
               <AnimatedContent {...lottieReveal}>
                 <div className="hb-lottie-wrap" aria-label="Ongoing connection animation">
@@ -715,7 +723,7 @@ const HalloBuur: React.FC = () => {
 
           {/* Title-only */}
           <div className="hb-block hb-title-only">
-            <div className="hb-block-grid">
+            <div className="grid hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
                   <h5>Learnings</h5>
@@ -725,8 +733,8 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* CARDS (group 2) */}
-          <div className="hb-grid">
-            <div className="hb-cards-2" aria-label="Learnings">
+          <div className="grid hb-grid">
+            <div className="grid hb-cards-2" aria-label="Learnings">
               {[
                 { title: "Assumption barriers", body: "Co-creation helped uncover hidden beliefs between residents.", iconClass: "mask-hidden" },
                 { title: "Contact, not connection", body: "Real interaction happens offline, the app just opens the door.", iconClass: "mask-door" },
