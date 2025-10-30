@@ -645,8 +645,8 @@ const Navigation: React.FC = () => {
                     <div className="switch-mobile-face">
                       <div className="switch-flip-24">
                         <motion.div initial={false} animate={{ rotateY: isDark ? 0 : 180 }} transition={{ type: 'tween', duration: 0.42, ease: [0.22, 1, 0.36, 1] }} className="flip-3d">
-                          <img src="/images/moon.svg" alt="" className="flip-face front" />
-                          <img src="/images/sun.svg" alt="" className="flip-face back" />
+                          <img src="/images/moon.svg" alt="Dark mode" className="flip-face front" />
+                          <img src="/images/sun.svg" alt="Light mode" className="flip-face back" />
                         </motion.div>
                       </div>
                     </div>
