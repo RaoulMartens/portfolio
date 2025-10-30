@@ -4671,4 +4671,31 @@ body {
     scroll-behavior: smooth;
   }
 
+  .menu-anchor {
+    position: relative;
+  }
+
+  /* paneel kan netjes eronder hangen */
+  .menu-panel {
+    position: absolute;
+    /* of fixed als je full-width wil, maar dan zie volgende regel */
+    top: 100%;
+    left: 0;
+    pointer-events: auto;
+    /* klikken mag */
+    z-index: 1000;
+    /* boven de knop */
+  }
+
+  .navbar,
+  .menu-anchor {
+    overflow: visible;
+  }
+
+  /* geen clipping op het paneel */
+  .menu-panel a,
+  .menu-panel button {
+    cursor: pointer;
+  }
+
 }

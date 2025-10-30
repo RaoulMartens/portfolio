@@ -549,6 +549,9 @@ const Navigation: React.FC = () => {
                   variants={isExiting ? panelExitVariants : panelEnterVariants}
                   animate={isExiting ? exitStage : enterStage}
                   initial="expandingRight"
+                  // NEW: houd hover-state vast wanneer je het paneel in gaat
+                  onMouseEnter={!mobileMode ? handleMenuEnter : undefined}
+                  onMouseLeave={!mobileMode ? handleMenuLeave : undefined}
                 >
                   <nav id={MENU_ID_DESKTOP} aria-label="Primary">
                     <ul className="menu-list">
