@@ -7,7 +7,7 @@ interface SkipLinkProps {
   label?: string;
 }
 
-const SkipLink: React.FC<SkipLinkProps> = ({ targetId = "main-content", label = "Ga direct naar de hoofdinhoud" }) => {
+const SkipLink: React.FC<SkipLinkProps> = ({ targetId = "main-content", label = "Skip to main content" }) => {
   const handleClick = (_event: React.MouseEvent<HTMLAnchorElement>) => {
     const target = document.getElementById(targetId);
     if (!target) return;
