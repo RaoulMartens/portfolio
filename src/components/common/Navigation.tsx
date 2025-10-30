@@ -16,13 +16,13 @@ import { useDarkMode } from '../../hooks/useDarkMode';
 import { SECTION_EVENT, readSectionFromWindow, Section } from '../../utils/sections';
 
 /**
- * Dit is de hoofdnavigatie met animaties, dark mode en toetsenbord-ondersteuning.
- * - De semantische <header>/<nav> structuur ondersteunt criterium 6.1.
- * - Animaties passen zich aan aan scroll en schermbreedte → criterium 6.2.
- * - Aria-attributen en echte knoppen maken de menuknop toegankelijk → criterium 6.3.
+ * Hoofdnavigatie met animaties, dark mode en toetsenbord-ondersteuning.
+ * - Semantische <nav> structuur → 6.1
+ * - Responsieve animaties en breakpoints → 6.2
+ * - Toegankelijke bediening en aria-attrs → 6.3
  */
 
-/* ---------- Herbruikbare "Magnet" voor zwevende iconen ---------- */
+/* ---------- Herbruikbare "Magnet" ---------- */
 interface MagnetProps {
   children: React.ReactNode;
   padding?: number;
@@ -49,7 +49,6 @@ const Magnet: React.FC<MagnetProps> = ({
   }));
 
   useEffect(() => {
-    // Als de magneet uit staat, springt het element terug naar het midden.
     if (disabled) {
       api.start({ x: 0, y: 0 });
       return;
@@ -67,7 +66,6 @@ const Magnet: React.FC<MagnetProps> = ({
         api.start({ x: 0, y: 0 });
       }
     };
-    // Luister naar muisbewegingen zodat het icoon licht mee beweegt.
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [padding, disabled, magnetStrength, api]);
@@ -119,25 +117,12 @@ const itemVariants: Variants = {
   open: (i: number = 0) => ({ opacity: 1, x: 0, transition: { x: springTransition, opacity: { duration: 0.2 }, delay: 0.06 * i } }),
   exit: (i: number = 0) => ({ opacity: 0, x: -20, transition: { x: springTransition, opacity: { duration: 0.15 }, delay: 0.02 * i } }),
 };
-const mobileBgVariants: Variants = {
-  hidden: { x: '-100%' },
-  visible: { x: 0, transition: { type: 'spring', stiffness: 460, damping: 42, mass: 0.9 } },
-  exit: { x: '-100%', transition: { duration: 0.25, ease: 'easeIn' } },
-};
-const mobilePanelVariants: Variants = {
-  hidden: { x: '-100%' },
-  visible: { x: 0, transition: { type: 'spring', stiffness: 420, damping: 38, mass: 0.8, delay: 0.02 } },
-  exit: { x: '-100%', transition: { duration: 0.25, ease: 'easeIn' } },
-};
 
 /* ---------- Theme refs ---------- */
-const MENU_BG = 'var(--surface-action, #0080FF)';
-const MENU_TEXT = 'var(--text-on-action, #FFF)';
-
 const MENU_ID_DESKTOP = 'primary-navigation-desktop';
 const MENU_ID_MOBILE = 'primary-navigation-mobile';
 
-/* ---------- Hook: bekijk of we onder de mobiele breakpoint zitten ---------- */
+/* ---------- Hook: breakpoint ---------- */
 function useIsMobile(breakpoint = 768) {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -145,7 +130,6 @@ function useIsMobile(breakpoint = 768) {
     const mql = window.matchMedia(`(max-width: ${breakpoint}px)`);
     const handler = (e: MediaQueryList | MediaQueryListEvent) =>
       setIsMobile('matches' in e ? e.matches : (e as MediaQueryList).matches);
-    // Eerste check en daarna luisteren naar veranderingen in schermbreedte.
     handler(mql);
     mql.addEventListener ? mql.addEventListener('change', handler) : mql.addListener(handler);
     return () =>
@@ -158,7 +142,6 @@ function useIsMobile(breakpoint = 768) {
    Navigation
 =================================================================== */
 const Navigation: React.FC = () => {
-  // State die bijhoudt of het menu open is en in welke animatiefase we zitten.
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [enterStage, setEnterStage] = useState<'expandingRight' | 'expandingDown' | 'open'>('expandingRight');
   const [exitStage, setExitStage] = useState<'itemsOut' | 'collapsingUp' | 'collapsingLeft'>('itemsOut');
@@ -166,18 +149,15 @@ const Navigation: React.FC = () => {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Achtergrond-animaties voor het mobiele paneel.
   const [bgReady, setBgReady] = useState(false);
   const bgDelayRef = useRef<number | null>(null);
   const [isClosingIcon, setIsClosingIcon] = useState(false);
 
-  // Thema, breakpoint en router-helpers.
   const { isDark, toggleDarkMode } = useDarkMode();
   const isMobile = useIsMobile(768);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Timers voor animaties zodat we ze kunnen opruimen (scheidt logica van UI → 6.1).
   const timeoutsRef = useRef<number[]>([]);
   const isHoveringRef = useRef(false);
 
@@ -199,7 +179,6 @@ const Navigation: React.FC = () => {
     }
   }, []);
 
-  /* Luister naar sectie-updates van de Home-pagina zodat de nav weet waar je bent. */
   const [section, setSection] = useState<Section>(() => readSectionFromWindow());
   useEffect(() => {
     const handler = (e: Event) => {
@@ -211,7 +190,6 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener(SECTION_EVENT, handler as EventListener);
   }, []);
 
-  /* Controleer welke route actief is voor duidelijke labels en aria-states. */
   const { pathname } = location;
   const onHome = pathname === "/";
   const onPlay = pathname === "/play";
@@ -221,7 +199,6 @@ const Navigation: React.FC = () => {
   const onNieuws = pathname === "/nieuwsbegrip";
   const onPEC = pathname === "/pec-zwolle";
 
-  /* Detailpagina's dwingen het mobiele menu zodat alles leesbaar blijft op kleine schermen. */
   const forceMobile = onHallo || onHallo2 || onNieuws || onPEC;
   const mobileMode = isMobile || forceMobile;
   const backMode = forceMobile;
@@ -233,7 +210,6 @@ const Navigation: React.FC = () => {
           onHome ? (section === "work" ? "Work" : "Home") :
             "Home";
 
-  // Menu-items voor de primaire navigatie (structuur → 6.1).
   const menuItems: MenuItem[] = [
     { href: '/', icon: '/images/home.svg', label: 'Home', active: onHome && section === 'home' },
     { href: '#work', icon: '/images/work.svg', label: 'Work', active: (onHome && section === 'work') || onHallo || onHallo2 || onNieuws || onPEC },
@@ -242,7 +218,6 @@ const Navigation: React.FC = () => {
   ];
 
   const socialBaseIndex = menuItems.length;
-  // Sociale links: apart lijstje zodat je ziet dat dit externe bestemmingen zijn.
   const socialLinks = [
     { href: 'https://www.behance.net/Raoulgraphics', icon: '/images/behance.svg', alt: 'Behance', label: 'Behance' },
     { href: 'https://www.instagram.com/raoulgraphics/', icon: '/images/instagram.svg', alt: 'Instagram', label: 'Instagram' },
@@ -250,13 +225,11 @@ const Navigation: React.FC = () => {
     { href: 'https://www.tiktok.com/@raoulgraphics', icon: '/images/tiktok.svg', alt: 'TikTok', label: 'TikTok' },
   ];
 
-  // Terugknop voor detailpagina's: ga terug in de geschiedenis of naar home.
   const handleBack = () => {
     if (window.history.length > 1) navigate(-1);
     else navigate('/', { replace: true });
   };
 
-  // Sluit het mobiele menu met een korte animatie.
   const closeMobileMenu = () => {
     setIsClosingIcon(true);
     addTimeout(() => {
@@ -266,7 +239,6 @@ const Navigation: React.FC = () => {
     }, 280);
   };
 
-  // Scroll helper voor ankers op de homepagina (neemt nav-hoogte mee → 6.2).
   const smoothScrollToId = (id: string) => {
     const target = document.getElementById(id);
     const navH = (document.querySelector('.navbar') as HTMLElement | null)?.offsetHeight ?? 0;
@@ -278,7 +250,6 @@ const Navigation: React.FC = () => {
 
   const scrollTopSmooth = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // Reageer op klikken/enter in het menu zodat toetsenbord en muis hetzelfde gedrag zien.
   const onMenuItemClick = (item: MenuItem, e?: React.MouseEvent<HTMLAnchorElement>) => {
     if (item.label === 'Work') {
       e?.preventDefault();
@@ -323,7 +294,6 @@ const Navigation: React.FC = () => {
   };
 
   /* Desktop hover open/close */
-  // Deze handlers zorgen dat het menu automatisch opent/sluit bij hover (muisgebruik). 6.3
   const handleMenuEnter = useCallback(() => {
     if (mobileMode) return;
     if (isMenuOpen && enterStage === 'open') return;
@@ -353,6 +323,7 @@ const Navigation: React.FC = () => {
     }, 700);
   }, [mobileMode, isMenuOpen, addTimeout, clearAllTimeouts]);
 
+  /* Keyboard focus open/close (fix zonder layout changes) */
   const handleMenuFocus = useCallback(() => {
     if (mobileMode) return;
     isHoveringRef.current = true;
@@ -366,15 +337,12 @@ const Navigation: React.FC = () => {
 
   const handleMenuBlur = useCallback((e: React.FocusEvent<HTMLDivElement>) => {
     if (mobileMode) return;
-    // sluit alleen als de focus de hele anchor verlaat
     if (!e.currentTarget.contains(e.relatedTarget as Node)) {
       handleMenuLeave();
     }
   }, [mobileMode, handleMenuLeave]);
 
-
   /* Mobile click toggle */
-  // Op mobiel werkt het menu via een klik/druk op de knop, met animatie.
   const toggleMenu = () => {
     if (!mobileMode) return;
     if (!isMenuOpen) {
@@ -396,7 +364,6 @@ const Navigation: React.FC = () => {
   const onMenuButtonClick = () => (backMode ? handleBack() : toggleMenu());
 
   /* Scroll nudge */
-  // Als je scrolt laten we de navbar iets omhoog komen voor extra focus op de inhoud.
   useEffect(() => {
     let ticking = false;
     const SHOW_AT = 8, HIDE_BELOW = 4;
@@ -414,7 +381,6 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Houd een dynamische verschuiving bij gebaseerd op de huidige font-size.
   const [shiftPx, setShiftPx] = useState(16);
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -427,7 +393,6 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('resize', compute);
   }, []);
 
-  // Gebruik veer-animaties voor zachte bewegingen (responsief en vriendelijk voor motion). 6.2
   const dist = useSpring(0, { stiffness: 320, damping: 32, mass: 0.6 });
   useEffect(() => { dist.set(isScrolled ? shiftPx : 0); }, [isScrolled, shiftPx, dist]);
 
@@ -437,7 +402,6 @@ const Navigation: React.FC = () => {
   const toggleY = dist;
 
   /* Logo parallax */
-  // Kleine parallaxbeweging op het logo om scroll-feedback te geven.
   const { scrollY } = useScroll();
   const logoYRaw = useTransform(scrollY, [0, 160], [0, -80]);
   const logoScaleRaw = useTransform(scrollY, [0, 120], [1, 0.97]);
@@ -454,22 +418,20 @@ const Navigation: React.FC = () => {
   const desktopClosedW = Math.round(7.5625 * 16);
   const desktopOpenW = Math.round(11.0625 * 16);
 
-  // Breedte van de menuschil volgt de staat; visuele laag vult de ruimte op.
   const menuShellW = (mobileMode ? MOBILE_WH : (isMenuOpen ? desktopOpenW : desktopClosedW));
   const menuShellH = TARGET_H;
   const menuVisualW: string | number = '100%';
 
   /* Toggle sizes */
   const SWITCH_MOBILE_WH = 40;
-  const SWITCH_DESKTOP_W = Math.round(5.5 * 16); // 88px breedte op desktop.
-  const SWITCH_DESKTOP_H = Math.round(2.5 * 16); // 40px hoogte op desktop.
+  const SWITCH_DESKTOP_W = Math.round(5.5 * 16);
+  const SWITCH_DESKTOP_H = Math.round(2.5 * 16);
 
   const switchShellW = mobileMode ? SWITCH_MOBILE_WH : SWITCH_DESKTOP_W;
   const switchShellH = mobileMode ? SWITCH_MOBILE_WH : SWITCH_DESKTOP_H;
   const switchVisualW = switchShellW;
 
   /* Body lock op mobiel menu */
-  // Wanneer het menu open is vergrendelen we de body-scroll om focus te houden. 6.3
   useEffect(() => {
     if (!(mobileMode && isMenuOpen)) return;
     const { style } = document.documentElement;
@@ -506,7 +468,6 @@ const Navigation: React.FC = () => {
 
   return (
     <>
-      {/* add is-project on project pages to target CSS */}
       <nav
         id="site-top"
         className={`navbar ${backMode ? 'is-project' : ''}`}
@@ -515,6 +476,7 @@ const Navigation: React.FC = () => {
       >
         <div className="grid-container">
           <div className="navbar-grid">
+
             {/* MENU / BACK + PANEL WRAPPER */}
             <motion.div
               key={`menu-anchor-${mobileMode ? 'm' : 'd'}`}
@@ -524,7 +486,6 @@ const Navigation: React.FC = () => {
               onMouseLeave={!mobileMode ? handleMenuLeave : undefined}
               onFocus={!mobileMode ? handleMenuFocus : undefined}
               onBlur={!mobileMode ? handleMenuBlur : undefined}
-
             >
               <motion.button
                 type="button"
@@ -539,26 +500,28 @@ const Navigation: React.FC = () => {
                 animate={{ width: menuShellW, height: menuShellH }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               >
+                {/* BELANGRIJK: geen extra 'menu-anchor' wrapper hierbinnen */}
                 <motion.div
-                  className="menu-anchor"
-                  style={{ x: menuX, y: menuY }}
-                  onMouseEnter={!mobileMode ? handleMenuEnter : undefined}
-                  onMouseLeave={!mobileMode ? handleMenuLeave : undefined}
-                  onFocus={!mobileMode ? handleMenuFocus : undefined}
-                  onBlur={!mobileMode ? handleMenuBlur : undefined}
-                  tabIndex={-1}  // maakt de container focusable als er geen focusbare kinderen zijn
+                  className="menu-visual"
+                  animate={{ width: menuVisualW }}
+                  initial={false}
+                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                 >
-
-                  {!mobileMode && <motion.span className="menu-label" initial={false}>{menuButtonLabel}</motion.span>}
+                  {!mobileMode && (
+                    <motion.span className="menu-label" initial={false}>
+                      {menuButtonLabel}
+                    </motion.span>
+                  )}
 
                   <div className={`menu-icon-box ${mobileMode ? 'is-mobile' : ''}`}>
                     {backMode ? (
-                      <img src="/images/chevron-left.svg" alt="" className="menu-icon-img" />
+                      <img src="/images/chevron-left.svg" alt="" aria-hidden="true" className="menu-icon-img" />
                     ) : (
                       <>
                         <motion.img
                           src="/images/menu.svg"
-                          alt="Menu icon"
+                          alt=""
+                          aria-hidden="true"
                           className="menu-icon-img"
                           initial={false}
                           animate={isMenuOpen ? { opacity: 0, rotate: 90, scale: 0 } : { opacity: 1, rotate: 0, scale: 1 }}
@@ -566,7 +529,8 @@ const Navigation: React.FC = () => {
                         />
                         <motion.img
                           src="/images/menu-open.svg"
-                          alt="Open menu icon"
+                          alt=""
+                          aria-hidden="true"
                           className="menu-icon-img"
                           initial={false}
                           animate={isMenuOpen ? { opacity: 1, rotate: 0, scale: 1 } : { opacity: 0, rotate: 90, scale: 0 }}
@@ -614,7 +578,8 @@ const Navigation: React.FC = () => {
                               >
                                 <motion.img
                                   src={hoverDotSrcDesktop}
-                                  alt="Hover dot"
+                                  alt=""
+                                  aria-hidden="true"
                                   className="menu-dot"
                                   initial={false}
                                   animate={{ x: showHoverDot ? 0 : -24, opacity: showHoverDot ? 1 : 0 }}
@@ -622,7 +587,8 @@ const Navigation: React.FC = () => {
                                 />
                                 <motion.img
                                   src={activeDotSrc}
-                                  alt="Active dot"
+                                  alt=""
+                                  aria-hidden="true"
                                   className="menu-dot"
                                   initial={false}
                                   animate={{ x: 0, opacity: item.active ? 1 : 0 }}
@@ -630,7 +596,7 @@ const Navigation: React.FC = () => {
                                 />
                               </motion.div>
                               <motion.span className="menu-text" initial={false}>
-                                <img src={item.icon} alt=" " /> {item.label}
+                                <img src={item.icon} alt="" aria-hidden="true" /> {item.label}
                               </motion.span>
                             </a>
                           </motion.li>
@@ -671,8 +637,8 @@ const Navigation: React.FC = () => {
                     <div className="switch-mobile-face">
                       <div className="switch-flip-24">
                         <motion.div initial={false} animate={{ rotateY: isDark ? 0 : 180 }} transition={{ type: 'tween', duration: 0.42, ease: [0.22, 1, 0.36, 1] }} className="flip-3d">
-                          <img src="/images/moon.svg" alt="" className="flip-face front" />
-                          <img src="/images/sun.svg" alt="" className="flip-face back" />
+                          <img src="/images/moon.svg" alt="" aria-hidden="true" className="flip-face front" />
+                          <img src="/images/sun.svg" alt="" aria-hidden="true" className="flip-face back" />
                         </motion.div>
                       </div>
                     </div>
@@ -681,8 +647,8 @@ const Navigation: React.FC = () => {
                       <motion.div className="switch-fill" style={{ left: fillLeftPx }}>
                         <div className="switch-fill-center">
                           <motion.div initial={false} className="flip-3d" style={{ rotateY }} transition={{ type: 'tween', duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-                            <img src="/images/moon.svg" alt="" className="flip-face front" />
-                            <img src="/images/sun.svg" alt="" className="flip-face back" />
+                            <img src="/images/moon.svg" alt="" aria-hidden="true" className="flip-face front" />
+                            <img src="/images/sun.svg" alt="" aria-hidden="true" className="flip-face back" />
                           </motion.div>
                         </div>
                       </motion.div>
@@ -693,6 +659,7 @@ const Navigation: React.FC = () => {
                 </motion.div>
               </motion.button>
             </motion.div>
+
           </div>
         </div>
       </nav>
@@ -706,12 +673,11 @@ const Navigation: React.FC = () => {
                 <motion.div
                   key="mobile-bg"
                   className="mobile-menu-bg"
-                  variants={mobileBgVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
+                  initial={{ x: '-100%' }}
+                  animate={{ x: 0, transition: { type: 'spring', stiffness: 460, damping: 42, mass: 0.9 } }}
+                  exit={{ x: '-100%', transition: { duration: 0.25, ease: 'easeIn' } }}
                   onAnimationComplete={(state) => {
-                    if (state === 'visible') {
+                    if (state === undefined) { // framer-motion calls with undefined after animate
                       clearBgDelay();
                       bgDelayRef.current = window.setTimeout(() => setBgReady(true), 120);
                     }
@@ -725,12 +691,12 @@ const Navigation: React.FC = () => {
                   onClick={() => { setIsClosingIcon(true); addTimeout(() => { setIsMenuOpen(false); setBgReady(false); setIsClosingIcon(false); }, 280); }}
                 >
                   <motion.div className="mobile-close-anim" style={{ x: menuX, y: menuY }}>
-                    <motion.img src="/images/menu.svg" alt="" className="mobile-close-img"
+                    <motion.img src="/images/menu.svg" alt="" aria-hidden="true" className="mobile-close-img"
                       initial={{ opacity: 1, rotate: 0, scale: 1 }}
                       animate={{ opacity: isClosingIcon ? 1 : 0, rotate: isClosingIcon ? 0 : 90, scale: isClosingIcon ? 1 : 0 }}
                       transition={{ duration: 0.28, ease: 'easeInOut', opacity: { duration: 0.18 } }}
                     />
-                    <motion.img src="/images/close.svg" alt="" className="mobile-close-img"
+                    <motion.img src="/images/close.svg" alt="" aria-hidden="true" className="mobile-close-img"
                       initial={{ opacity: 0, rotate: -90, scale: 0.95 }}
                       animate={{ opacity: isClosingIcon ? 0 : 1, rotate: isClosingIcon ? -90 : 0, scale: isClosingIcon ? 0.95 : 1 }}
                       transition={{ duration: 0.28, ease: 'easeInOut', opacity: { duration: 0.18, delay: isClosingIcon ? 0 : 0.05 } }}
@@ -739,7 +705,13 @@ const Navigation: React.FC = () => {
                 </motion.button>
 
                 {/* PANEL */}
-                <motion.div key="mobile-panel" className="mobile-panel" variants={mobilePanelVariants} initial="hidden" animate="visible" exit="exit">
+                <motion.div
+                  key="mobile-panel"
+                  className="mobile-panel"
+                  initial={{ x: '-100%' }}
+                  animate={{ x: 0, transition: { type: 'spring', stiffness: 420, damping: 38, mass: 0.8, delay: 0.02 } }}
+                  exit={{ x: '-100%', transition: { duration: 0.25, ease: 'easeIn' } }}
+                >
                   <div className="grid-container mobile-panel-inner">
                     <div className="grid-x mobile-panel-scroll">
                       <div className="cell small-12">
@@ -765,13 +737,13 @@ const Navigation: React.FC = () => {
                                     onMouseLeave={() => setHoveredItem(null)}
                                     aria-current={item.active ? 'page' : undefined}
                                   >
-                                    <img src={item.icon} alt="" className="mobile-icon" />
+                                    <img src={item.icon} alt={item.label} className="mobile-icon" />
                                     <h3 className="mobile-label">{item.label}</h3>
                                     <span className="mobile-dot-wrap">
-                                      {/* theme-aware hover dot on mobile */}
                                       <motion.img
                                         src={hoverDotSrcMobile}
                                         alt=""
+                                        aria-hidden="true"
                                         className="mobile-dot"
                                         initial={false}
                                         animate={{ opacity: showHoverDot ? 1 : 0 }}
@@ -780,6 +752,7 @@ const Navigation: React.FC = () => {
                                       <motion.img
                                         src={activeDotSrc}
                                         alt=""
+                                        aria-hidden="true"
                                         className="mobile-dot"
                                         initial={false}
                                         animate={{ opacity: item.active ? 1 : 0, rotate: item.active ? 0 : -90, scale: item.active ? 1 : 0.95 }}
