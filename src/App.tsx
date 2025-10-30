@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import SkipLink from "./components/common/SkipLink";
 import ScrollToTop from "./components/common/ScrollToTop";
 import Home from "./pages/Home";
 import Play from "./pages/Play";
@@ -30,8 +29,7 @@ const App: React.FC = () => {
         style={{ position: "absolute", top: 0, left: 0, width: "1px", height: "1px" }}
         aria-hidden="true"
       />
-
-      <SkipLink targetId="main-content" />
+      
       <ScrollToTop />
 
       <main id="main-content" tabIndex={-1} aria-label="Main content">
