@@ -353,6 +353,26 @@ const Navigation: React.FC = () => {
     }, 700);
   }, [mobileMode, isMenuOpen, addTimeout, clearAllTimeouts]);
 
+  const handleMenuFocus = useCallback(() => {
+    if (mobileMode) return;
+    isHoveringRef.current = true;
+    clearAllTimeouts();
+    setIsExiting(false);
+    setIsMenuOpen(true);
+    setEnterStage('expandingRight');
+    addTimeout(() => isHoveringRef.current && setEnterStage('expandingDown'), 200);
+    addTimeout(() => isHoveringRef.current && setEnterStage('open'), 400);
+  }, [mobileMode, addTimeout, clearAllTimeouts]);
+
+  const handleMenuBlur = useCallback((e: React.FocusEvent<HTMLDivElement>) => {
+    if (mobileMode) return;
+    // sluit alleen als de focus de hele anchor verlaat
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      handleMenuLeave();
+    }
+  }, [mobileMode, handleMenuLeave]);
+
+
   /* Mobile click toggle */
   // Op mobiel werkt het menu via een klik/druk op de knop, met animatie.
   const toggleMenu = () => {
@@ -502,6 +522,9 @@ const Navigation: React.FC = () => {
               style={{ x: menuX, y: menuY }}
               onMouseEnter={!mobileMode ? handleMenuEnter : undefined}
               onMouseLeave={!mobileMode ? handleMenuLeave : undefined}
+              onFocus={!mobileMode ? handleMenuFocus : undefined}
+              onBlur={!mobileMode ? handleMenuBlur : undefined}
+
             >
               <motion.button
                 type="button"
@@ -517,12 +540,15 @@ const Navigation: React.FC = () => {
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               >
                 <motion.div
-                  key={`menu-visual-${mobileMode ? 'm' : 'd'}`}
-                  className="menu-visual"
-                  animate={{ width: menuVisualW }}
-                  initial={false}
-                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  className="menu-anchor"
+                  style={{ x: menuX, y: menuY }}
+                  onMouseEnter={!mobileMode ? handleMenuEnter : undefined}
+                  onMouseLeave={!mobileMode ? handleMenuLeave : undefined}
+                  onFocus={!mobileMode ? handleMenuFocus : undefined}
+                  onBlur={!mobileMode ? handleMenuBlur : undefined}
+                  tabIndex={-1}  // maakt de container focusable als er geen focusbare kinderen zijn
                 >
+
                   {!mobileMode && <motion.span className="menu-label" initial={false}>{menuButtonLabel}</motion.span>}
 
                   <div className={`menu-icon-box ${mobileMode ? 'is-mobile' : ''}`}>
@@ -604,7 +630,7 @@ const Navigation: React.FC = () => {
                                 />
                               </motion.div>
                               <motion.span className="menu-text" initial={false}>
-                                <img src={item.icon} alt="" /> {item.label}
+                                <img src={item.icon} alt=" " /> {item.label}
                               </motion.span>
                             </a>
                           </motion.li>

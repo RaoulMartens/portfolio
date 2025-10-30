@@ -31,20 +31,25 @@ const App: React.FC = () => {
         aria-hidden="true"
       />
 
-      <SkipLink />
+      <SkipLink targetId="main-content" />
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/play" element={<Play />} />
-        <Route path="/me" element={<Me />} />
-        <Route path="/hallo-buur" element={<HalloBuur />} />
-        <Route path="/hallo-buur-2" element={<HalloBuur2 />} />
-        <Route path="/nieuwsbegrip" element={<Nieuwsbegrip />} />
-        <Route path="/pec-zwolle" element={<PECZwolle />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+
+      <main id="main-content" tabIndex={-1} aria-label="Main content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/play" element={<Play />} />
+          <Route path="/me" element={<Me />} />
+          <Route path="/hallo-buur" element={<HalloBuur />} />
+          <Route path="/hallo-buur-2" element={<HalloBuur2 />} />
+          <Route path="/nieuwsbegrip" element={<Nieuwsbegrip />} />
+          <Route path="/pec-zwolle" element={<PECZwolle />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+
       <SpeedInsights />
       <Analytics />
+
     </BrowserRouter>
   );
 };
