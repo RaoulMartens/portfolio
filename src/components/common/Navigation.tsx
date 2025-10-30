@@ -655,8 +655,8 @@ const Navigation: React.FC = () => {
                       <motion.div className="switch-fill" style={{ left: fillLeftPx }}>
                         <div className="switch-fill-center">
                           <motion.div initial={false} className="flip-3d" style={{ rotateY }} transition={{ type: 'tween', duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
-                            <img src="/images/moon.svg" alt="" className="flip-face front" />
-                            <img src="/images/sun.svg" alt="" className="flip-face back" />
+                            <img src="/images/moon.svg" alt="Dark mode" className="flip-face front" />
+                            <img src="/images/sun.svg" alt="Light mode" className="flip-face back" />
                           </motion.div>
                         </div>
                       </motion.div>
