@@ -2,8 +2,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSpring, animated, to } from '@react-spring/web';
 
+/* ---------- utils ---------- */
+function usePrefersReducedMotion(): boolean {
+  if (typeof window === 'undefined' || !('matchMedia' in window)) return false;
+  try {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch {
+    return false;
+  }
+}
+
+const readIsDarkFromDOM = () =>
+  typeof document !== 'undefined' &&
+  (document.documentElement.classList.contains('dark') ||
+    document.body.classList.contains('dark'));
+
 /* ---------- Magnet ---------- */
-// Zelfde magneet-effect als in de navigatie voor speelse icoon-animaties (responsief → 6.2).
 interface MagnetProps {
   children: React.ReactNode;
   padding?: number;
@@ -23,6 +37,9 @@ const Magnet: React.FC<MagnetProps> = ({
   ...props
 }) => {
   const magnetRef = useRef<HTMLDivElement>(null);
+  const prefersReduced = usePrefersReducedMotion();
+  const actuallyDisabled = disabled || prefersReduced;
+
   const [{ x, y }, api] = useSpring(() => ({
     x: 0,
     y: 0,
@@ -30,8 +47,8 @@ const Magnet: React.FC<MagnetProps> = ({
   }));
 
   useEffect(() => {
-    if (disabled) {
-      api.start({ x: 0, y: 0 });
+    if (actuallyDisabled) {
+      api.start({ x: 0, y: 0, immediate: true });
       return;
     }
     const handleMouseMove = (e: MouseEvent) => {
@@ -47,11 +64,9 @@ const Magnet: React.FC<MagnetProps> = ({
         api.start({ x: 0, y: 0 });
       }
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [padding, disabled, magnetStrength, api]);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [padding, actuallyDisabled, magnetStrength, api]);
 
   return (
     <div
@@ -64,7 +79,7 @@ const Magnet: React.FC<MagnetProps> = ({
         className={innerClassName}
         style={{
           transform: to([x, y], (xv: number, yv: number) => `translate3d(${xv}px, ${yv}px, 0)`),
-          willChange: 'transform',
+          willChange: actuallyDisabled ? undefined : 'transform',
         }}
       >
         {children}
@@ -74,21 +89,13 @@ const Magnet: React.FC<MagnetProps> = ({
 };
 
 /* ---------- Footer ---------- */
-// Deze footer bundelt contact, socials en terug-naar-boven in semantische HTML → 6.1.
 interface SocialLink {
   href: string;
   icon: string;
-  alt: string;
-  label: string;
+  label: string; // accessible name lives on the link
 }
 
-const readIsDarkFromDOM = () =>
-  typeof document !== 'undefined' &&
-  (document.documentElement.classList.contains('dark') ||
-    document.body.classList.contains('dark'));
-
 const Footer: React.FC = () => {
-  // UI-state voor de interactieve onderdelen van de footer.
   const [copyButtonText, setCopyButtonText] = useState('Copy email address');
   const [showCopyIcon, setShowCopyIcon] = useState(true);
   const [isScrollHovered, setIsScrollHovered] = useState(false);
@@ -97,6 +104,8 @@ const Footer: React.FC = () => {
   const [hoveredSocial, setHoveredSocial] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
+
+  const statusRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -121,13 +130,13 @@ const Footer: React.FC = () => {
   }, []);
 
   const socialLinks: SocialLink[] = [
-    { href: 'https://www.behance.net/Raoulgraphics', icon: '/images/behance.svg', alt: 'Behance', label: 'Behance' },
-    { href: 'https://www.instagram.com/raoulgraphics/', icon: '/images/instagram.svg', alt: 'Instagram', label: 'Instagram' },
-    { href: 'https://www.youtube.com/@RaoulGraphics', icon: '/images/youtube.svg', alt: 'YouTube', label: 'YouTube' },
-    { href: 'https://www.tiktok.com/@raoulgraphics', icon: '/images/tiktok.svg', alt: 'TikTok', label: 'TikTok' },
+    { href: 'https://www.behance.net/Raoulgraphics', icon: '/images/behance.svg', label: 'Behance' },
+    { href: 'https://www.instagram.com/raoulgraphics/', icon: '/images/instagram.svg', label: 'Instagram' },
+    { href: 'https://www.youtube.com/@RaoulGraphics', icon: '/images/youtube.svg', label: 'YouTube' },
+    { href: 'https://www.tiktok.com/@raoulgraphics', icon: '/images/tiktok.svg', label: 'TikTok' },
   ];
 
-  // Afbeeldingen vooraf laden zodat de achtergrond niet flikkert.
+  // Preload
   useEffect(() => {
     ['/images/confirm.svg', '/images/footer.jpg', '/images/footer-dark.jpg'].forEach((src) => {
       const i = new Image();
@@ -135,8 +144,9 @@ const Footer: React.FC = () => {
     });
   }, []);
 
-  // Kopieer de e-mail naar het klembord (toegankelijk alternatief voor mailto).
   const handleCopyEmail = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Gewone click = kopiëren; Ctrl/Cmd-click laat mailto openen.
+    if (e.metaKey || e.ctrlKey) return;
     e.preventDefault();
     const email = 'Raoulma4@gmail.com';
     try {
@@ -144,13 +154,18 @@ const Footer: React.FC = () => {
       setCopyButtonText('Copied');
       setShowCopyIcon(false);
       setEmailCopied(true);
-      setTimeout(() => {
+      // update live region expliciet
+      if (statusRef.current) statusRef.current.textContent = 'Email address copied to clipboard';
+      const t = setTimeout(() => {
         setCopyButtonText('Copy email address');
         setShowCopyIcon(true);
         setEmailCopied(false);
+        if (statusRef.current) statusRef.current.textContent = '';
       }, 2000);
+      return () => clearTimeout(t);
     } catch (err) {
       console.error('Copy failed:', err);
+      if (statusRef.current) statusRef.current.textContent = 'Copy failed';
     }
   };
 
@@ -162,63 +177,64 @@ const Footer: React.FC = () => {
         <div className="footer-main-content">
           <div className="footer-row grid-x align-stretch">
             <div className="cell small-12">
-              {/* Footer image that switches between light and dark theme versions */}
               <img
                 key={isDark ? 'footer-dark' : 'footer-light'}
                 src={footerImgSrc}
                 alt={
                   isDark
-                    ? "Sunlight filtering through garden trees at sunset, casting a warm glow over the grass and surrounding plants."
-                    : "A quiet rural path curving through a line of trees beside plowed fields under a bright blue sky with scattered clouds."
+                    ? 'Sunlight filtering through garden trees at sunset, casting a warm glow over the grass and surrounding plants.'
+                    : 'A quiet rural path curving through a line of trees beside plowed fields under a bright blue sky with scattered clouds.'
                 }
                 className="footer-image"
                 loading="lazy"
               />
             </div>
 
-
             <div className="cell small-12">
               <div className="footer-color-block">
-                {/* Headline met duidelijke call-to-action (structuur → 6.1). */}
                 <h3 className="footer-title">
-                  Quiet interfaces, loud impact.{' '}
+                  Quiet interfaces, loud impact{' '}
                   <span className="footer-title-gradient gradient-clip">Work with me.</span>
                 </h3>
 
                 <div className="footer-cta">
-                  {/* Mailknop met magneet-effect en klembordfunctie. */}
-                  <Magnet
-                    padding={30}
-                    magnetStrength={8}
-                    wrapperClassName="magnet--email"
-                  >
+                  {/* Mailknop: click = kopiëren, Ctrl/Cmd-click = mailto openen */}
+                  <Magnet padding={30} magnetStrength={8} wrapperClassName="magnet--email">
                     <a
                       href="mailto:Raoulma4@gmail.com"
                       onClick={handleCopyEmail}
                       onMouseEnter={() => setEmailHovered(true)}
                       onMouseLeave={() => setEmailHovered(false)}
-                      aria-label="Mail to Raoulma4@gmail.com"
-                      tabIndex={0}
+                      aria-label="Copy email address for Raoulma4@gmail.com"
                       className="btn-email"
+                      title="Click to copy. Ctrl/Cmd-click to open email app."
                     >
                       <span
                         className="btn-fill"
-                        style={{
-                          height: emailHovered || emailCopied ? '100%' : '0%',
-                        }}
+                        style={{ height: emailHovered || emailCopied ? '100%' : '0%' }}
+                        aria-hidden="true"
                       />
                       <span className="btn-content">
                         {emailCopied ? (
                           <img src="/images/confirm.svg" alt="Copied" />
                         ) : (
-                          showCopyIcon && <img src="/images/copy.svg" alt="Copy email address" />
+                          showCopyIcon && <img src="/images/copy.svg" alt="" aria-hidden="true" />
                         )}
-                        <span aria-live="polite" aria-atomic="true">{copyButtonText}</span>
+                        <span>{copyButtonText}</span>
                       </span>
                     </a>
                   </Magnet>
 
-                  {/* Social media lijst met hover-animaties en duidelijke aria-labels. */}
+                  {/* Live region voor statusupdates (non-visual) */}
+                  <span
+                    ref={statusRef}
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                    className="sr-only"
+                  />
+
+                  {/* Social media */}
                   <ul className="social-list">
                     {socialLinks.map((link) => (
                       <li key={link.label}>
@@ -231,14 +247,15 @@ const Footer: React.FC = () => {
                             className="social-btn"
                             onMouseEnter={() => setHoveredSocial(link.label)}
                             onMouseLeave={() => setHoveredSocial(null)}
+                            title={link.label}
                           >
                             <span
                               className="btn-fill"
-                              style={{
-                                height: hoveredSocial === link.label ? '100%' : '0%',
-                              }}
+                              style={{ height: hoveredSocial === link.label ? '100%' : '0%' }}
+                              aria-hidden="true"
                             />
-                            <img src={link.icon} alt={link.alt} className="social-icon" />
+                            {/* decoratief icoon; naam zit op de link */}
+                            <img src={link.icon} alt="" aria-hidden="true" className="social-icon" />
                           </a>
                         </Magnet>
                       </li>
@@ -252,33 +269,29 @@ const Footer: React.FC = () => {
 
         <div className="footer-bottom">
           <div className="footer-brand">
-            <img src="/images/logo-grey.svg" alt="Grey R logo" /> Raoul Martens © 2025
+            <img src="/images/logo-grey.svg" alt="" aria-hidden="true" /> Raoul Martens © 2025
           </div>
 
-          {/* Footer: "Back to top" knop */}
           <a
             href="#top"
             onClick={(e) => {
               e.preventDefault();
-              // Scroll soepel naar boven van het hele document
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             className="scroll-to-top body-sm-medium"
+            aria-label="Back to top of page"
             onMouseEnter={() => setIsScrollHovered(true)}
             onMouseLeave={() => setIsScrollHovered(false)}
+            title="Back to top"
           >
             Back to top
             <img
               src="/images/chevron-top.svg"
-              alt="Scroll to top"
-              style={{
-                transform: isScrollHovered ? 'translateY(-8px)' : 'translateY(0)',
-              }}
+              alt=""
+              aria-hidden="true"
+              style={{ transform: isScrollHovered ? 'translateY(-8px)' : 'translateY(0)' }}
             />
           </a>
-
-
-
         </div>
       </div>
     </footer>

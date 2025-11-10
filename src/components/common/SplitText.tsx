@@ -6,12 +6,12 @@ export interface SplitTextProps {
   text: string;
 
   // animation config
-  delay?: number;          // seconds between tokens
-  duration?: number;       // seconds per token
-  ease?: string;           // CSS timing-function or alias "power3.out"
-  from?: Vec;              // starting state
-  to?: Vec;                // end state
-  startDelay?: number;     // extra start offset (seconds)
+  delay?: number;          // s tussen tokens
+  duration?: number;       // s per token
+  ease?: string;           // CSS timing-fn of alias "power3.out"
+  from?: Vec;              // start
+  to?: Vec;                // eind
+  startDelay?: number;     // extra startoffset (s)
 
   // splitting
   splitType?: "words" | "chars";
@@ -24,10 +24,10 @@ export interface SplitTextProps {
   // persistence
   persistId?: string;
 
-  // optional phrase group styling
+  // optionele phrase-groepstijl
   groupPhrase?: { tokens: string[]; className?: string };
 
-  // fires once after the final token finishes animating
+  // firet één keer na de laatste token-animatie
   onLetterAnimationComplete?: () => void;
 }
 
@@ -36,7 +36,7 @@ const played = new Set<string>();
 const defaultFrom: Vec = { opacity: 0, y: 28 };
 const defaultTo: Vec = { opacity: 1, y: 0 };
 
-// ---- helpers to harden IO config -------------------------------------------
+// ---- helpers -------------------------------------------------------
 const isValidRootMargin = (s: unknown) => {
   if (typeof s !== "string") return false;
   const parts = s.trim().split(/\s+/);
@@ -48,7 +48,7 @@ const clamp01 = (n: unknown, fb = 0.1) => {
   const x = Number(n);
   return Number.isFinite(x) ? Math.min(1, Math.max(0, x)) : fb;
 };
-// ----------------------------------------------------------------------------
+// -------------------------------------------------------------------
 
 const SplitText: React.FC<SplitTextProps> = ({
   text,
@@ -68,47 +68,53 @@ const SplitText: React.FC<SplitTextProps> = ({
 }) => {
   const holderRef = useRef<HTMLSpanElement | null>(null);
 
-  // Arm transitions after initial paint to prevent jump from 'none' → animated timeline.
+  // Transition pas na eerste paint armen
   const [armed, setArmed] = useState(false);
+  const raf1 = useRef<number | null>(null);
+  const raf2 = useRef<number | null>(null);
 
-  // If persistId was played before, render directly "in view"; else wait for IO.
+  // Persist: als eerder gespeeld, direct zichtbaar
   const [inView, setInView] = useState<boolean>(
     () => (persistId && played.has(persistId)) || false
   );
 
   const completionTimer = useRef<number | null>(null);
 
-  // prefers-reduced-motion (stateful with listener)
+  // prefers-reduced-motion
   const [reduceMotion, setReduceMotion] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
     const apply = () => setReduceMotion(!!mq?.matches);
     apply();
+    // oude en nieuwe API’s
     mq?.addEventListener?.("change", apply);
-    return () => mq?.removeEventListener?.("change", apply);
-  }, []);
-
-  // Map alias to CSS bezier
-  const cssEase = ease === "power3.out" ? "cubic-bezier(0.22, 1, 0.36, 1)" : ease;
-
-  // Arm transitions after mount (double RAF ⇒ ensure first paint)
-  useEffect(() => {
-    const id1 = requestAnimationFrame(() => {
-      const id2 = requestAnimationFrame(() => setArmed(true));
-      (setArmed as any)._id2 = id2;
-    });
+    // @ts-ignore
+    mq?.addListener?.(apply);
     return () => {
-      cancelAnimationFrame(id1);
+      mq?.removeEventListener?.("change", apply);
       // @ts-ignore
-      if ((setArmed as any)._id2) cancelAnimationFrame((setArmed as any)._id2);
+      mq?.removeListener?.(apply);
     };
   }, []);
 
-  // IntersectionObserver; flip to inView after at least one paint
+  // Alias → CSS bezier
+  const cssEase = ease === "power3.out" ? "cubic-bezier(0.22, 1, 0.36, 1)" : ease;
+
+  // Arm transitions na dubbele RAF
+  useEffect(() => {
+    raf1.current = requestAnimationFrame(() => {
+      raf2.current = requestAnimationFrame(() => setArmed(true));
+    });
+    return () => {
+      if (raf1.current) cancelAnimationFrame(raf1.current);
+      if (raf2.current) cancelAnimationFrame(raf2.current);
+    };
+  }, []);
+
+  // IntersectionObserver met gesaneerde config
   useEffect(() => {
     if (!holderRef.current || inView || reduceMotion) return;
 
-    // SSR / polyfill-less environments
     if (
       typeof window === "undefined" ||
       typeof (window as any).IntersectionObserver === "undefined"
@@ -118,57 +124,57 @@ const SplitText: React.FC<SplitTextProps> = ({
     }
 
     const node = holderRef.current;
-
-    // sanitize inputs
     const safeRootMargin = isValidRootMargin(rootMargin)
       ? rootMargin
       : "0px 0px -10% 0px";
     const safeThreshold = clamp01(threshold, 0.1);
 
-    let io: IntersectionObserver | undefined;
+    let io: IntersectionObserver | null = null;
     try {
       io = new IntersectionObserver(
         (entries) => {
           const hit = entries.find((e) => e.isIntersecting);
           if (hit) {
+            // zeker weten dat 'from'-styles 1x gepaint zijn
             const run = () => {
               setInView(true);
               if (persistId) played.add(persistId);
               io?.disconnect();
             };
-            // ensure initial 'from' styles painted
             requestAnimationFrame(() => requestAnimationFrame(run));
           }
         },
         { threshold: safeThreshold, root: null, rootMargin: safeRootMargin }
       );
-
       io.observe(node);
     } catch (err) {
-      // Never crash the app because of a malformed config: just reveal
-      console.warn(
-        "[SplitText] IntersectionObserver failed; revealing immediately",
-        { safeRootMargin, safeThreshold, err }
-      );
+      console.warn("[SplitText] IO failed; reveal immediately", {
+        safeRootMargin,
+        safeThreshold,
+        err,
+      });
       setInView(true);
     }
 
-    return () => io?.disconnect();
+    return () => {
+      io?.disconnect();
+      io = null;
+    };
   }, [inView, persistId, threshold, rootMargin, reduceMotion]);
 
-  // --- tokenize: preserve ALL whitespace when splitting by words
+  // Tokenize: behoud ALLE whitespace bij words
   const tokens = useMemo(() => {
     if (splitType === "chars") return Array.from(text);
-    return text.split(/(\s+)/); // keep whitespace segments (spaces, tabs, newlines)
+    return text.split(/(\s+)/);
   }, [text, splitType]);
 
-  // Group set: normalize to lowercase, trim
+  // Group normalisatie
   const groupSet = useMemo(
     () => new Set((groupPhrase?.tokens ?? []).map((t) => t.trim().toLowerCase())),
     [groupPhrase]
   );
 
-  // Fire completion callback once when the last token would finish
+  // Fire completion callback exact één keer
   useEffect(() => {
     if (!onLetterAnimationComplete) return;
     if (!(inView || reduceMotion)) return;
@@ -187,22 +193,21 @@ const SplitText: React.FC<SplitTextProps> = ({
     return () => {
       if (completionTimer.current) window.clearTimeout(completionTimer.current);
     };
+    // onLetterAnimationComplete is bewust niet in deps opgenomen
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView, reduceMotion, tokens.length, startDelay, delay, duration, onLetterAnimationComplete]);
+  }, [inView, reduceMotion, tokens.length, startDelay, delay, duration]);
 
   return (
     <span
       ref={holderRef}
-      aria-label={text}
-      role="text"
-      // inline-block keeps a stable IO box; pre-wrap preserves line breaks & extra spaces
+      aria-label={text}             // één samenhangende naam voor AT
+      // géén role="text": native semantiek volstaat
       style={{ display: "inline-block", textAlign, whiteSpace: "pre-wrap" }}
       className="split-parent"
     >
       {tokens.map((tok, i) => {
         const isWhitespace = /^\s+$/.test(tok);
         if (isWhitespace) {
-          // render whitespace exactly as-is (no animation)
           return (
             <span key={i} aria-hidden="true">
               {tok}
@@ -210,7 +215,7 @@ const SplitText: React.FC<SplitTextProps> = ({
           );
         }
 
-        // normalize token for grouping: strip spaces & punctuation, keep letters/numbers/&/-
+        // normaliseer voor grouping
         const normTok = tok
           .replace(/\s+/g, "")
           .replace(/[^\p{L}\p{N}&-]+/gu, "")
