@@ -9,7 +9,6 @@ type GalleryItem = { src: string; alt: string };
 /* ----------------------------- */
 /* Breakpoint hook (zelfde als Hero) */
 /* ----------------------------- */
-// Houd bij welke schermgrootte actief is zodat de layout zich aanpast (6.2).
 type BP = "mobile" | "tablet" | "desktop";
 function useBreakpoint(): BP | null {
   const [bp, setBp] = React.useState<BP | null>(null);
@@ -70,22 +69,12 @@ const GALLERY_WIDE_2: GalleryItem[] = [
   { src: "/images/play/friet-scootmobiel.jpg", alt: "Black and white photo of people waiting in line at a food stand labeled ‘Verse Friet & Snacks,’ with an older person on a mobility scooter in the foreground." },
 ];
 
-/** Berekent 1/2/3 kolommen zodat het aansluit op de CSS breakpoints. */
-function getCols(): number {
-  if (typeof window === "undefined") return 1;
-  if (window.matchMedia("(min-width: 1025px)").matches) return 3;
-  if (window.matchMedia("(min-width: 768px)").matches) return 2;
-  return 1;
-}
-
 const Play: React.FC = () => {
   const bp = useBreakpoint();
   if (!bp) return null;
 
-  const isMobile = bp === "mobile";
-  const isTablet = bp === "tablet";
+  const colsMain = bp === "desktop" ? 3 : bp === "tablet" ? 2 : 1;
 
-  // Gebruik dezelfde hero-klassen per breakpoint maar houd de tekst links.
   const titleClass =
     bp === "desktop"
       ? "page-title hero-title play-title"
@@ -106,8 +95,6 @@ const Play: React.FC = () => {
   const LATE = new Set([3, 4, 5]);
   const VERY_LATE = new Set([6, 7, 8]);
 
-  // Eén keer per render berekenen is genoeg voor de animatievertragingen.
-  const colsMain = getCols();
   const headingId = "play-heading";
 
   return (
@@ -121,7 +108,7 @@ const Play: React.FC = () => {
         tabIndex={-1}
         aria-labelledby={headingId}
       >
-        {/* Titelblok met animatie en duidelijke H1. */}
+        {/* Titel */}
         <section className="play-container">
           <div className="title-grid">
             <div className="title-col">
@@ -136,7 +123,7 @@ const Play: React.FC = () => {
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.2}
                   rootMargin="0px 0px -10% 0px"
-                  textAlign="left" // altijd links uitgelijnd voor leesbaarheid
+                  textAlign="left"
                   groupPhrase={{ tokens: ["curiosity"], className: "gradient-group" }}
                 />
               </h1>
@@ -144,7 +131,7 @@ const Play: React.FC = () => {
           </div>
         </section>
 
-        {/* Hoofdgalerij met responsieve afbeeldingen. */}
+        {/* Hoofdgalerij */}
         <section className="play-container gallery-container" aria-label="Image gallery">
           <div className="gallery">
             {GALLERY_MAIN.map(({ src, alt }, i) => {
@@ -152,13 +139,8 @@ const Play: React.FC = () => {
               const perRowIndex = i % colsMain;
               const delay = perRowIndex * STAGGER_COL;
 
-              const rootMarginBottomPct = isFirstRow
-                ? undefined
-                : VERY_LATE.has(i)
-                  ? 6
-                  : LATE.has(i)
-                    ? 10
-                    : 16;
+              const rootMarginBottomPct =
+                isFirstRow ? undefined : VERY_LATE.has(i) ? 6 : LATE.has(i) ? 10 : 16;
 
               return (
                 <div key={i} className="tile">
@@ -168,7 +150,14 @@ const Play: React.FC = () => {
                     rootMarginBottomPct={rootMarginBottomPct}
                     delay={delay}
                   >
-                    <img className="tile-media" src={src} alt={alt} loading="lazy" />
+                    <img
+                      className="tile-media"
+                      src={src}
+                      alt={alt}
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                    />
                   </AnimatedContent>
                 </div>
               );
@@ -181,7 +170,14 @@ const Play: React.FC = () => {
           {GALLERY_WIDE.map(({ src, alt }, i) => (
             <div key={i} className="tile-wide">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={(i % 2) * STAGGER_COL}>
-                <img className="tile-media-wide" src={src} alt={alt} loading="lazy" />
+                <img
+                  className="tile-media-wide"
+                  src={src}
+                  alt={alt}
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
+                />
               </AnimatedContent>
             </div>
           ))}
@@ -192,7 +188,14 @@ const Play: React.FC = () => {
           {GALLERY_SQUARE.map(({ src, alt }, i) => (
             <div key={i} className="tile-square">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={i * 0.18}>
-                <img className="tile-media-square" src={src} alt={alt} loading="lazy" />
+                <img
+                  className="tile-media-square"
+                  src={src}
+                  alt={alt}
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
+                />
               </AnimatedContent>
             </div>
           ))}
@@ -203,12 +206,24 @@ const Play: React.FC = () => {
           <div className="mix-empty" />
           <div className="tile-mix mix-horizontal">
             <AnimatedContent {...imgAnim} rootMarginBottomPct={14}>
-              <img src={GALLERY_MIX.horizontal.src} alt={GALLERY_MIX.horizontal.alt} loading="lazy" />
+              <img
+                src={GALLERY_MIX.horizontal.src}
+                alt={GALLERY_MIX.horizontal.alt}
+                loading="lazy"
+                decoding="async"
+                fetchPriority="low"
+              />
             </AnimatedContent>
           </div>
           <div className="tile-mix mix-vertical">
             <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={STAGGER_COL}>
-              <img src={GALLERY_MIX.vertical.src} alt={GALLERY_MIX.vertical.alt} loading="lazy" />
+              <img
+                src={GALLERY_MIX.vertical.src}
+                alt={GALLERY_MIX.vertical.alt}
+                loading="lazy"
+                decoding="async"
+                fetchPriority="low"
+              />
             </AnimatedContent>
           </div>
         </section>
@@ -218,7 +233,14 @@ const Play: React.FC = () => {
           {GALLERY_VERTICALS.map(({ src, alt }, i) => (
             <div key={i} className="tile-vertical">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={i * 0.18}>
-                <img className="tile-media-vertical" src={src} alt={alt} loading="lazy" />
+                <img
+                  className="tile-media-vertical"
+                  src={src}
+                  alt={alt}
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
+                />
               </AnimatedContent>
             </div>
           ))}
@@ -229,6 +251,8 @@ const Play: React.FC = () => {
                 src={GALLERY_MIX.vertical.src}
                 alt={GALLERY_MIX.vertical.alt}
                 loading="lazy"
+                decoding="async"
+                fetchPriority="low"
               />
             </AnimatedContent>
           </div>
@@ -243,6 +267,8 @@ const Play: React.FC = () => {
                 src={GALLERY_SQ_WIDE.square.src}
                 alt={GALLERY_SQ_WIDE.square.alt}
                 loading="lazy"
+                decoding="async"
+                fetchPriority="low"
               />
             </AnimatedContent>
           </div>
@@ -254,6 +280,8 @@ const Play: React.FC = () => {
                 src={GALLERY_SQ_WIDE.horizontal.src}
                 alt={GALLERY_SQ_WIDE.horizontal.alt}
                 loading="lazy"
+                decoding="async"
+                fetchPriority="low"
               />
             </AnimatedContent>
           </div>
@@ -264,7 +292,14 @@ const Play: React.FC = () => {
           {GALLERY_WIDE_2.map(({ src, alt }, i) => (
             <div key={i} className="tile-wide-2">
               <AnimatedContent {...imgAnim} rootMarginBottomPct={14} delay={i * 0.22}>
-                <img className="tile-media-wide-2" src={src} alt={alt} loading="lazy" />
+                <img
+                  className="tile-media-wide-2"
+                  src={src}
+                  alt={alt}
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
+                />
               </AnimatedContent>
             </div>
           ))}

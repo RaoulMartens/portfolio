@@ -1,58 +1,76 @@
 // src/pages/Me.tsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useLayoutEffect, useMemo } from "react";
 import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
 import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
 
 /* ----------------------------- */
-/* Breakpoint hook (zelfde als Hero) */
+/* Breakpoint hook (SSR-safe)    */
 /* ----------------------------- */
-// Zorgt dat de layout meebeweegt met de schermgrootte (6.2).
 type BP = "mobile" | "tablet" | "desktop";
-function useBreakpoint(): BP | null {
-  const [bp, setBp] = useState<BP | null>(null);
+
+function useBreakpoint(): BP {
+  // SSR: kies een veilige default
+  const ssrSafeDefault: BP = "desktop";
+  const getBP = () => {
+    if (typeof window === "undefined") return ssrSafeDefault;
+    const w = window.innerWidth;
+    return w < 768 ? "mobile" : w <= 1024 ? "tablet" : "desktop";
+  };
+
+  const [bp, setBp] = useState<BP>(getBP);
+
+  // layoutEffect om eerste paint jump te beperken
+  useLayoutEffect(() => {
+    setBp(getBP());
+  }, []);
+
   useEffect(() => {
-    const calc = () => {
-      const w = window.innerWidth;
-      setBp(w < 768 ? "mobile" : w <= 1024 ? "tablet" : "desktop");
-    };
-    calc();
-    window.addEventListener("resize", calc);
-    return () => window.removeEventListener("resize", calc);
+    const onResize = () => setBp(getBP());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
   return bp;
 }
 
 /* ----------------------------- */
-/* In-view title hook            */
+/* In-view title hook (hardened) */
 /* ----------------------------- */
-// Geeft door wanneer een sectietitel zichtbaar is zodat animaties starten.
-function useInViewTitle(options?: {
+function useInViewTitle(params?: {
   rootMargin?: string;
   thresholds?: number[];
   minRatio?: number;
-  minTopRatio?: number; // deel van het scherm vanaf de bovenkant (bijv. 0.2 = 20%)
+  minTopRatio?: number; // 0..1 vh
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
 
+  // Ontpak en memoize zodat deps stabiel zijn
+  const {
+    rootMargin,
+    thresholds,
+    minRatio,
+    minTopRatio,
+  } = useMemo(
+    () => ({
+      rootMargin: params?.rootMargin ?? "0px 0px -35% 0px",
+      thresholds: params?.thresholds ?? [0, 0.25, 0.5, 0.6, 0.75, 0.9, 1],
+      minRatio: params?.minRatio ?? 0.6,
+      minTopRatio: params?.minTopRatio ?? 0.2,
+    }),
+    [params?.rootMargin, params?.thresholds, params?.minRatio, params?.minTopRatio]
+  );
+
   useEffect(() => {
     if (inView) return;
+    if (typeof window === "undefined") { setInView(true); return; }
 
     let obs: IntersectionObserver | null = null;
     let rafId = 0;
 
-    const arm = () => {
-      if (obs) return;
-
-      const {
-        rootMargin = "0px 0px -35% 0px",
-        thresholds = [0, 0.25, 0.5, 0.6, 0.75, 0.9, 1],
-        minRatio = 0.6,
-        minTopRatio = 0.2,
-      } = options || {};
-
+    const start = () => {
+      if (!ref.current) return;
       obs = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
@@ -60,8 +78,7 @@ function useInViewTitle(options?: {
             const vh = entry.rootBounds?.height ?? window.innerHeight;
             const top = entry.boundingClientRect.top;
             const ratio = entry.intersectionRatio;
-            const deepEnough = ratio >= minRatio && top >= vh * minTopRatio;
-            if (deepEnough) {
+            if (ratio >= minRatio && top >= vh * minTopRatio) {
               setInView(true);
               obs?.disconnect();
               obs = null;
@@ -71,17 +88,15 @@ function useInViewTitle(options?: {
         },
         { rootMargin, threshold: thresholds }
       );
-
-      rafId = requestAnimationFrame(() => {
-        if (ref.current) obs?.observe(ref.current);
-      });
+      rafId = requestAnimationFrame(() => ref.current && obs?.observe(ref.current));
     };
 
-    const afterFonts = () => arm();
-    if ("fonts" in document && (document as any).fonts?.ready) {
-      (document as any).fonts.ready.then(afterFonts).catch(afterFonts);
+    // Wacht op fonts voor stabiele bounds
+    const ready = (document as any).fonts?.ready;
+    if (ready && typeof ready.then === "function") {
+      ready.then(start).catch(start);
     } else {
-      afterFonts();
+      start();
     }
 
     return () => {
@@ -89,22 +104,23 @@ function useInViewTitle(options?: {
       obs?.disconnect();
       obs = null;
     };
-  }, [inView, options]);
+  }, [inView, rootMargin, thresholds, minRatio, minTopRatio]);
 
   return { ref, inView };
 }
 
 const Me: React.FC = () => {
   const bp = useBreakpoint();
+  const isMobile = bp === "mobile";
+  const headingId = "me-heading";
 
-  // Titels komen pas tot leven als ze in beeld komen (zelfde gevoel als projectkaarten).
+  // Titels liften pas in als ze in view zijn
   const approach = useInViewTitle({
     rootMargin: "0px 0px -35% 0px",
     thresholds: [0, 0.25, 0.5, 0.6, 0.75, 0.9, 1],
     minRatio: 0.6,
     minTopRatio: 0.2,
   });
-
   const favorites = useInViewTitle({
     rootMargin: "0px 0px -35% 0px",
     thresholds: [0, 0.25, 0.5, 0.6, 0.75, 0.9, 1],
@@ -112,7 +128,7 @@ const Me: React.FC = () => {
     minTopRatio: 0.2,
   });
 
-  // Afbeeldingsanimatie: hetzelfde gedrag als in de hero.
+  // Animatieprofielen
   const heroImgAnim = {
     distance: 80,
     direction: "vertical" as const,
@@ -124,14 +140,8 @@ const Me: React.FC = () => {
     rootMarginBottomPct: 14,
     delay: 0.18,
   };
+  const heroBodyAnim = { ...heroImgAnim, delay: 0.9 };
 
-  // Tekst verschijnt iets later zodat de focus eerst op de foto ligt.
-  const heroBodyAnim = {
-    ...heroImgAnim,
-    delay: 0.9, // duidelijke pauze na de afbeelding
-  };
-
-  // Kaarten schuiven omhoog wanneer je scrollt.
   const cardReveal = {
     distance: 80,
     direction: "vertical" as const,
@@ -141,10 +151,6 @@ const Me: React.FC = () => {
     animateOpacity: true,
     rootMarginBottomPct: 14,
   };
-
-  if (!bp) return null;
-  const isMobile = bp === "mobile";
-  const headingId = "me-heading";
 
   return (
     <div className="viewport-wrapper">
@@ -158,7 +164,7 @@ const Me: React.FC = () => {
         aria-labelledby={headingId}
       >
         <div className="grid-container me-grid">
-          {/* Titel met dezelfde groottes als de Hero maar links uitgelijnd. */}
+          {/* Titel */}
           <div className="me-title-col">
             <h1
               id={headingId}
@@ -178,20 +184,27 @@ const Me: React.FC = () => {
                 to={{ opacity: 1, y: 0 }}
                 threshold={0.1}
                 rootMargin="-100px"
-                textAlign="left" // altijd links uitlijnen
+                textAlign="left"
                 groupPhrase={{ tokens: ["digital", "products"], className: "gradient-group" }}
               />
             </h1>
           </div>
 
-          {/* Image */}
+          {/* Afbeelding */}
           <div className="me-image-col">
             <AnimatedContent {...heroImgAnim}>
-              <img className="me-image" src="/images/me/me.jpg" alt="Raoul Martens standing and smiling on a bridge between two modern buildings, with a geometric green-covered high-rise in the background under a partly cloudy sky." />
+              <img
+                className="me-image"
+                src="/images/me/me.jpg"
+                alt="Raoul Martens standing and smiling on a bridge between two modern buildings, with a geometric green-covered high-rise in the background."
+                decoding="async"
+                loading="eager"
+                fetchPriority="high"
+              />
             </AnimatedContent>
           </div>
 
-          {/* Body — later */}
+          {/* Body */}
           <div className="me-body-col">
             <AnimatedContent {...heroBodyAnim}>
               <p className="me-body">
@@ -222,7 +235,7 @@ const Me: React.FC = () => {
                     startDelay={0.1}
                   />
                 ) : (
-                  <span className="invisible-placeholder">
+                  <span className="invisible-placeholder" aria-hidden="true">
                     My approach, from first spark to live product
                   </span>
                 )}
@@ -271,7 +284,9 @@ const Me: React.FC = () => {
                     startDelay={0.1}
                   />
                 ) : (
-                  <span className="invisible-placeholder">A few things I live for</span>
+                  <span className="invisible-placeholder" aria-hidden="true">
+                    A few things I live for
+                  </span>
                 )}
               </h2>
             </div>

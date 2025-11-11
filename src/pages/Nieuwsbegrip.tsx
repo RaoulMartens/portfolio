@@ -77,7 +77,6 @@ const Nieuwsbegrip: React.FC = () => {
   };
 
   const STAGGER = 0.18;
-
   const headingId = "nieuwsbegrip-heading";
 
   return (
@@ -99,7 +98,7 @@ const Nieuwsbegrip: React.FC = () => {
                 <SplitText
                   text="Nieuwsbegrip"
                   splitType="words"
-                  delay={0.06}            // ✅ fixed (was 60)
+                  delay={0.06}
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 28 }}
@@ -113,14 +112,14 @@ const Nieuwsbegrip: React.FC = () => {
                 <SplitText
                   text="A fresh take on the news-based reading comprehension method."
                   splitType="words"
-                  delay={0.06}            // ✅ fixed (was 60)
+                  delay={0.06}
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 24 }}
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.1}
                   textAlign="left"
-                  startDelay={0.15}       // subtle trail after title
+                  startDelay={0.15}
                 />
               </p>
             </div>
@@ -144,14 +143,13 @@ const Nieuwsbegrip: React.FC = () => {
               <div className="np-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    How can we make teaching easier in an already demanding classroom environment?
-                    That was the question my team and I set out to answer when we were challenged
-                    to redesign Nieuwsbegrip. A widely used platform that helps teachers improve
-                    students’ reading comprehension through weekly news-based lessons. Working in
-                    a multidisciplinary team of five, we applied the IDEO design thinking process
-                    to develop a renewed concept specifically tailored to teachers. Through multiple
-                    iterations, co-creative sessions, and user testing with educators, we created a
-                    more intuitive and efficient experience that helps teachers focus on what they do best: teaching.
+                    How can we make teaching easier in an already demanding classroom environment? That was the
+                    question my team and I set out to answer when we were challenged to redesign Nieuwsbegrip. A
+                    widely used platform that helps teachers improve students’ reading comprehension through weekly
+                    news-based lessons. Working in a multidisciplinary team of five, we applied the IDEO design
+                    thinking process to develop a renewed concept specifically tailored to teachers. Through multiple
+                    iterations, co-creative sessions, and user testing with educators, we created a more intuitive and
+                    efficient experience that helps teachers focus on what they do best: teaching.
                   </p>
                 </AnimatedContent>
               </div>
@@ -176,11 +174,10 @@ const Nieuwsbegrip: React.FC = () => {
               <div className="np-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    While the platform is rich in content, many teachers experience friction when
-                    using it—citing difficulty navigating, a cluttered interface, and a lack of
-                    clarity when preparing lessons. Our redesign aimed to reduce this friction by
-                    simplifying the teacher’s journey: from logging in and selecting appropriate
-                    texts to planning and assigning lessons, streamlining the process to better
+                    While the platform is rich in content, many teachers experience friction when using it—citing
+                    difficulty navigating, a cluttered interface, and a lack of clarity when preparing lessons. Our
+                    redesign aimed to reduce this friction by simplifying the teacher’s journey: from logging in and
+                    selecting appropriate texts to planning and assigning lessons, streamlining the process to better
                     support their daily workflow.
                   </p>
                 </AnimatedContent>
@@ -194,38 +191,49 @@ const Nieuwsbegrip: React.FC = () => {
               {[
                 {
                   src: "/images/nieuwsbegrip/image-1.jpg",
-                  alt: "Laptop mockup showing the redesigned Nieuwsbegrip interface with the ‘Week 17’ lesson overview and navigation menu on the left side.",
+                  alt:
+                    "Laptop mockup showing the redesigned Nieuwsbegrip interface with the ‘Week 17’ lesson overview and navigation menu on the left side.",
                 },
                 {
                   src: "/images/nieuwsbegrip/image-2.jpg",
-                  alt: "Laptop mockup displaying the redesigned Nieuwsbegrip dashboard with quick access tiles for lessons, digital board, and workflows",
+                  alt:
+                    "Laptop mockup displaying the redesigned Nieuwsbegrip dashboard with quick access tiles for lessons, digital board, and workflows.",
                 },
                 {
                   src: "/images/nieuwsbegrip/image-3.jpg",
-                  alt: "Two laptops showing the redesigned Nieuwsbegrip student management pages, with class lists and settings for individual learners.",
+                  alt:
+                    "Two laptops showing the redesigned Nieuwsbegrip student management pages, with class lists and settings for individual learners.",
                 },
                 {
                   src: "/images/nieuwsbegrip/image-4.jpg",
-                  alt: "Laptop mockup showing the redesigned Nieuwsbegrip archive page with a list of past lessons and filters for strategies and saved materials.",
+                  alt:
+                    "Laptop mockup showing the redesigned Nieuwsbegrip archive page with a list of past lessons and filters for strategies and saved materials.",
                 },
                 {
                   src: "/images/nieuwsbegrip/image-5.jpg",
-                  alt: "Laptop mockup displaying the redesigned Nieuwsbegrip results page with performance graphs showing student test scores over time.",
+                  alt:
+                    "Laptop mockup displaying the redesigned Nieuwsbegrip results page with performance graphs showing student test scores over time.",
                 },
                 {
                   src: "/images/nieuwsbegrip/image-6.jpg",
-                  alt: "Two laptops showing redesigned Nieuwsbegrip pages: one with student test results for a speed test block, and the other with extra lesson materials and quizzes.",
+                  alt:
+                    "Two laptops showing redesigned Nieuwsbegrip pages: one with student test results for a speed test block, and the other with extra lesson materials and quizzes.",
                 },
               ].map(({ src, alt }, i) => (
                 <AnimatedContent key={i} {...imageReveal} delay={i * 0.1}>
-                  <figure className="np-image" aria-label={alt}>
-                    <img src={src} alt={alt} loading="lazy" decoding="async" />
+                  <figure className="np-image">
+                    <img
+                      src={src}
+                      alt={alt}
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                    />
                   </figure>
                 </AnimatedContent>
               ))}
             </div>
           </div>
-
         </section>
       </main>
 

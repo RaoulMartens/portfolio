@@ -1,5 +1,5 @@
 // src/hooks/useDarkMode.tsx
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type ThemeChoice = "light" | "dark" | "system";
 
@@ -9,91 +9,101 @@ declare global {
   }
 }
 
-const KEY: "theme" = "theme";
+const KEY = "theme" as const;
 
-function isDarkFrom(choice: ThemeChoice): boolean {
+function resolveDark(choice: ThemeChoice): boolean {
   if (choice === "dark") return true;
   if (choice === "light") return false;
+  // system
   const mq = typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: dark)");
   return !!mq && !!mq.matches;
 }
 
 export const useDarkMode = (): { isDark: boolean; toggleDarkMode: () => void } => {
+  // 1) Keuze laden (default: 'system' als er niets staat)
   const [choice, setChoice] = useState<ThemeChoice>(() => {
-    if (typeof window === "undefined") return "light";
+    if (typeof window === "undefined") return "system";
     const saved = (localStorage.getItem(KEY) as ThemeChoice) || "system";
-    return saved;
+    return saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
   });
 
-  const isDark = isDarkFrom(choice);
+  // 2) Opgeloste modus berekenen op basis van keuze + systeem
+  const isDark = useMemo(() => resolveDark(choice), [choice]);
 
-  // Apply whenever our resolved state changes (mirror the bootstrap)
+  // 3) Toepassen op DOM bij iedere verandering van de OPGELOSTE modus
   useEffect(() => {
-    const next: ThemeChoice = isDark ? "dark" : "light";
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    const body = document.body;
 
-    if (window.__setTheme) {
-      window.__setTheme(next);
-    } else {
-      // Fallback if bootstrap isn't present for some reason
-      const root = document.documentElement;
-      const body = document.body;
-      root.classList.toggle("dark", next === "dark");
-      root.classList.toggle("light", next === "light");
-      body.classList.toggle("dark", next === "dark");
-      body.classList.toggle("light", next === "light");
-      try {
-        localStorage.setItem(KEY, next);
-      } catch {}
-      try {
-        root.style.colorScheme = next;
-      } catch {}
-      // Let other mounted components know
-      window.dispatchEvent(new CustomEvent("themechange", { detail: { mode: next } }));
-    }
+    // classes
+    root.classList.toggle("dark", isDark);
+    root.classList.toggle("light", !isDark);
+    body.classList.toggle("dark", isDark);
+    body.classList.toggle("light", !isDark);
+
+    // color-scheme hint
+    root.style.colorScheme = isDark ? "dark" : "light";
   }, [isDark]);
 
-  // Stay in sync with other parts of the app / tabs
+  // 4) Externe sync: storage-events, system-wijzigingen, custom 'themechange'
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
-      if (e.key === KEY && e.newValue) setChoice(e.newValue as ThemeChoice);
+      if (e.key === KEY && e.newValue) {
+        const next = e.newValue as ThemeChoice;
+        if (next === "light" || next === "dark" || next === "system") setChoice(next);
+      }
     };
 
     const mq = window.matchMedia?.("(prefers-color-scheme: dark)");
-    const onMq = () => {
-      if (choice === "system") setChoice("system"); // recompute isDark
+    const onMqChange = () => {
+      // Alleen herberekenen als gebruiker op 'system' staat
+      if (choice === "system") {
+        // Trigger re-render door dezelfde keuze te zetten
+        setChoice("system");
+      }
     };
 
     const onThemeChange = (e: Event) => {
       const mode = (e as CustomEvent).detail?.mode as ThemeChoice | undefined;
-      if (mode) setChoice(mode);
-      else {
+      if (mode === "light" || mode === "dark" || mode === "system") {
+        setChoice(mode);
+      } else {
         const saved = (localStorage.getItem(KEY) as ThemeChoice) || "system";
         setChoice(saved);
       }
     };
 
     window.addEventListener("storage", onStorage);
-    mq?.addEventListener?.("change", onMq);
+    mq?.addEventListener?.("change", onMqChange);
     window.addEventListener("themechange", onThemeChange as EventListener);
 
     return () => {
       window.removeEventListener("storage", onStorage);
-      mq?.removeEventListener?.("change", onMq);
+      mq?.removeEventListener?.("change", onMqChange);
       window.removeEventListener("themechange", onThemeChange as EventListener);
     };
   }, [choice]);
 
-  const toggleDarkMode = () => {
-    const next: ThemeChoice = isDark ? "light" : "dark";
-    setChoice(next);
-    // Optimistically inform others immediately
-    if (window.__setTheme) window.__setTheme(next);
-    else {
-      try {
-        localStorage.setItem(KEY, next);
-      } catch {}
-      window.dispatchEvent(new CustomEvent("themechange", { detail: { mode: next } }));
+  // 5) Persist de KEUZE bij iedere wijziging van choice
+  useEffect(() => {
+    try {
+      localStorage.setItem(KEY, choice);
+    } catch { }
+    // Informeer eventuele luisteraars (andere tabs / onderdelen)
+    if (window.__setTheme) {
+      // Belangrijk: stuur de KEUZE (light/dark/system), niet de opgeloste modus
+      window.__setTheme(choice);
+    } else {
+      window.dispatchEvent(new CustomEvent("themechange", { detail: { mode: choice } }));
     }
+  }, [choice]);
+
+  // 6) Toggle: vanuit 'system' flippen we t.o.v. de HUIDIGE opgeloste modus
+  const toggleDarkMode = () => {
+    const next: ThemeChoice =
+      choice === "system" ? (isDark ? "light" : "dark") : (choice === "dark" ? "light" : "dark");
+    setChoice(next);
   };
 
   return { isDark, toggleDarkMode };

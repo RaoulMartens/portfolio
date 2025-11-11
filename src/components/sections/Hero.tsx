@@ -4,10 +4,7 @@ import { useSpring, animated, to } from '@react-spring/web';
 import SplitText from '../common/SplitText';
 import AnimatedContent from '../common/AnimatedContent';
 
-/* ----------------------------- */
-/* Magnet (react-spring)         */
-/* ----------------------------- */
-// Kleine hulpcomponent voor het magnetische effect rond visuals (responsief → 6.2).
+/* Magnet (react-spring) */
 interface MagnetProps {
   children: React.ReactNode;
   padding?: number;
@@ -33,8 +30,20 @@ const Magnet: React.FC<MagnetProps> = ({
     config: { tension: 280, friction: 12, mass: 1.2 },
   }));
 
+  // respect reduced motion
+  const [reduceMotion, setReduceMotion] = useState(false);
   useEffect(() => {
-    if (disabled) {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => setReduceMotion(!!mq.matches);
+    apply();
+    mq.addEventListener ? mq.addEventListener('change', apply) : mq.addListener(apply);
+    return () =>
+      mq.removeEventListener ? mq.removeEventListener('change', apply) : mq.removeListener(apply as any);
+  }, []);
+
+  useEffect(() => {
+    if (disabled || reduceMotion || typeof window === 'undefined') {
       api.start({ x: 0, y: 0 });
       return;
     }
@@ -53,7 +62,7 @@ const Magnet: React.FC<MagnetProps> = ({
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [padding, disabled, magnetStrength, api]);
+  }, [padding, disabled, magnetStrength, api, reduceMotion]);
 
   return (
     <div
@@ -75,14 +84,12 @@ const Magnet: React.FC<MagnetProps> = ({
   );
 };
 
-/* ----------------------------- */
-/* Breakpoint hook               */
-/* ----------------------------- */
-// Bepaal eenvoudig of we mobiel, tablet of desktop tonen (responsief → 6.2).
+/* Breakpoint hook */
 type BP = 'mobile' | 'tablet' | 'desktop';
 function useBreakpoint(): BP | null {
   const [bp, setBp] = useState<BP | null>(null);
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const calc = () => {
       const w = window.innerWidth;
       setBp(w < 768 ? 'mobile' : w <= 1024 ? 'tablet' : 'desktop');
@@ -94,25 +101,17 @@ function useBreakpoint(): BP | null {
   return bp;
 }
 
-/* ----------------------------- */
-/* Hero                          */
-/* ----------------------------- */
+/* Hero */
 interface HeroProps {
   headingId?: string;
 }
 
-/**
- * Hero-sectie met animaties en duidelijke heading.
- * - Structuur: <header> met <h1> → criterium 6.1.
- * - Responsief: layout wisselt op basis van breakpoint → criterium 6.2.
- * - Toegankelijk: aria-labelledby en leesbare tekst → criterium 6.3.
- */
-const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
+const Hero: React.FC<HeroProps> = ({ headingId = 'home-hero-heading' }) => {
   const bp = useBreakpoint();
   const [viewportHeight, setViewportHeight] = useState<string>('100vh');
 
   useLayoutEffect(() => {
-    // Houd de hero even hoog als het scherm minus de navigatiehoogte.
+    if (typeof window === 'undefined') return;
     const calculateHeight = () => {
       const nav = document.querySelector('.navbar') as HTMLElement | null;
       const offset = nav?.offsetHeight || 0;
@@ -123,10 +122,8 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
     return () => window.removeEventListener('resize', calculateHeight);
   }, []);
 
-  // Placeholder voor eventuele vervolgacties wanneer de SplitText klaar is.
   const handleAnimationComplete = () => { };
 
-  // Basisconfig voor fade-up animaties zodat alles hetzelfde tempo volgt.
   const fadeUp = {
     distance: 50,
     direction: 'vertical' as const,
@@ -138,24 +135,48 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
     rootMarginBottomPct: 14,
   };
 
-  // Verschillende vertragingen voor iconen/tekst zodat de animaties rustig binnenkomen.
-  const iconDelay = 1.0;      // icoon iets later
-  const subtitleDelay = 1.2;  // ondertitel als laatste
+  const iconDelay = 1.0;
+  const subtitleDelay = 1.2;
 
-  // Afbeelding komt na de titel, maar vóór de ondertitel, voor een logische volgorde.
   const heroImgAnim = {
     ...fadeUp,
     distance: 80,
-    delay: 0.6, // midden timing
+    delay: 0.6,
   };
 
-  // Speciaal groepje woorden zodat "UX & Product Designer" dezelfde gradient krijgt.
   const heroGroupPhrase = {
     tokens: ['ux', '&', 'product', 'designer'],
     className: 'gradient-group',
   };
 
   if (!bp) return null;
+
+  // shared hero text
+  const heroText =
+    "I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people.";
+
+  // pin icon is decorative, hide from a11y tree
+  const PinIcon = ({ size = 24 }: { size?: number }) => (
+    <img
+      className="hero-pin"
+      src="/images/map-pin.svg"
+      alt=""
+      aria-hidden="true"
+      width={size}
+      height={size}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+
+  // hero image attributes to avoid CLS + prioritize above-the-fold
+  const heroImgAttrs = {
+    src: '/images/hero-image.jpg',
+    decoding: 'async' as const,
+    loading: 'eager' as const,
+    // fetchPriority ondersteunt moderne browsers; harmless fallback elders
+    fetchpriority: 'high' as any,
+  };
 
   return (
     <header
@@ -165,7 +186,7 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
       aria-labelledby={headingId}
     >
       <div className="grid-container hero-center-wrap">
-        {/* ---------------- Desktop ---------------- */}
+        {/* Desktop */}
         {bp === 'desktop' && (
           <div className="hero-desktop-layout">
             <div className="hero-grid">
@@ -173,9 +194,8 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
                 <div className="hero-title-wrapper">
                   <div className="hero-desktop-title-container">
                     <h1 id={headingId} className="page-title hero-title">
-                      {/* SplitText animeren de woorden zodat de intro rustig leesbaar binnenkomt. */}
                       <SplitText
-                        text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
+                        text={heroText}
                         delay={0.06}
                         duration={0.8}
                         ease="power3.out"
@@ -183,7 +203,7 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
                         from={{ opacity: 0, y: 50 }}
                         to={{ opacity: 1, y: 0 }}
                         threshold={0.1}
-                        rootMargin="-100px"
+                        rootMargin="0px 0px -10% 0px"
                         textAlign="left"
                         onLetterAnimationComplete={handleAnimationComplete}
                         groupPhrase={heroGroupPhrase}
@@ -191,15 +211,8 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
                     </h1>
 
                     <div className="subtitle-row">
-                      {/* Locatie-informatie koppelt icoon en tekst voor screenreaders. */}
                       <AnimatedContent {...fadeUp} delay={iconDelay}>
-                        <img
-                          className="hero-pin"
-                          src="/images/map-pin.svg"
-                          alt="Location pin"
-                          width={24}
-                          height={24}
-                        />
+                        <PinIcon size={24} />
                       </AnimatedContent>
 
                       <AnimatedContent {...fadeUp} delay={subtitleDelay}>
@@ -208,13 +221,14 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
                     </div>
                   </div>
 
-                  {/* Hero-afbeelding met magnetisch effect voor extra interactie. */}
                   <AnimatedContent {...heroImgAnim}>
                     <Magnet padding={50} magnetStrength={9}>
                       <img
-                        src="/images/hero-image.jpg"
-                        alt="Raoul Martens sitting outside at a café, wearing a light cap and dark shirt, smiling at the camera."
+                        {...heroImgAttrs}
+                        alt="Portrait of Raoul Martens seated at an outdoor café, smiling toward the camera."
                         className="hero-image hero-image--desktop"
+                        width={640}
+                        height={800}
                       />
                     </Magnet>
                   </AnimatedContent>
@@ -224,25 +238,25 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
           </div>
         )}
 
-        {/* ---------------- Tablet ---------------- */}
+        {/* Tablet */}
         {bp === 'tablet' && (
           <div className="hero-tablet-layout">
-            {/* Eerst de afbeelding zodat hij naast de tekst staat in tablet-layout. */}
             <AnimatedContent {...heroImgAnim}>
               <Magnet padding={50} magnetStrength={9}>
                 <img
-                  src="/images/hero-image.jpg"
-                  alt="Hero image"
+                  {...heroImgAttrs}
+                  alt="Portrait of Raoul Martens at an outdoor café."
                   className="hero-image hero-image--tablet"
+                  width={560}
+                  height={700}
                 />
               </Magnet>
             </AnimatedContent>
 
             <div className="text-container" style={{ width: '100%' }}>
-              {/* Zelfde boodschap in de h1 maar gecentreerd voor tablet. */}
               <h1 id={headingId} className="page-title hero-title hero-title--tablet">
                 <SplitText
-                  text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
+                  text={heroText}
                   delay={0.06}
                   duration={0.8}
                   ease="power3.out"
@@ -250,7 +264,7 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
                   from={{ opacity: 0, y: 50 }}
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.1}
-                  rootMargin="-100px"
+                  rootMargin="0px 0px -10% 0px"
                   textAlign="center"
                   onLetterAnimationComplete={handleAnimationComplete}
                   groupPhrase={heroGroupPhrase}
@@ -258,15 +272,8 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
               </h1>
 
               <div className="subtitle-row">
-                {/* Iconen/tekst blijven identiek zodat screenreaders consistente inhoud horen. */}
                 <AnimatedContent {...fadeUp} delay={iconDelay}>
-                  <img
-                    className="hero-pin"
-                    src="/images/map-pin.svg"
-                    alt="Location pin"
-                    width={24}
-                    height={24}
-                  />
+                  <PinIcon size={24} />
                 </AnimatedContent>
 
                 <AnimatedContent {...fadeUp} delay={subtitleDelay}>
@@ -277,25 +284,25 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
           </div>
         )}
 
-        {/* ---------------- Mobile ---------------- */}
+        {/* Mobile */}
         {bp === 'mobile' && (
           <div className="hero-mobile-layout">
-            {/* Mobiel: afbeelding staat bovenaan zodat de intro meteen zichtbaar is. */}
             <AnimatedContent {...heroImgAnim}>
               <Magnet padding={50} magnetStrength={9}>
                 <img
-                  src="/images/hero-image.jpg"
-                  alt="Young man wearing a light cap and blue shirt, smiling while sitting at an outdoor café."
+                  {...heroImgAttrs}
+                  alt="Portrait of Raoul Martens smiling at an outdoor café."
                   className="hero-image hero-image--mobile"
+                  width={480}
+                  height={640}
                 />
               </Magnet>
             </AnimatedContent>
 
             <div className="text-container" style={{ width: '100%' }}>
-              {/* Tekst volgt onder de foto maar blijft hetzelfde verhaal en heading-id. */}
               <h1 id={headingId} className="page-title hero-title hero-title--mobile">
                 <SplitText
-                  text="I'm Raoul, a UX & Product Designer crafting intuitive digital experiences that connect people."
+                  text={heroText}
                   delay={0.06}
                   duration={0.8}
                   ease="power3.out"
@@ -303,7 +310,7 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
                   from={{ opacity: 0, y: 50 }}
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.1}
-                  rootMargin="-100px"
+                  rootMargin="0px 0px -10% 0px"
                   textAlign="center"
                   onLetterAnimationComplete={handleAnimationComplete}
                   groupPhrase={heroGroupPhrase}
@@ -311,16 +318,8 @@ const Hero: React.FC<HeroProps> = ({ headingId = "home-hero-heading" }) => {
               </h1>
 
               <div className="subtitle-row">
-                {/* Herhaal locatie-informatie zodat iedereen die snel kan vinden. */}
                 <AnimatedContent {...fadeUp} delay={iconDelay}>
-                  <img
-                    className="hero-pin"
-                    src="/images/map-pin.svg"
-                    alt="Location pin"
-                    width={16}
-                    height={16}
-                    style={{ display: 'block', verticalAlign: 'middle' }}
-                  />
+                  <PinIcon size={16} />
                 </AnimatedContent>
 
                 <AnimatedContent {...fadeUp} delay={subtitleDelay}>

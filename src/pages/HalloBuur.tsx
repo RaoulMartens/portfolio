@@ -7,10 +7,6 @@ import AnimatedContent from "../components/common/AnimatedContent";
 
 /* =========================================================
    LottieBox v6 — .json/.lottie player (iOS/Safari hardened)
-   - Fallback CDN + timeout voor webcomponent load
-   - Autoplay op dotlottie-player + iOS double-play nudge
-   - Soepelere IntersectionObserver thresholds op mobiel
-   - Poster zichtbaar tot 'ready'
    ========================================================= */
 
 let dotlottieReadyPromise: Promise<void> | null = null;
@@ -174,9 +170,8 @@ const LottieBox: React.FC<{
           const player = document.createElement("dotlottie-player") as any;
           player.setAttribute("src", src);
           player.setAttribute("loop", loop ? "true" : "false");
-          player.setAttribute("autoplay", "true"); // laat de component zelf starten
+          player.setAttribute("autoplay", "true");
           player.setAttribute("background", "transparent");
-          // geen 'renderer' attribuut op dotlottie-player (kan verwarren)
           player.className = "hb-lottie-el";
           holderRef.current.appendChild(player);
 
@@ -184,7 +179,6 @@ const LottieBox: React.FC<{
             setReadyToShow(true);
 
             if (isIOS) {
-              // iOS Safari duwtje: play → korte pause → opnieuw play
               try {
                 player.seek?.(0);
                 player.play?.();
@@ -245,7 +239,7 @@ const LottieBox: React.FC<{
           instRef.current?.addEventListener?.("DOMLoaded", onDomLoaded);
         }
 
-        // Soepelere zichtbaarheid op iOS (adresbalk/viewport jumps)
+        // Soepelere zichtbaarheid op iOS
         playObs = new IntersectionObserver(
           (es) => {
             const me = es.find((e) => e.target === holderRef.current);
@@ -281,7 +275,7 @@ const LottieBox: React.FC<{
       createObs?.disconnect();
       playObs?.disconnect();
       if (instRef.current) {
-        instRef.current.destroy?.(); // lottie-web only; webcomponent negeert dit
+        instRef.current.destroy?.();
         try {
           (holderRef.current as any)?.removeChild?.(instRef.current);
         } catch { }
@@ -388,7 +382,6 @@ const HalloBuur: React.FC = () => {
   };
 
   const STAGGER = 0.18;
-
   const headingId = "hallo-buur-heading";
 
   return (
@@ -398,7 +391,6 @@ const HalloBuur: React.FC = () => {
       <main
         id="main-content"
         className="hb-main"
-        aria-label="Hallo Buur case study"
         tabIndex={-1}
         aria-labelledby={headingId}
       >
@@ -451,11 +443,11 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* INTRODUCTION */}
-          <div className="hb-block cv-auto">
+          <section className="hb-block cv-auto" role="region" aria-labelledby="intro-heading">
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Introduction</h5>
+                  <h5 id="intro-heading">Introduction</h5>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -470,7 +462,7 @@ const HalloBuur: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* IMAGE */}
           <div className="hb-grid cv-media">
@@ -489,11 +481,11 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* PROBLEM */}
-          <div className="hb-block cv-auto">
+          <section className="hb-block cv-auto" role="region" aria-labelledby="problem-heading">
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Problem</h5>
+                  <h5 id="problem-heading">Problem</h5>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -505,7 +497,7 @@ const HalloBuur: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* DIVIDER */}
           <div className="hb-grid">
@@ -515,11 +507,11 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* RESEARCH */}
-          <div className="hb-block cv-auto">
+          <section className="hb-block cv-auto" role="region" aria-labelledby="research-heading">
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Research</h5>
+                  <h5 id="research-heading">Research</h5>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -532,11 +524,11 @@ const HalloBuur: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* CARDS (group 1) */}
           <div className="hb-grid cv-auto">
-            <div className="hb-cards">
+            <div className="hb-cards" role="list" aria-label="Key insights">
               {[
                 {
                   title: "Conversation anxiety",
@@ -558,8 +550,8 @@ const HalloBuur: React.FC = () => {
                 },
               ].map((c, i) => (
                 <AnimatedContent key={i} {...textReveal} delay={i * 0.06}>
-                  <div className="hb-card">
-                    <div className={`hb-card-icon ${c.iconClass}`} />
+                  <div className="hb-card" role="listitem">
+                    <div className={`hb-card-icon ${c.iconClass}`} aria-hidden="true" />
                     <h5>{c.title}</h5>
                     <p>{c.body}</p>
                   </div>
@@ -576,11 +568,11 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* SOLUTION */}
-          <div className="hb-block cv-auto">
+          <section className="hb-block cv-auto" role="region" aria-labelledby="solution-heading">
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Solution</h5>
+                  <h5 id="solution-heading">Solution</h5>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -591,7 +583,7 @@ const HalloBuur: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* DIVIDER 3 */}
           <div className="hb-grid">
@@ -600,12 +592,12 @@ const HalloBuur: React.FC = () => {
             </div>
           </div>
 
-          {/* TEXT + LOTTIES */}
-          <div className="hb-block cv-auto">
+          {/* CREATE ACCOUNT */}
+          <section className="hb-block cv-auto" role="region" aria-labelledby="create-heading">
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Create an Account</h5>
+                  <h5 id="create-heading">Create an Account</h5>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -616,7 +608,7 @@ const HalloBuur: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           <div className="hb-grid cv-media">
             <div className="hb-lottie">
@@ -631,11 +623,12 @@ const HalloBuur: React.FC = () => {
             </div>
           </div>
 
-          <div className="hb-block cv-auto">
+          {/* POST ACTIVITY */}
+          <section className="hb-block cv-auto" role="region" aria-labelledby="post-heading">
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Post an Activity</h5>
+                  <h5 id="post-heading">Post an Activity</h5>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -646,7 +639,7 @@ const HalloBuur: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           <div className="hb-grid cv-media">
             <div className="hb-lottie hb-lottie-2">
@@ -661,11 +654,12 @@ const HalloBuur: React.FC = () => {
             </div>
           </div>
 
-          <div className="hb-block cv-auto">
+          {/* RESPOND */}
+          <section className="hb-block cv-auto" role="region" aria-labelledby="respond-heading">
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Responding to a Request</h5>
+                  <h5 id="respond-heading">Responding to a Request</h5>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -676,7 +670,7 @@ const HalloBuur: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           <div className="hb-grid cv-media">
             <div className="hb-lottie hb-lottie-3">
@@ -691,11 +685,12 @@ const HalloBuur: React.FC = () => {
             </div>
           </div>
 
-          <div className="hb-block cv-auto">
+          {/* MANAGE SETTINGS */}
+          <section className="hb-block cv-auto" role="region" aria-labelledby="manage-heading">
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Manage Profile Settings</h5>
+                  <h5 id="manage-heading">Manage Profile Settings</h5>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -706,7 +701,7 @@ const HalloBuur: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           <div className="hb-grid cv-media">
             <div className="hb-lottie hb-lottie-4">
@@ -722,19 +717,19 @@ const HalloBuur: React.FC = () => {
           </div>
 
           {/* Title-only */}
-          <div className="hb-block hb-title-only">
+          <section className="hb-block hb-title-only" role="region" aria-labelledby="learnings-heading">
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Learnings</h5>
+                  <h5 id="learnings-heading">Learnings</h5>
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* CARDS (group 2) */}
           <div className="hb-grid">
-            <div className="hb-cards-2" aria-label="Learnings">
+            <div className="hb-cards-2" role="list" aria-label="Project learnings">
               {[
                 { title: "Assumption barriers", body: "Co-creation helped uncover hidden beliefs between residents.", iconClass: "mask-hidden" },
                 { title: "Contact, not connection", body: "Real interaction happens offline, the app just opens the door.", iconClass: "mask-door" },
@@ -743,8 +738,8 @@ const HalloBuur: React.FC = () => {
                 { title: "People want control", body: "Balancing visibility and privacy builds trust.", iconClass: "mask-joystick" },
               ].map((c, i) => (
                 <AnimatedContent key={i} {...textReveal} delay={i * 0.06}>
-                  <div className="hb-card">
-                    <div className={`hb-card-icon ${c.iconClass}`} />
+                  <div className="hb-card" role="listitem">
+                    <div className={`hb-card-icon ${c.iconClass}`} aria-hidden="true" />
                     <h5>{c.title}</h5>
                     <p>{c.body}</p>
                   </div>

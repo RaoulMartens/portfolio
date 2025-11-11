@@ -5,13 +5,13 @@ import Footer from "../components/common/Footer";
 import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
 
-/* Respect reduced motion */
+/* Respect reduced motion (safe for SSR) */
 const prefersReducedMotion =
   typeof window !== "undefined" &&
   typeof window.matchMedia === "function" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* Left→Right grow divider (same as other pages) */
+/* Left→Right grow divider (consistent met andere pagina's) */
 const RuleGrow: React.FC<{ delayMs?: number }> = ({ delayMs = 0 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const playedRef = useRef(false);
@@ -56,7 +56,7 @@ const RuleGrow: React.FC<{ delayMs?: number }> = ({ delayMs = 0 }) => {
 };
 
 const HalloBuur2: React.FC = () => {
-  /* --- animations (match HalloBuur feel) --- */
+  /* Animaties (gelijk aan HalloBuur) */
   const textReveal = {
     distance: 80,
     direction: "vertical" as const,
@@ -92,7 +92,6 @@ const HalloBuur2: React.FC = () => {
 
       <main
         id="main-content"
-        aria-label="Hallo Buur 2 case study"
         className="hb2-main"
         tabIndex={-1}
         aria-labelledby={headingId}
@@ -105,7 +104,7 @@ const HalloBuur2: React.FC = () => {
                 <SplitText
                   text="Understanding community change"
                   splitType="words"
-                  delay={0.06}                 // ✅ fixed (was 60)
+                  delay={0.06}                 // correct delay
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 28 }}
@@ -119,14 +118,14 @@ const HalloBuur2: React.FC = () => {
                 <SplitText
                   text="Researching social connection in a shifting residential community."
                   splitType="words"
-                  delay={0.06}                 // ✅ fixed (was 60)
+                  delay={0.06}
                   duration={0.7}
                   ease="power3.out"
                   from={{ opacity: 0, y: 24 }}
                   to={{ opacity: 1, y: 0 }}
                   threshold={0.1}
                   textAlign="left"
-                  startDelay={0.15}            // subtle trail after title
+                  startDelay={0.15}
                 />
               </p>
 
@@ -146,11 +145,11 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* TEXT BLOCK #1 */}
-          <div className="hb2-block">
+          <section className="hb2-block" role="region" aria-labelledby="hb2-intro">
             <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Introduction</h5>
+                  <h5 id="hb2-intro">Introduction</h5>
                 </AnimatedContent>
               </div>
               <div className="hb2-block-text">
@@ -164,7 +163,7 @@ const HalloBuur2: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* FULL-WIDTH IMAGE #1 */}
           <div className="hb2-grid">
@@ -173,18 +172,21 @@ const HalloBuur2: React.FC = () => {
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-1.jpg"
-                  alt="Simple black-and-white illustration of a frowning man with text above him that reads ‘This is all pointless, those people won’t show up anyway."
+                  alt="Simple black-and-white illustration of a frowning man with text above him that reads 'This is all pointless, those people won’t show up anyway.'"
+                  decoding="async"
+                  loading="lazy"
+                  fetchPriority="low"
                 />
               </AnimatedContent>
             </div>
           </div>
 
           {/* TEXT BLOCK #2 */}
-          <div className="hb2-block">
+          <section className="hb2-block" role="region" aria-labelledby="hb2-context">
             <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Context</h5>
+                  <h5 id="hb2-context">Context</h5>
                 </AnimatedContent>
               </div>
               <div className="hb2-block-text">
@@ -200,7 +202,7 @@ const HalloBuur2: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* DIVIDER — grow left → right */}
           <div className="hb2-grid">
@@ -214,33 +216,31 @@ const HalloBuur2: React.FC = () => {
             <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Why a Co-Creation?</h5>
+                  <h5 id="hb2-why">Why a Co-Creation?</h5>
                 </AnimatedContent>
               </div>
             </div>
           </div>
 
           <div className="hb2-grid">
-            <div className="hb2-cards-right">
+            <div className="hb2-cards-right" role="list" aria-labelledby="hb2-why">
               {[
                 {
                   title: "Needs and desires",
                   body:
-                    "By actively thinking along and sharing their ideas, participants provide me, as a researcher, " +
-                    "with a better and more nuanced understanding of their actual needs, values, and desires.",
+                    "By actively thinking along and sharing their ideas, participants provide me, as a researcher, with a better and more nuanced understanding of their actual needs, values, and desires.",
                   iconClass: "mask-shopping-bag",
                 },
                 {
                   title: "Depth",
                   body:
-                    "Where traditional methods such as surveys or interviews are often structured and more superficial, " +
-                    "co-creation allows for open exploration and deeper conversations. This brings hidden insights and emotions to light.",
+                    "Where traditional methods such as surveys or interviews are often structured and more superficial, co-creation allows for open exploration and deeper conversations. This brings hidden insights and emotions to light.",
                   iconClass: "mask-triangle",
                 },
               ].map((c, i) => (
                 <AnimatedContent key={i} {...textReveal} delay={i * 0.06}>
-                  <div className="hb2-card">
-                    <div className={`hb2-card-icon ${c.iconClass}`} />
+                  <div className="hb2-card" role="listitem">
+                    <div className={`hb2-card-icon ${c.iconClass}`} aria-hidden="true" />
                     <h5>{c.title}</h5>
                     <p>{c.body}</p>
                   </div>
@@ -257,11 +257,11 @@ const HalloBuur2: React.FC = () => {
           </div>
 
           {/* TEXT BLOCK #3 */}
-          <div className="hb2-block">
+          <section className="hb2-block" role="region" aria-labelledby="hb2-co-creation">
             <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>The Co-Creation</h5>
+                  <h5 id="hb2-co-creation">The Co-Creation</h5>
                 </AnimatedContent>
               </div>
               <div className="hb2-block-text">
@@ -277,7 +277,7 @@ const HalloBuur2: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* FULL-WIDTH IMAGE #2 */}
           <div className="hb2-grid">
@@ -286,7 +286,10 @@ const HalloBuur2: React.FC = () => {
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-2.jpg"
-                  alt="Two groups of colorful sticky notes labeled ‘Why not?’ and ‘Why yes?’ showing reasons for and against participating in community coffee gatherings."
+                  alt="Two groups of colorful sticky notes labeled 'Why not?' and 'Why yes?' showing reasons for and against participating in community coffee gatherings."
+                  decoding="async"
+                  loading="lazy"
+                  fetchPriority="low"
                 />
               </AnimatedContent>
             </div>
@@ -319,7 +322,10 @@ const HalloBuur2: React.FC = () => {
                 <img
                   className="hb2-image hb2-image--hairline-fix"
                   src="/images/hallo-buur2/wide-3.jpg"
-                  alt="Black-and-white illustration of a man with a slight smile looking upward, with handwritten text above him that reads: ‘On the 3rd and 5th floors, everyone knows each other, it’s really cozy there."
+                  alt="Black-and-white illustration of a man with a slight smile looking upward, with handwritten text above him that reads: 'On the 3rd and 5th floors, everyone knows each other, it’s really cozy there.'"
+                  decoding="async"
+                  loading="lazy"
+                  fetchPriority="low"
                 />
               </AnimatedContent>
             </div>
@@ -348,18 +354,21 @@ const HalloBuur2: React.FC = () => {
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-4.jpg"
-                  alt="Illustration of an apartment building surrounded by icons and short phrases representing things residents appreciate about their community, such as ‘Music is part of it,’ ‘Well-maintained garden,’ ‘Being together is cozy,’ ‘Bingo,’ and ‘Beautiful walking area.’ The image highlights positive aspects of shared living like social events, greenery, and nearby facilities."
+                  alt="Illustration of an apartment building surrounded by icons and short phrases representing things residents appreciate about their community, such as 'Music is part of it,' 'Well-maintained garden,' 'Being together is cozy,' 'Bingo,' and 'Beautiful walking area.' The image highlights positive aspects of shared living like social events, greenery, and nearby facilities."
+                  decoding="async"
+                  loading="lazy"
+                  fetchPriority="low"
                 />
               </AnimatedContent>
             </div>
           </div>
 
           {/* TEXT BLOCK #6 */}
-          <div className="hb2-block">
+          <section className="hb2-block" role="region" aria-labelledby="hb2-result">
             <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Result</h5>
+                  <h5 id="hb2-result">Result</h5>
                 </AnimatedContent>
               </div>
               <div className="hb2-block-text">
@@ -373,16 +382,19 @@ const HalloBuur2: React.FC = () => {
                 </AnimatedContent>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* FULL-WIDTH IMAGE #5 — bottom gap to match other pages */}
+          {/* FULL-WIDTH IMAGE #5 */}
           <div className="hb2-grid hb2-bottom-gap">
             <div className="hb2-followup">
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image"
                   src="/images/hallo-buur2/wide-5.jpg"
-                  alt="A colorful poster titled ‘De Aubade Waardeplaat’ hanging on a beige wall near an elevator. The poster visualizes what residents value about their building, featuring icons and categories such as ‘Activiteiten,’ ‘Sociaal,’ ‘Feesten,’ ‘Voorzieningen,’ and ‘Omgeving.’ Illustrations show themes like bingo, coffee gatherings, helping each other, greenery, and local shops."
+                  alt="A colorful poster titled 'De Aubade Waardeplaat' hanging on a beige wall near an elevator. The poster visualizes what residents value about their building, featuring icons and categories such as 'Activiteiten,' 'Sociaal,' 'Feesten,' 'Voorzieningen,' and 'Omgeving.' Illustrations show themes like bingo, coffee gatherings, helping each other, greenery, and local shops."
+                  decoding="async"
+                  loading="lazy"
+                  fetchPriority="low"
                 />
               </AnimatedContent>
             </div>

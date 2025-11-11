@@ -4,7 +4,6 @@ import AnimatedContent from '../common/AnimatedContent';
 import { hasPlayed, markPlayed } from '../../utils/animationMemory';
 
 /* ---------- dotLottie web component wrapper ---------- */
-// Wrapper zodat we het custom element in React kunnen gebruiken.
 const DotlottiePlayer = React.forwardRef<any, any>((props, ref) =>
   React.createElement('dotlottie-player' as any, { ...props, ref })
 );
@@ -23,7 +22,7 @@ interface ProjectCardProps {
 }
 
 /* ---------- Small Lottie wrapper ---------- */
-// Verpakt het dotLottie-element en respecteert "reduced motion" (criterium 6.3).
+// Respecteert prefers-reduced-motion en voorkomt onnodige focus.
 const LottieAnim: React.FC<{
   src: string;
   loop?: boolean;
@@ -35,9 +34,11 @@ const LottieAnim: React.FC<{
   const playerRef = useRef<any>(null);
 
   useEffect(() => {
-    // Zet animaties uit als de gebruiker minder beweging wil zien.
     const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-    if (mq?.matches) setShouldAutoplay(false);
+    const apply = () => setShouldAutoplay(mq?.matches ? false : autoplay);
+    apply();
+    mq?.addEventListener?.('change', apply);
+    return () => mq?.removeEventListener?.('change', apply);
   }, [autoplay]);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const LottieAnim: React.FC<{
       .catch(() => setReady(true));
   }, []);
 
-  // Zorg dat de animatie altijd de volledige kaart opvult.
+  // Zorg dat de animatie de container volledig vult.
   useEffect(() => {
     if (!ready || !playerRef.current) return;
     let raf = 0;
@@ -77,9 +78,12 @@ const LottieAnim: React.FC<{
           ref={playerRef}
           src={src}
           autoplay={shouldAutoplay}
-          loop={loop}
+          loop={shouldAutoplay && loop}
           background="transparent"
           renderer="svg"
+          // niet focusbaar; link rondom draagt de naam
+          tabindex={-1 as any}
+          aria-hidden="true"
         />
       )}
     </div>
@@ -87,19 +91,16 @@ const LottieAnim: React.FC<{
 };
 
 /* ---------- Theme sync (DOM class watch) ---------- */
-// Lees het thema rechtstreeks uit de DOM zodat de kaartkleur mee wisselt (6.1/6.3).
 function useIsDarkFromDOM() {
-  // Controleer of het donkere thema actief is via classnames op html/body.
+  if (typeof document === 'undefined') return false;
+
   const getIsDark = () =>
     document.documentElement.classList.contains('dark') ||
     document.documentElement.classList.contains('mapped--dark') ||
     document.body.classList.contains('dark') ||
     document.body.classList.contains('mapped--dark');
 
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    if (typeof document === 'undefined') return false;
-    return getIsDark();
-  });
+  const [isDark, setIsDark] = useState<boolean>(getIsDark);
 
   useEffect(() => {
     const update = () => setIsDark(getIsDark());
@@ -121,8 +122,8 @@ function useIsDarkFromDOM() {
 }
 
 /* ---------- Link ---------- */
-// CTA-link met pijl die thema volgt en aria-label heeft.
-const LinkWithHover: React.FC<{ link: string; className?: string }> = ({ link, className }) => {
+// Duidelijke naam voor SR; decoratieve pijl is aria-hidden.
+const LinkWithHover: React.FC<{ link: string; title: string; className?: string }> = ({ link, title, className }) => {
   const isDark = useIsDarkFromDOM();
   const chevronSrc = useMemo(
     () => (isDark ? '/images/chevron-right-dark.svg' : '/images/chevron-right.svg'),
@@ -130,9 +131,9 @@ const LinkWithHover: React.FC<{ link: string; className?: string }> = ({ link, c
   );
 
   return (
-    <a href={link} className={`project-link ${className ?? ''}`} aria-label="Read story">
+    <a href={link} className={`project-link ${className ?? ''}`} aria-label={`Read story: ${title}`}>
       <span>Read Story</span>
-      <img className="active-icon" src={chevronSrc} alt="Read story" />
+      <img className="active-icon" src={chevronSrc} alt="" aria-hidden="true" />
     </a>
   );
 };
@@ -153,46 +154,35 @@ const ProjectInfo: React.FC<ProjectInfoProps> = memo(({ title, meta, link, headi
   const playedMeta = hasPlayed(`${link}::meta`);
   const playedCta = hasPlayed(`${link}::cta`);
 
-  // Start animaties pas als de kaart in beeld komt (performant en toegankelijk).
+  // Start animaties bij eerste intersect; geen afhankelijkheid van scrollY.
   useEffect(() => {
     if (inView || (playedTitle && playedMeta && playedCta)) return;
     const obs = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting && window.scrollY > 50) {
+          if (entry.isIntersecting) {
             setInView(true);
             obs.disconnect();
             break;
           }
         }
       },
-      {
-        rootMargin: '-20% 0px -40% 0px',
-        threshold: 0.3,
-      }
+      { rootMargin: '-20% 0px -40% 0px', threshold: 0.3 }
     );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, [inView, playedTitle, playedMeta, playedCta]);
 
-  // Animatievertraging per woord.
-  const titleDelay = 0.06;      // seconden per woord
+  const titleDelay = 0.06;
   const titleDuration = 0.8;
   const titleWordCount = title.trim().split(/\s+/).length;
-
-  // Ondertitel start iets eerder dan de titel klaar is.
   const subtitleStartDelay = titleWordCount * titleDelay * 0.5 + 0.1;
-
-  // CTA komt als laatste binnen.
   const ctaDelay = subtitleStartDelay + 0.3;
   const ctaDuration = 0.8;
 
-  // Markeer dat de CTA-animatie al afgespeeld is na de eerste keer.
   useEffect(() => {
     if (!inView || playedCta) return;
-    const t = window.setTimeout(() => {
-      markPlayed(`${link}::cta`);
-    }, Math.max(0, (ctaDelay + ctaDuration) * 1000));
+    const t = window.setTimeout(() => { markPlayed(`${link}::cta`); }, Math.max(0, (ctaDelay + ctaDuration) * 1000));
     return () => window.clearTimeout(t);
   }, [inView, playedCta, link, ctaDelay, ctaDuration]);
 
@@ -248,9 +238,8 @@ const ProjectInfo: React.FC<ProjectInfoProps> = memo(({ title, meta, link, headi
       </div>
 
       <div className="project-link-desktop">
-        {/* Desktop CTA schuift in beeld voor een duidelijke call-to-action. */}
         {playedCta ? (
-          <LinkWithHover link={link} />
+          <LinkWithHover link={link} title={title} />
         ) : inView && (
           <AnimatedContent
             distance={50}
@@ -263,7 +252,7 @@ const ProjectInfo: React.FC<ProjectInfoProps> = memo(({ title, meta, link, headi
             initialOpacity={0}
             persistId={`${link}::cta`}
           >
-            <LinkWithHover link={link} />
+            <LinkWithHover link={link} title={title} />
           </AnimatedContent>
         )}
       </div>
@@ -273,7 +262,6 @@ const ProjectInfo: React.FC<ProjectInfoProps> = memo(({ title, meta, link, headi
 ProjectInfo.displayName = 'ProjectInfo';
 
 /* ---------- Project card ---------- */
-// Eén projectkaart met artikelstructuur + animatie, helpt bij criteria 6.1-6.3.
 const ProjectCard: React.FC<ProjectCardProps> = ({
   title,
   meta,
@@ -281,10 +269,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   media,
   isVideo = false,
 }) => {
-  // Animatie die we tonen bij videoprojecten.
   const lottieSrc = '/videos/hallo-buur.lottie';
 
-  // Mobiele CTA: markeer wanneer hij in beeld is geweest.
   const mobileCtaRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (hasPlayed(`${link}::cta`)) return;
@@ -294,7 +280,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       (entries) => {
         for (const e of entries) {
           if (e.isIntersecting) {
-            // Kleine vertraging zodat het lijkt alsof de animatie afspeelt.
             setTimeout(() => markPlayed(`${link}::cta`), 800);
             obs.disconnect();
             break;
@@ -307,7 +292,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     return () => obs.disconnect();
   }, [link]);
 
-  // Kies een posterafbeelding als het project een video heeft, anders de gewone afbeelding.
   const imageProps =
     isVideo
       ? { src: (media as any).poster as string, alt: (media as any).alt as string }
@@ -316,13 +300,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   const headingId = useMemo(
     () =>
       `project-${link
-        .replace(/[^a-z0-9]+/gi, "-")
-        .replace(/(^-|-$)/g, "")
+        .replace(/[^a-z0-9]+/gi, '-')
+        .replace(/(^-|-$)/g, '')
         .toLowerCase()}`,
     [link]
   );
 
-  // Gebruik het projectlink-pad om een uniek heading-id te maken (structuur → 6.1).
   return (
     <section className="project-background">
       <div className="grid-container">
@@ -334,7 +317,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             <ProjectInfo title={title} meta={meta} link={link} headingId={headingId} />
 
             <div className="project-image-wrapper">
-              {/* Klikbare media: ondersteunt zowel afbeeldingen als lottie-animatie. */}
               <a href={link} aria-label={`Open ${title}`} className="media-link">
                 <div className="media-inner">
                   {isVideo ? (
@@ -344,19 +326,20 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                       src={imageProps.src}
                       alt={imageProps.alt}
                       className="project-image"
+                      loading="lazy"
+                      decoding="async"
                     />
                   )}
                 </div>
               </a>
             </div>
 
-            {/* Mobiele CTA zodat telefoongebruikers ook een duidelijke knop zien. */}
             <div className="project-link-mobile" ref={mobileCtaRef}>
               {hasPlayed(`${link}::cta`) ? (
-                <LinkWithHover link={link} />
+                <LinkWithHover link={link} title={title} />
               ) : (
                 <AnimatedContent persistId={`${link}::cta`}>
-                  <LinkWithHover link={link} />
+                  <LinkWithHover link={link} title={title} />
                 </AnimatedContent>
               )}
             </div>
