@@ -4,6 +4,8 @@ import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
 import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
+import RuleGrow from "../components/common/RuleGrow";
+import { useDocumentHead } from "../hooks/useDocumentHead";
 
 /* =========================================================
    LottieBox v6 — .json/.lottie player (iOS/Safari hardened)
@@ -64,10 +66,7 @@ const deviceMemory = (() => {
   return typeof dm === "number" ? dm : 8;
 })();
 
-const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  window.matchMedia &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+import { prefersReducedMotion } from "../utils/a11y";
 
 const isIOS =
   typeof navigator !== "undefined" &&
@@ -304,51 +303,15 @@ const LottieBox: React.FC<{
   );
 };
 
-/* ------------ Left→Right grow divider ------------ */
-const RuleGrow: React.FC<{ delayMs?: number }> = ({ delayMs = 0 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const playedRef = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    if (prefersReducedMotion) {
-      el.classList.add("is-in");
-      return;
-    }
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (playedRef.current) break;
-          if (!e.isIntersecting) continue;
-
-          const ratio = e.intersectionRatio;
-          const top = e.boundingClientRect.top;
-          const vh = e.rootBounds?.height ?? window.innerHeight;
-
-          const deepEnough = ratio >= 0.6 && top >= vh * 0.15;
-          if (deepEnough) {
-            playedRef.current = true;
-            if (delayMs > 0) el.style.setProperty("--hb-rule-delay", `${Math.max(0, delayMs)}ms`);
-            requestAnimationFrame(() => el.classList.add("is-in"));
-            obs.disconnect();
-            break;
-          }
-        }
-      },
-      { root: null, rootMargin: "0px 0px -25% 0px", threshold: [0, 0.25, 0.6, 0.9, 1] }
-    );
-
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [delayMs]);
-
-  return <div ref={ref} className="hb-rule hb-rule-anim" role="separator" aria-hidden="true" />;
-};
+/* RuleGrow is now imported from ../components/common/RuleGrow */
 
 const HalloBuur: React.FC = () => {
+  useDocumentHead({
+    title: "Hallo Buur — Raoul Martens",
+    description:
+      "Case study: community building through a digital bulletin board for a residential complex.",
+  });
+
   const lottieReveal = {
     distance: 60,
     direction: "vertical" as const,
@@ -447,7 +410,7 @@ const HalloBuur: React.FC = () => {
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="intro-heading">Introduction</h5>
+                  <h3 id="intro-heading">Introduction</h3>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -481,7 +444,7 @@ const HalloBuur: React.FC = () => {
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="problem-heading">Problem</h5>
+                  <h3 id="problem-heading">Problem</h3>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -497,7 +460,7 @@ const HalloBuur: React.FC = () => {
           {/* DIVIDER */}
           <div className="hb-grid">
             <div className="hb-divider">
-              <RuleGrow />
+              <RuleGrow classPrefix="hb" />
             </div>
           </div>
 
@@ -506,7 +469,7 @@ const HalloBuur: React.FC = () => {
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="research-heading">Research</h5>
+                  <h3 id="research-heading">Research</h3>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -545,7 +508,7 @@ const HalloBuur: React.FC = () => {
                 <AnimatedContent key={i} {...textReveal} delay={i * 0.06}>
                   <div className="hb-card" role="listitem">
                     <div className={`hb-card-icon ${c.iconClass}`} aria-hidden="true" />
-                    <h5>{c.title}</h5>
+                    <h3>{c.title}</h3>
                     <p>{c.body}</p>
                   </div>
                 </AnimatedContent>
@@ -565,7 +528,7 @@ const HalloBuur: React.FC = () => {
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="solution-heading">Solution</h5>
+                  <h3 id="solution-heading">Solution</h3>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -590,7 +553,7 @@ const HalloBuur: React.FC = () => {
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="create-heading">Create an Account</h5>
+                  <h3 id="create-heading">Create an Account</h3>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -621,7 +584,7 @@ const HalloBuur: React.FC = () => {
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="post-heading">Post an Activity</h5>
+                  <h3 id="post-heading">Post an Activity</h3>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -652,7 +615,7 @@ const HalloBuur: React.FC = () => {
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="respond-heading">Responding to a Request</h5>
+                  <h3 id="respond-heading">Responding to a Request</h3>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -683,7 +646,7 @@ const HalloBuur: React.FC = () => {
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="manage-heading">Manage Profile Settings</h5>
+                  <h3 id="manage-heading">Manage Profile Settings</h3>
                 </AnimatedContent>
               </div>
               <div className="hb-block-text">
@@ -714,7 +677,7 @@ const HalloBuur: React.FC = () => {
             <div className="hb-block-grid">
               <div className="hb-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="learnings-heading">Learnings</h5>
+                  <h3 id="learnings-heading">Learnings</h3>
                 </AnimatedContent>
               </div>
             </div>
@@ -733,7 +696,7 @@ const HalloBuur: React.FC = () => {
                 <AnimatedContent key={i} {...textReveal} delay={i * 0.06}>
                   <div className="hb-card" role="listitem">
                     <div className={`hb-card-icon ${c.iconClass}`} aria-hidden="true" />
-                    <h5>{c.title}</h5>
+                    <h3>{c.title}</h3>
                     <p>{c.body}</p>
                   </div>
                 </AnimatedContent>

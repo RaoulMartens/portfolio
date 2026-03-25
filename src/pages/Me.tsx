@@ -1,38 +1,13 @@
 // src/pages/Me.tsx
-import React, { useEffect, useRef, useState, useLayoutEffect, useMemo } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
 import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
+import { useBreakpoint } from "../hooks/useBreakpoint";
+import { useDocumentHead } from "../hooks/useDocumentHead";
 
-/* ----------------------------- */
-/* Breakpoint hook (SSR-safe)    */
-/* ----------------------------- */
-type BP = "mobile" | "tablet" | "desktop";
-
-function useBreakpoint(): BP {
-  // SSR: kies een veilige default
-  const ssrSafeDefault: BP = "desktop";
-  const getBP = () => {
-    if (typeof window === "undefined") return ssrSafeDefault;
-    const w = window.innerWidth;
-    return w < 768 ? "mobile" : w <= 1024 ? "tablet" : "desktop";
-  };
-
-  const [bp, setBp] = useState<BP>(getBP);
-
-  // layoutEffect om eerste paint jump te beperken
-  useLayoutEffect(() => {
-    setBp(getBP());
-  }, []);
-
-  useEffect(() => {
-    const onResize = () => setBp(getBP());
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-  return bp;
-}
+/* useBreakpoint is now imported from ../hooks/useBreakpoint */
 
 /* ----------------------------- */
 /* In-view title hook (hardened) */
@@ -109,6 +84,11 @@ function useInViewTitle(params?: {
 }
 
 const Me: React.FC = () => {
+  useDocumentHead({
+    title: "About Me — Raoul Martens",
+    description:
+      "UX & Product Designer based in the Netherlands — learn about my background and design process.",
+  });
   const bp = useBreakpoint();
   const isMobile = bp === "mobile";
   const headingId = "me-heading";

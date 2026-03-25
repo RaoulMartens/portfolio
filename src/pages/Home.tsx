@@ -10,6 +10,7 @@ import Footer from "../components/common/Footer";
 import { homeProjects } from "../data/projects";
 import { Section, emitSection } from "../utils/sections";
 import { getNavHeight, scrollToY, updateNavHeightVar } from "../utils/layout";
+import { useDocumentHead } from "../hooks/useDocumentHead";
 
 /**
  * Home pagina met hero, projecten en footer.
@@ -22,6 +23,12 @@ const Home: React.FC = () => {
   const workRef = useRef<HTMLDivElement | null>(null);
   const lastSectionRef = useRef<Section>("home");
   const heroHeadingId = "home-hero-heading";
+
+  useDocumentHead({
+    title: "Raoul Martens | UX & Product Designer",
+    description:
+      "Portfolio of Raoul Martens — UX & Product Designer crafting thoughtful digital experiences.",
+  });
 
   // Bepaal top van work-sectie (houdt rekening met nav-hoogte)
   const computeWorkTop = () => {

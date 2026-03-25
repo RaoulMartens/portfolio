@@ -1,61 +1,20 @@
 // src/pages/HalloBuur2.tsx
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
 import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
+import RuleGrow from "../components/common/RuleGrow";
+import { useDocumentHead } from "../hooks/useDocumentHead";
 
-/* Respect reduced motion (safe for SSR) */
-const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  typeof window.matchMedia === "function" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-/* Left→Right grow divider (consistent met andere pagina's) */
-const RuleGrow: React.FC<{ delayMs?: number }> = ({ delayMs = 0 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const playedRef = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    if (prefersReducedMotion) {
-      el.classList.add("is-in");
-      return;
-    }
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (playedRef.current) break;
-          if (!e.isIntersecting) continue;
-
-          const ratio = e.intersectionRatio;
-          const top = e.boundingClientRect.top;
-          const vh = e.rootBounds?.height ?? window.innerHeight;
-          const deepEnough = ratio >= 0.6 && top >= vh * 0.15;
-
-          if (deepEnough) {
-            playedRef.current = true;
-            if (delayMs > 0) el.style.transitionDelay = `${Math.max(0, delayMs)}ms`;
-            requestAnimationFrame(() => el.classList.add("is-in"));
-            obs.disconnect();
-            break;
-          }
-        }
-      },
-      { root: null, rootMargin: "0px 0px -25% 0px", threshold: [0, 0.25, 0.6, 0.9, 1] }
-    );
-
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [delayMs]);
-
-  return <div ref={ref} className="hb2-rule hb2-rule-anim" role="separator" aria-hidden="true" />;
-};
+/* RuleGrow + prefersReducedMotion imported from shared modules */
 
 const HalloBuur2: React.FC = () => {
+  useDocumentHead({
+    title: "Hallo Buur Research — Raoul Martens",
+    description:
+      "Co-creation research on social connection in a changing residential community.",
+  });
   /* Animaties (gelijk aan HalloBuur) */
   const textReveal = {
     distance: 80,
@@ -149,7 +108,7 @@ const HalloBuur2: React.FC = () => {
             <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="hb2-intro">Introduction</h5>
+                  <h3 id="hb2-intro">Introduction</h3>
                 </AnimatedContent>
               </div>
               <div className="hb2-block-text">
@@ -183,7 +142,7 @@ const HalloBuur2: React.FC = () => {
             <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="hb2-context">Context</h5>
+                  <h3 id="hb2-context">Context</h3>
                 </AnimatedContent>
               </div>
               <div className="hb2-block-text">
@@ -199,7 +158,7 @@ const HalloBuur2: React.FC = () => {
           {/* DIVIDER — grow left → right */}
           <div className="hb2-grid">
             <div className="hb2-divider">
-              <RuleGrow />
+              <RuleGrow classPrefix="hb2" />
             </div>
           </div>
 
@@ -208,7 +167,7 @@ const HalloBuur2: React.FC = () => {
             <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="hb2-why">Why a Co-Creation?</h5>
+                  <h3 id="hb2-why">Why a Co-Creation?</h3>
                 </AnimatedContent>
               </div>
             </div>
@@ -233,7 +192,7 @@ const HalloBuur2: React.FC = () => {
                 <AnimatedContent key={i} {...textReveal} delay={i * 0.06}>
                   <div className="hb2-card" role="listitem">
                     <div className={`hb2-card-icon ${c.iconClass}`} aria-hidden="true" />
-                    <h5>{c.title}</h5>
+                    <h3>{c.title}</h3>
                     <p>{c.body}</p>
                   </div>
                 </AnimatedContent>
@@ -253,7 +212,7 @@ const HalloBuur2: React.FC = () => {
             <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="hb2-co-creation">The Co-Creation</h5>
+                  <h3 id="hb2-co-creation">The Co-Creation</h3>
                 </AnimatedContent>
               </div>
               <div className="hb2-block-text">
@@ -355,7 +314,7 @@ const HalloBuur2: React.FC = () => {
             <div className="hb2-block-grid">
               <div className="hb2-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5 id="hb2-result">Result</h5>
+                  <h3 id="hb2-result">Result</h3>
                 </AnimatedContent>
               </div>
               <div className="hb2-block-text">

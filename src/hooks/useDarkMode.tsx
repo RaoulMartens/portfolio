@@ -23,8 +23,8 @@ export const useDarkMode = (): { isDark: boolean; toggleDarkMode: () => void } =
   // 1) Keuze laden (default: 'system' als er niets staat)
   const [choice, setChoice] = useState<ThemeChoice>(() => {
     if (typeof window === "undefined") return "system";
-    const saved = (localStorage.getItem(KEY) as ThemeChoice) || "system";
-    return saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
+    const saved = (localStorage.getItem(KEY) as ThemeChoice) || "light";
+    return saved === "light" || saved === "dark" || saved === "system" ? saved : "light";
   });
 
   // 2) Opgeloste modus berekenen op basis van keuze + systeem

@@ -3,26 +3,12 @@ import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
 import AnimatedContent from "../components/common/AnimatedContent";
 import SplitText from "../components/common/SplitText";
+import { useBreakpoint } from "../hooks/useBreakpoint";
+import { useDocumentHead } from "../hooks/useDocumentHead";
 
 type GalleryItem = { src: string; alt: string };
 
-/* ----------------------------- */
-/* Breakpoint hook (zelfde als Hero) */
-/* ----------------------------- */
-type BP = "mobile" | "tablet" | "desktop";
-function useBreakpoint(): BP | null {
-  const [bp, setBp] = React.useState<BP | null>(null);
-  React.useEffect(() => {
-    const calc = () => {
-      const w = window.innerWidth;
-      setBp(w < 768 ? "mobile" : w <= 1024 ? "tablet" : "desktop");
-    };
-    calc();
-    window.addEventListener("resize", calc);
-    return () => window.removeEventListener("resize", calc);
-  }, []);
-  return bp;
-}
+/* useBreakpoint is now imported from ../hooks/useBreakpoint */
 
 const GALLERY_MAIN: GalleryItem[] = [
   { src: "/images/play/football-psg.webp", alt: "Two PSG players in a dimly lit room strategize around a table with toy soldiers, a football, and the Champions League trophy, symbolizing tactical preparation and battle for victory." },
@@ -32,7 +18,7 @@ const GALLERY_MAIN: GalleryItem[] = [
   { src: "/images/play/football-mbappe.webp", alt: "Kylian Mbappe in a Paris Saint-Germain kit poses confidently with one foot on a ball beneath the Eiffel Tower, illuminated by dramatic lighting and a surreal, cinematic sky." },
   { src: "/images/play/football-championsleague.webp", alt: "Football players from various European clubs stand on rocky cliffs under a glowing sky, facing a massive translucent Champions League trophy in the distance." },
   { src: "/images/play/football-liverpool.webp", alt: "Liverpool players in red vintage biplanes marked with ‘YNWA’ and the club logo struggle as the planes begin crashing down through a fiery sunset sky." },
-  { src: "/images/play/football-messi-space.png", alt: "Lionel Messi in a PSG kit stands triumphantly on a glowing planet in space, surrounded by floating debris and cosmic light, raising both hands toward the sky." },
+  { src: "/images/play/football-messi-space.webp", alt: "Lionel Messi in a PSG kit stands triumphantly on a glowing planet in space, surrounded by floating debris and cosmic light, raising both hands toward the sky." },
   { src: "/images/play/football-italy.webp", alt: "Italian football players celebrate a dramatic goal on the pitch with the words ‘The Italian way’ above them, set against a stylized blue graphic background." },
 ];
 
@@ -70,8 +56,12 @@ const GALLERY_WIDE_2: GalleryItem[] = [
 ];
 
 const Play: React.FC = () => {
+  useDocumentHead({
+    title: "Play — Raoul Martens",
+    description: "Photography and visual experiments by Raoul Martens.",
+  });
+
   const bp = useBreakpoint();
-  if (!bp) return null;
 
   const colsMain = bp === "desktop" ? 3 : bp === "tablet" ? 2 : 1;
 

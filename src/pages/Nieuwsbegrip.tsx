@@ -1,61 +1,21 @@
 // src/pages/Nieuwsbegrip.tsx
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
 import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
+import RuleGrow from "../components/common/RuleGrow";
+import { useDocumentHead } from "../hooks/useDocumentHead";
 
-/* Respect reduced motion */
-const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  typeof window.matchMedia === "function" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-/* Left→Right grow divider (same logic as HalloBuur) */
-const RuleGrow: React.FC<{ delayMs?: number }> = ({ delayMs = 0 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const playedRef = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    if (prefersReducedMotion) {
-      el.classList.add("is-in");
-      return;
-    }
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (playedRef.current) break;
-          if (!e.isIntersecting) continue;
-
-          const ratio = e.intersectionRatio;
-          const top = e.boundingClientRect.top;
-          const vh = e.rootBounds?.height ?? window.innerHeight;
-          const deepEnough = ratio >= 0.6 && top >= vh * 0.15;
-
-          if (deepEnough) {
-            playedRef.current = true;
-            if (delayMs > 0) el.style.transitionDelay = `${Math.max(0, delayMs)}ms`;
-            requestAnimationFrame(() => el.classList.add("is-in"));
-            obs.disconnect();
-            break;
-          }
-        }
-      },
-      { root: null, rootMargin: "0px 0px -25% 0px", threshold: [0, 0.25, 0.6, 0.9, 1] }
-    );
-
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [delayMs]);
-
-  return <div ref={ref} className="np-rule np-rule-anim" role="separator" aria-hidden="true" />;
-};
+/* RuleGrow is now imported from ../components/common/RuleGrow */
 
 const Nieuwsbegrip: React.FC = () => {
+  useDocumentHead({
+    title: "Nieuwsbegrip — Raoul Martens",
+    description:
+      "Case study: redesigning a news-based reading comprehension platform for teachers.",
+  });
+
   const textReveal = {
     distance: 80,
     direction: "vertical" as const,
@@ -128,7 +88,7 @@ const Nieuwsbegrip: React.FC = () => {
           {/* DIVIDER 1 */}
           <div className="np-grid np-divider-wrap">
             <div className="np-divider">
-              <RuleGrow />
+              <RuleGrow classPrefix="np" />
             </div>
           </div>
 
@@ -137,7 +97,7 @@ const Nieuwsbegrip: React.FC = () => {
             <div className="np-block-grid">
               <div className="np-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Introduction</h5>
+                  <h3>Introduction</h3>
                 </AnimatedContent>
               </div>
               <div className="np-block-text">
@@ -167,7 +127,7 @@ const Nieuwsbegrip: React.FC = () => {
             <div className="np-block-grid">
               <div className="np-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Context</h5>
+                  <h3>Context</h3>
                 </AnimatedContent>
               </div>
               <div className="np-block-text">

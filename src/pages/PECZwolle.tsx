@@ -1,59 +1,13 @@
 // src/pages/PECZwolle.tsx
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Navigation from "../components/common/Navigation";
 import Footer from "../components/common/Footer";
 import SplitText from "../components/common/SplitText";
 import AnimatedContent from "../components/common/AnimatedContent";
+import RuleGrow from "../components/common/RuleGrow";
+import { useDocumentHead } from "../hooks/useDocumentHead";
 
-/* Respect reduced motion */
-const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  typeof window.matchMedia === "function" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-/* Left→Right grow divider */
-const RuleGrow: React.FC<{ delayMs?: number }> = ({ delayMs = 0 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const playedRef = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    if (prefersReducedMotion) {
-      el.classList.add("is-in");
-      return;
-    }
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (playedRef.current) break;
-          if (!e.isIntersecting) continue;
-
-          const ratio = e.intersectionRatio;
-          const top = e.boundingClientRect.top;
-          const vh = e.rootBounds?.height ?? window.innerHeight;
-          const deepEnough = ratio >= 0.6 && top >= vh * 0.15;
-
-          if (deepEnough) {
-            playedRef.current = true;
-            if (delayMs > 0) el.style.transitionDelay = `${Math.max(0, delayMs)}ms`;
-            requestAnimationFrame(() => el.classList.add("is-in"));
-            obs.disconnect();
-            break;
-          }
-        }
-      },
-      { root: null, rootMargin: "0px 0px -25% 0px", threshold: [0, 0.25, 0.6, 0.9, 1] }
-    );
-
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [delayMs]);
-
-  return <div ref={ref} className="pz-rule pz-rule-anim" role="separator" aria-hidden="true" />;
-};
+/* RuleGrow is now imported from ../components/common/RuleGrow */
 
 const PECZwolle: React.FC = () => {
   // animations (same feel as other project pages)
@@ -78,6 +32,12 @@ const PECZwolle: React.FC = () => {
   const STAGGER = 0.18;
 
   const headingId = "pec-zwolle-heading";
+
+  useDocumentHead({
+    title: "PEC Zwolle — Raoul Martens",
+    description:
+      "Graphic design for PEC Zwolle: matchday posters and season ticket campaigns.",
+  });
 
   return (
     <div className="viewport-wrapper">
@@ -128,7 +88,7 @@ const PECZwolle: React.FC = () => {
           {/* DIVIDER — grow left → right */}
           <div className="pz-grid pz-divider-wrap">
             <div className="pz-divider">
-              <RuleGrow />
+              <RuleGrow classPrefix="pz" />
             </div>
           </div>
 
@@ -137,7 +97,7 @@ const PECZwolle: React.FC = () => {
             <div className="pz-block-grid">
               <div className="pz-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Matchdays</h5>
+                  <h3>Matchdays</h3>
                 </AnimatedContent>
               </div>
               <div className="pz-block-text">
@@ -206,7 +166,7 @@ const PECZwolle: React.FC = () => {
             <div className="pz-block-grid">
               <div className="pz-block-title">
                 <AnimatedContent {...textReveal}>
-                  <h5>Ticket Campaign</h5>
+                  <h3>Ticket Campaign</h3>
                 </AnimatedContent>
               </div>
               <div className="pz-block-text">
