@@ -60,7 +60,7 @@ const SplitText: React.FC<SplitTextProps> = ({
   startDelay = 0,
   splitType = "words",
   threshold = 0.1,
-  rootMargin = "0px 0px -10% 0px",
+  rootMargin = "0px 0px -15% 0px",
   textAlign = "left",
   persistId,
   groupPhrase,
@@ -126,7 +126,7 @@ const SplitText: React.FC<SplitTextProps> = ({
     const node = holderRef.current;
     const safeRootMargin = isValidRootMargin(rootMargin)
       ? rootMargin
-      : "0px 0px -10% 0px";
+      : "0px 0px -15% 0px";
     const safeThreshold = clamp01(threshold, 0.1);
 
     let io: IntersectionObserver | null = null;
@@ -197,11 +197,30 @@ const SplitText: React.FC<SplitTextProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView, reduceMotion, tokens.length, startDelay, delay, duration]);
 
+  // ---- build group indices for synchronized gradient ----
+  // Count non-whitespace grouped tokens and assign sequential indices
+  // so each word can offset its background-position within a shared gradient.
+  const groupIndices = useMemo(() => {
+    if (groupSet.size === 0) return new Map<number, number>();
+    const indices = new Map<number, number>();
+    let idx = 0;
+    tokens.forEach((tok, i) => {
+      if (/^\s+$/.test(tok)) return;
+      const norm = tok.replace(/\s+/g, "").replace(/[^\p{L}\p{N}&-]+/gu, "").toLowerCase();
+      if (groupSet.has(norm)) {
+        indices.set(i, idx);
+        idx++;
+      }
+    });
+    return indices;
+  }, [tokens, groupSet]);
+
+  const groupTotal = groupIndices.size;
+
   return (
     <span
       ref={holderRef}
-      aria-label={text}             // één samenhangende naam voor AT
-      // géén role="text": native semantiek volstaat
+      aria-label={text}
       style={{ display: "inline-block", textAlign, whiteSpace: "pre-wrap" }}
       className="split-parent"
     >
@@ -215,7 +234,6 @@ const SplitText: React.FC<SplitTextProps> = ({
           );
         }
 
-        // normaliseer voor grouping
         const normTok = tok
           .replace(/\s+/g, "")
           .replace(/[^\p{L}\p{N}&-]+/gu, "")
@@ -238,6 +256,13 @@ const SplitText: React.FC<SplitTextProps> = ({
             : "none",
           willChange: armed ? "transform, opacity" : undefined,
         };
+
+        // For grouped words, set CSS vars for synchronized gradient
+        if (isGrouped && groupTotal > 1) {
+          const gi = groupIndices.get(i) ?? 0;
+          (style as any)["--gi"] = gi;
+          (style as any)["--gt"] = groupTotal;
+        }
 
         const className = `split-word${isGrouped ? ` ${groupPhrase?.className ?? ""}` : ""}`;
 

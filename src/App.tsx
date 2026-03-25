@@ -24,9 +24,9 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <div
-        id="site-top"
+        id="route-anchor"
         tabIndex={-1}
-        style={{ position: "absolute", top: 0, left: 0, width: "1px", height: "1px" }}
+        style={{ position: "absolute", top: 0, left: 0, width: 0, height: 0, overflow: "hidden", outline: "none", border: "none" }}
         aria-hidden="true"
       />
 

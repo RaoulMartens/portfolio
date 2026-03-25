@@ -144,8 +144,8 @@ const PECZwolle: React.FC = () => {
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
                     I've proudly collaborated with PEC Zwolle, creating posters for various matches.
-                    Each design was crafted using a combination of Photoshop and Blender, showcasing
-                    a dynamic blend of 2D and 3D elements.
+                    Each design was made using a combination of Photoshop and Blender, showcasing
+                    a blend of 2D and 3D elements.
                   </p>
                 </AnimatedContent>
               </div>
@@ -158,22 +158,22 @@ const PECZwolle: React.FC = () => {
               <div className="pz-2x2">
                 {[
                   {
-                    src: "/images/pec-zwolle/vert-1.jpg",
+                    src: "/images/pec-zwolle/vert-1.webp",
                     alt:
                       "A boy lies on his bed in a dimly lit room decorated with PEC Zwolle posters, dreaming while looking at photos of football players and matches on the wall.",
                   },
                   {
-                    src: "/images/pec-zwolle/vert-2.jpg",
+                    src: "/images/pec-zwolle/vert-2.webp",
                     alt:
                       "Four PEC Zwolle players decorate a glowing Christmas tree on the football field under a starry night sky with a full moon.",
                   },
                   {
-                    src: "/images/pec-zwolle/vert-3.jpg",
+                    src: "/images/pec-zwolle/vert-3.webp",
                     alt:
                       "PEC Zwolle players ride a roller coaster shaped like a fierce wolf high above the city, passing a tall clock tower under a dramatic sky.",
                   },
                   {
-                    src: "/images/pec-zwolle/vert-4.jpg",
+                    src: "/images/pec-zwolle/vert-4.webp",
                     alt:
                       "Four PEC Zwolle players ride a roller coaster shaped like a wolf soaring above the city skyline beside a clock tower, symbolizing excitement and team spirit.",
                   },
@@ -228,7 +228,7 @@ const PECZwolle: React.FC = () => {
                 <AnimatedContent {...imageReveal}>
                   <figure className="pz-mosaic-left">
                     <img
-                      src="/images/pec-zwolle/vert-5.jpg"
+                      src="/images/pec-zwolle/vert-5.webp"
                       alt="An adult and a child wearing PEC Zwolle clothing stand together in a room covered with photos from past football matches, symbolizing shared memories of the season."
                       loading="lazy"
                       decoding="async"
@@ -241,12 +241,12 @@ const PECZwolle: React.FC = () => {
                 <div className="pz-mosaic-right">
                   {[
                     {
-                      src: "/images/pec-zwolle/horz-1.jpg",
+                      src: "/images/pec-zwolle/horz-1.webp",
                       alt:
                         "Screenshot of PEC Zwolle’s season ticket page showing two fans facing a wall of match photos with the text ‘De mooiste club van allemaal’ and buttons to choose season tickets for different age groups.",
                     },
                     {
-                      src: "/images/pec-zwolle/horz-2.jpg",
+                      src: "/images/pec-zwolle/horz-2.webp",
                       alt:
                         "Screenshot of PEC Zwolle’s news section showing three updates: the season ticket campaign launch, a match summary against Telstar, and a photo from the Almere City FC match.",
                     },
@@ -274,7 +274,7 @@ const PECZwolle: React.FC = () => {
               <AnimatedContent {...imageReveal}>
                 <figure className="pz-wide-figure">
                   <img
-                    src="/images/pec-zwolle/wide-1.jpg"
+                    src="/images/pec-zwolle/wide-1.webp"
                     alt="PEC Zwolle full-width visual"
                     loading="lazy"
                     decoding="async"

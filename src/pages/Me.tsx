@@ -46,7 +46,6 @@ function useInViewTitle(params?: {
   const ref = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
 
-  // Ontpak en memoize zodat deps stabiel zijn
   const {
     rootMargin,
     thresholds,
@@ -54,10 +53,10 @@ function useInViewTitle(params?: {
     minTopRatio,
   } = useMemo(
     () => ({
-      rootMargin: params?.rootMargin ?? "0px 0px -35% 0px",
+      rootMargin: params?.rootMargin ?? "0px 0px -15% 0px",
       thresholds: params?.thresholds ?? [0, 0.25, 0.5, 0.6, 0.75, 0.9, 1],
-      minRatio: params?.minRatio ?? 0.6,
-      minTopRatio: params?.minTopRatio ?? 0.2,
+      minRatio: params?.minRatio ?? 0.2,
+      minTopRatio: params?.minTopRatio ?? 0.1,
     }),
     [params?.rootMargin, params?.thresholds, params?.minRatio, params?.minTopRatio]
   );
@@ -116,16 +115,16 @@ const Me: React.FC = () => {
 
   // Titels liften pas in als ze in view zijn
   const approach = useInViewTitle({
-    rootMargin: "0px 0px -35% 0px",
+    rootMargin: "0px 0px -15% 0px",
     thresholds: [0, 0.25, 0.5, 0.6, 0.75, 0.9, 1],
-    minRatio: 0.6,
-    minTopRatio: 0.2,
+    minRatio: 0.2,
+    minTopRatio: 0.1,
   });
   const favorites = useInViewTitle({
-    rootMargin: "0px 0px -35% 0px",
+    rootMargin: "0px 0px -15% 0px",
     thresholds: [0, 0.25, 0.5, 0.6, 0.75, 0.9, 1],
-    minRatio: 0.6,
-    minTopRatio: 0.2,
+    minRatio: 0.2,
+    minTopRatio: 0.1,
   });
 
   // Animatieprofielen
@@ -195,7 +194,7 @@ const Me: React.FC = () => {
             <AnimatedContent {...heroImgAnim}>
               <img
                 className="me-image"
-                src="/images/me/me.jpg"
+                src="/images/me/me.webp"
                 alt="Raoul Martens standing and smiling on a bridge between two modern buildings, with a geometric green-covered high-rise in the background."
                 decoding="async"
                 loading="eager"
@@ -208,10 +207,7 @@ const Me: React.FC = () => {
           <div className="me-body-col">
             <AnimatedContent {...heroBodyAnim}>
               <p className="me-body">
-                Since then I’ve centred my practice on design thinking: observing, reframing, prototyping and
-                testing until the problem is unmistakably clear. I begin every project by listening: mapping
-                behaviours, emotions instead of jumping straight to pixels. From there I iterate fast—sketch,
-                wireframe, clickable proof. Because ideas earn their keep only when real users respond to them.
+                Since then, I’ve started to shape my practice more around design thinking. For me, it starts with listening and really trying to understand behaviour, emotions and what’s actually going on beneath the surface. Only after that do I move into sketches, wireframes and prototypes, testing ideas early to see how real users respond.
               </p>
             </AnimatedContent>
           </div>
@@ -222,7 +218,7 @@ const Me: React.FC = () => {
               <h2 className="me-approach-title">
                 {approach.inView ? (
                   <SplitText
-                    text="My approach, from first spark to live product"
+                    text="How I work, from first idea to live product"
                     splitType="words"
                     delay={0.06}
                     duration={0.8}
@@ -249,11 +245,11 @@ const Me: React.FC = () => {
             aria-label="Design process steps (grid on tablet & stacked on mobile)"
           >
             {[
-              { idx: 1, title: "Empathize", body: "Real insight saves weeks of nice looking but useless UI.", iconClass: "mask-empathize" },
-              { idx: 2, title: "Define", body: "Focus keeps scope tight and decisions easy to defend.", iconClass: "mask-define" },
-              { idx: 3, title: "Ideate", body: "Quantity early, so quality can surface later.", iconClass: "mask-ideate" },
-              { idx: 4, title: "Prototype", body: "Making it tangible turns opinions into evidence.", iconClass: "mask-prototype" },
-              { idx: 5, title: "Iterate", body: "Each loop nudges the product closer to effortless.", iconClass: "mask-iterate" },
+              { idx: 1, title: "Empathize", body: "If you miss what people actually need, you can easily spend weeks making the wrong thing look good.", iconClass: "mask-empathize" },
+              { idx: 2, title: "Define", body: "Defining the problem well keeps things from drifting and gives your decisions a good reason.", iconClass: "mask-define" },
+              { idx: 3, title: "Ideate", body: "You have to get past the obvious ideas before the interesting ones start to come.", iconClass: "mask-ideate" },
+              { idx: 4, title: "Prototype", body: "Once an idea is visible and usable, feedback gets a lot more useful.", iconClass: "mask-prototype" },
+              { idx: 5, title: "Iterate", body: "Each version gets you closer to something that feels obvious in the best way.", iconClass: "mask-iterate" },
             ].map((c, i) => (
               <AnimatedContent key={c.idx} {...cardReveal} delay={i * 0.06}>
                 <div className="me-card hb-card">
@@ -296,27 +292,27 @@ const Me: React.FC = () => {
           <div className="me-favorites-cards">
             {[
               {
-                title: "Football’s rhythm",
+                title: "Football",
                 body:
-                  "I grew up with a ball at my feet, and the sport still resets my head. Strategy, teamwork, split-second decisions, exactly the muscles I use in product design, just covered in grass stains and echoing with last-minute cheers.",
+                  "I grew up playing football, and it still helps me clear my head. A lot of what I like about it: strategy, teamwork, reacting quickly, is also what I enjoy in design. It just happens on a pitch instead of behind a screen.",
                 iconClass: "mask-football",
               },
               {
-                title: "Curious making",
+                title: "Always curious",
                 body:
-                  "Give me a blank canvas, Figma frame, Blender scene and I’ll fill it. I love turning half formed ideas into visuals people can react to, whether that’s a micro interaction in an app or a poster that lives on a bedroom wall.",
+                  "At the core, I just love creating. If it’s visual, I’m interested. Graphic design, editing, interfaces, motion, apps. I like building things that start as an idea and slowly become real.",
                 iconClass: "mask-hammer",
               },
               {
                 title: "Stories on screen",
                 body:
-                  "Films and narrative driven games fascinate me. I pause, rewind, dissect pacing, colour and sound design the way some people study code. It keeps my sense of storytelling sharp.",
+                  "I like stories that are told visually. Films and narrative games pull me in because every detail matters: timing, atmosphere, sound, colour. I enjoy picking those things apart and understanding how they create emotion.",
                 iconClass: "mask-macbook",
               },
               {
-                title: "Analogue moments",
+                title: "Analogue photography",
                 body:
-                  "I shoot 35 mm photos to slow down. Waiting for a roll to develop reminds me that not everything should be instant, and that patience often rewards with richer results.",
+                  "I shoot on film it forces me to slow down. You take the photo, then you wait, and that waiting is part of it. It reminds me that not everything needs to be instant to be good.",
                 iconClass: "mask-camera",
               },
             ].map((f, i) => (

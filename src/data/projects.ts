@@ -30,7 +30,7 @@ export const homeProjects: HomeProject[] = [
     link: '/hallo-buur',
     media: {
       kind: 'video',
-      poster: '/images/hallo-buur-cover.jpg',
+      poster: '/images/hallo-buur-cover.webp',
       alt: 'Hallo Buur app interface showing a central logo and example neighbor posts about a board-game afternoon and borrowing pasta.',
       sources: {
         webm: '/videos/hallo-buur.webm',
@@ -44,7 +44,7 @@ export const homeProjects: HomeProject[] = [
     link: '/nieuwsbegrip',
     media: {
       kind: 'image',
-      src: '/images/nieuwsbegrip-cover.jpg',
+      src: '/images/nieuwsbegrip-cover.webp',
       alt: 'Laptop with the Nieuwsbegrip dashboard on screen, showing lesson tiles and clear navigation.',
     },
   },
@@ -54,7 +54,7 @@ export const homeProjects: HomeProject[] = [
     link: '/pec-zwolle',
     media: {
       kind: 'image',
-      src: '/images/peczwolle-cover.jpg',
+      src: '/images/peczwolle-cover.webp',
       alt: 'Street poster of two PEC Zwolle fans looking toward a lit stadium filled with supporters.',
     },
   },
@@ -64,7 +64,7 @@ export const homeProjects: HomeProject[] = [
     link: '/hallo-buur-2',
     media: {
       kind: 'image',
-      src: '/images/hallo-buur2-cover.jpg',
+      src: '/images/hallo-buur2-cover.webp',
       alt: 'Elderly resident using an interactive screen with community activity cards such as game afternoons and repair help.',
     },
   },

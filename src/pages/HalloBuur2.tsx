@@ -133,7 +133,7 @@ const HalloBuur2: React.FC = () => {
                 <AnimatedContent {...heroImgAnim}>
                   <img
                     className="hb2-hero-img"
-                    src="/images/hallo-buur2/hero.jpg"
+                    src="/images/hallo-buur2/hero.webp"
                     alt="Group of elderly residents sitting together at a community table having coffee and conversation, with handwritten observation notes visible in the foreground."
                     decoding="async"
                     loading="eager"
@@ -155,10 +155,7 @@ const HalloBuur2: React.FC = () => {
               <div className="hb2-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    After various probes and observations, I discovered that elderly people do desire more
-                    social contact but are not easily open to change. By conducting a co-creation session, I
-                    gained insight into how deeply these desires are rooted and why they are unable to take
-                    the first step themselves.
+                    After probes and observations, I found that older residents do want more social contact, but are not quick to embrace change. Through a co-creation session, I got a better understanding of how strong that need really is, and what makes taking the first step so difficult for them.
                   </p>
                 </AnimatedContent>
               </div>
@@ -171,7 +168,7 @@ const HalloBuur2: React.FC = () => {
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image"
-                  src="/images/hallo-buur2/wide-1.jpg"
+                  src="/images/hallo-buur2/wide-1.webp"
                   alt="Simple black-and-white illustration of a frowning man with text above him that reads 'This is all pointless, those people won’t show up anyway.'"
                   decoding="async"
                   loading="lazy"
@@ -192,12 +189,7 @@ const HalloBuur2: React.FC = () => {
               <div className="hb2-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    In a residential complex owned by Talis on Aubadestraat in Nijmegen, many elderly people
-                    live. Until recently, the complex had a 65-plus label, but this has since been removed.
-                    This means that the number of elderly residents is decreasing, and this gap is not being
-                    filled for the time being. Increasingly, young and foreign people are moving in. The older
-                    residents miss the sense of community they once had and would like to have more contact
-                    with the new residents.
+                    In a residential complex on Aubadestraat in Nijmegen, owned by Talis, many older residents still live. The complex used to have a 65-plus label, but that has recently been removed. As a result, the number of elderly residents is slowly decreasing, while more young people and newcomers are moving in. Many older residents miss the sense of community that used to be there and would like more contact with the new residents.
                   </p>
                 </AnimatedContent>
               </div>
@@ -228,13 +220,13 @@ const HalloBuur2: React.FC = () => {
                 {
                   title: "Needs and desires",
                   body:
-                    "By actively thinking along and sharing their ideas, participants provide me, as a researcher, with a better and more nuanced understanding of their actual needs, values, and desires.",
+                    "Their ideas and input helped me better understand what they truly need, value, and hope for.",
                   iconClass: "mask-shopping-bag",
                 },
                 {
                   title: "Depth",
                   body:
-                    "Where traditional methods such as surveys or interviews are often structured and more superficial, co-creation allows for open exploration and deeper conversations. This brings hidden insights and emotions to light.",
+                    "Compared to more static methods like interviews, co-creation creates more room for open conversation. That often leads to deeper insights.",
                   iconClass: "mask-triangle",
                 },
               ].map((c, i) => (
@@ -285,7 +277,7 @@ const HalloBuur2: React.FC = () => {
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image"
-                  src="/images/hallo-buur2/wide-2.jpg"
+                  src="/images/hallo-buur2/wide-2.webp"
                   alt="Two groups of colorful sticky notes labeled 'Why not?' and 'Why yes?' showing reasons for and against participating in community coffee gatherings."
                   decoding="async"
                   loading="lazy"
@@ -301,14 +293,9 @@ const HalloBuur2: React.FC = () => {
               <div className="hb2-block-text">
                 <AnimatedContent {...textReveal}>
                   <p>
-                    Some residents aren’t affected by the negativity and even suggest solutions—for instance,
-                    displaying positive feedback at the building’s entrance to highlight what makes the common area
-                    cozy. Still, tensions remain. One resident, who occasionally joins communal activities, recalled
-                    being handed a paintbrush with the comment, “The paint will come later,” which, though humorous,
-                    felt personal. This illustrates how negative remarks still impact residents and may contribute to
-                    group divisions. To explore these dynamics further, I visited several residents to ask where they
-                    live, how they relate to neighbours, which routes they take through the building, and where they
-                    typically meet others—insights that may inform the design later.
+                    Some residents are not strongly affected by the negativity and even suggest ways to improve the atmosphere. One idea was to display positive feedback at the entrance, making visible what residents value about the shared space. Still, tensions remain. One resident, who occasionally joins communal activities, recalled being handed a paintbrush with the comment, “The paint will come later.” Although meant as a joke, it felt personal. This shows how seemingly small remarks can still have impact and may contribute to division between residents.
+
+                    To explore these dynamics, I visited residents in their homes to learn more about how they move through the building, how they relate to neighbours, and where contact with others tends to happen. These insights may later inform the design.
                   </p>
                 </AnimatedContent>
               </div>
@@ -321,7 +308,7 @@ const HalloBuur2: React.FC = () => {
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image hb2-image--hairline-fix"
-                  src="/images/hallo-buur2/wide-3.jpg"
+                  src="/images/hallo-buur2/wide-3.webp"
                   alt="Black-and-white illustration of a man with a slight smile looking upward, with handwritten text above him that reads: 'On the 3rd and 5th floors, everyone knows each other, it’s really cozy there.'"
                   decoding="async"
                   loading="lazy"
@@ -353,7 +340,7 @@ const HalloBuur2: React.FC = () => {
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image"
-                  src="/images/hallo-buur2/wide-4.jpg"
+                  src="/images/hallo-buur2/wide-4.webp"
                   alt="Illustration of an apartment building surrounded by icons and short phrases representing things residents appreciate about their community, such as 'Music is part of it,' 'Well-maintained garden,' 'Being together is cozy,' 'Bingo,' and 'Beautiful walking area.' The image highlights positive aspects of shared living like social events, greenery, and nearby facilities."
                   decoding="async"
                   loading="lazy"
@@ -390,7 +377,7 @@ const HalloBuur2: React.FC = () => {
               <AnimatedContent {...imageReveal}>
                 <img
                   className="hb2-image"
-                  src="/images/hallo-buur2/wide-5.jpg"
+                  src="/images/hallo-buur2/wide-5.webp"
                   alt="A colorful poster titled 'De Aubade Waardeplaat' hanging on a beige wall near an elevator. The poster visualizes what residents value about their building, featuring icons and categories such as 'Activiteiten,' 'Sociaal,' 'Feesten,' 'Voorzieningen,' and 'Omgeving.' Illustrations show themes like bingo, coffee gatherings, helping each other, greenery, and local shops."
                   decoding="async"
                   loading="lazy"

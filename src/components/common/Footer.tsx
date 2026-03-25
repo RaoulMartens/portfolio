@@ -138,7 +138,7 @@ const Footer: React.FC = () => {
 
   // Preload
   useEffect(() => {
-    ['/images/confirm.svg', '/images/footer.jpg', '/images/footer-dark.jpg'].forEach((src) => {
+    ['/images/confirm.svg', '/images/footer.webp', '/images/footer-dark.webp'].forEach((src) => {
       const i = new Image();
       i.src = src;
     });
@@ -169,7 +169,7 @@ const Footer: React.FC = () => {
     }
   };
 
-  const footerImgSrc = mounted && isDark ? '/images/footer-dark.jpg' : '/images/footer.jpg';
+  const footerImgSrc = mounted && isDark ? '/images/footer-dark.webp' : '/images/footer.webp';
 
   return (
     <footer className="main-footer">
@@ -269,7 +269,7 @@ const Footer: React.FC = () => {
 
         <div className="footer-bottom">
           <div className="footer-brand">
-            <img src="/images/logo-grey.svg" alt="" aria-hidden="true" /> Raoul Martens © 2025
+            <img src="/images/logo-grey.svg" alt="" aria-hidden="true" /> Raoul Martens © 2026
           </div>
 
           <a

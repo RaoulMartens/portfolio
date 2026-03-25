@@ -167,7 +167,7 @@ const ProjectInfo: React.FC<ProjectInfoProps> = memo(({ title, meta, link, headi
           }
         }
       },
-      { rootMargin: '-20% 0px -40% 0px', threshold: 0.3 }
+      { rootMargin: '0px 0px -15% 0px', threshold: 0.15 }
     );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
@@ -286,7 +286,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           }
         }
       },
-      { rootMargin: '0px 0px -20% 0px', threshold: 0.2 }
+      { rootMargin: '0px 0px -15% 0px', threshold: 0.15 }
     );
     obs.observe(node);
     return () => obs.disconnect();

@@ -171,7 +171,7 @@ const Hero: React.FC<HeroProps> = ({ headingId = 'home-hero-heading' }) => {
 
   // hero image attributes to avoid CLS + prioritize above-the-fold
   const heroImgAttrs = {
-    src: '/images/hero-image.jpg',
+    src: '/images/hero-image.webp',
     decoding: 'async' as const,
     loading: 'eager' as const,
     // fetchPriority ondersteunt moderne browsers; harmless fallback elders

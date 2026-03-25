@@ -430,7 +430,7 @@ const HalloBuur: React.FC = () => {
               <div className="hb-hero">
                 <AnimatedContent {...heroImgAnim}>
                   <img
-                    src="/images/hallo-buur/preview.jpg"
+                    src="/images/hallo-buur/preview.webp"
                     alt="An older man interacts with a large touchscreen displaying a digital community board where residents can view and create activity cards for shared events and help requests."
                     decoding="async"
                     loading="eager"
@@ -453,11 +453,7 @@ const HalloBuur: React.FC = () => {
               <div className="hb-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    In a residential complex where the elderly used to make up the majority,
-                    the population is now shifting. Young people and newcomers&nbsp;are moving in.
-                    This transition has led to a social disconnect. Older residents often feel ignored,
-                    while newer ones feel unwelcome. These assumptions feed into a spiral of misunderstanding,
-                    preventing natural contact.
+                    The residential complex is changing. Where older residents once formed the majority, more young people and newcomers are now moving in. That shift has created a social gap: older residents often feel ignored, while newer residents feel unwelcome. As these assumptions grow, natural contact becomes less likely and misunderstanding takes over.
                   </p>
                 </AnimatedContent>
               </div>
@@ -469,7 +465,7 @@ const HalloBuur: React.FC = () => {
             <div className="hb-followup">
               <AnimatedContent {...lottieReveal}>
                 <img
-                  src="/images/hallo-buur/problem.jpg"
+                  src="/images/hallo-buur/problem.webp"
                   alt="Two women sit back to back against a neutral background. One is elderly with short gray hair, the other is younger with long brown hair. Both have serious expressions and look away from each other, suggesting distance or disagreement."
                   decoding="async"
                   loading="lazy"
@@ -491,8 +487,7 @@ const HalloBuur: React.FC = () => {
               <div className="hb-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    While both groups express a need for contact, neither feels comfortable taking the first step.
-                    The building lacks a low threshold system to spark interactions or create visibility around shared interests.
+                    Both groups want more contact, but neither feels comfortable breaking the ice. What is missing is a simple, approachable way to spark interaction.
                   </p>
                 </AnimatedContent>
               </div>
@@ -517,9 +512,7 @@ const HalloBuur: React.FC = () => {
               <div className="hb-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    Getting residents to open up about their social struggles wasn’t easy.
-                    In the early phase of the project, I conducted a cultural probe study and a co-creation
-                    session to uncover the underlying reasons behind the lack of social interaction in the building.
+                    Because residents did not easily open up about their social struggles, I started the project with a cultural probe study and a co-creation session. These methods helped uncover the deeper reasons behind the lack of social interaction in the building.
                   </p>
                 </AnimatedContent>
               </div>
@@ -531,21 +524,21 @@ const HalloBuur: React.FC = () => {
             <div className="hb-cards" role="list" aria-label="Key insights">
               {[
                 {
-                  title: "Conversation anxiety",
+                  title: "Fear of rejection",
                   body:
-                    "Residents often avoid initiating contact out of fear of being judged or rejected. This makes casual conversations feel risky instead of natural.",
+                    "Fear of judgment or rejection keeps many residents from starting a conversation, making casual contact feel uncomfortable instead of natural.",
                   iconClass: "mask-ghost",
                 },
                 {
-                  title: "Silent assumptions",
+                  title: "Assumptions",
                   body:
-                    "Older residents assume newcomers aren’t interested in them, while newer residents feel like outsiders. These silent assumptions fuel a cycle of avoidance.",
+                    "Older residents often assume newcomers are not interested, while newer residents feel like outsiders. Because those assumptions stay unspoken, both sides keep avoiding each other.",
                   iconClass: "mask-barrier",
                 },
                 {
-                  title: "Dormant spaces",
+                  title: "Shared spaces",
                   body:
-                    "Although there are shared areas, interactions rarely happen spontaneously. Without a clear invitation or reason to connect, most residents stick to their routines.",
+                    "Shared spaces exist, but they are underused as places for connection. Without a clear invitation to engage, most residents stick to their routines.",
                   iconClass: "mask-suitcase",
                 },
               ].map((c, i) => (
@@ -578,7 +571,7 @@ const HalloBuur: React.FC = () => {
               <div className="hb-block-text">
                 <AnimatedContent {...textReveal} delay={STAGGER}>
                   <p>
-                    The Digital Bulletin Board lowers the threshold for initiating contact between residents. It provides a simple and approachable way to express needs, share activities, and offer help. Making the first step toward connection easier. While the interaction starts digitally, the goal is to encourage real-life encounters and build a stronger sense of community within the complex.
+                    Hallo Buur makes the first step toward connection feel easier. By giving residents a simple way to share needs, activities, and support, it creates new openings for contact. While the interaction starts digitally, the aim is social: more real life contact and a stronger community within the complex.
                   </p>
                 </AnimatedContent>
               </div>
@@ -616,7 +609,7 @@ const HalloBuur: React.FC = () => {
                 <div className="hb-lottie-wrap" aria-label="Create an account animation">
                   <LottieBox
                     src="/videos/hallo-buur/create-an-account.lottie"
-                    poster="/images/hallo-buur/posters/create-an-account.jpg"
+                    poster="/images/hallo-buur/posters/create-an-account.webp"
                   />
                 </div>
               </AnimatedContent>
@@ -647,7 +640,7 @@ const HalloBuur: React.FC = () => {
                 <div className="hb-lottie-wrap" aria-label="Post a note animation">
                   <LottieBox
                     src="/videos/hallo-buur/post-an-activity.lottie"
-                    poster="/images/hallo-buur/posters/post-an-activity.jpg"
+                    poster="/images/hallo-buur/posters/post-an-activity.webp"
                   />
                 </div>
               </AnimatedContent>
@@ -678,7 +671,7 @@ const HalloBuur: React.FC = () => {
                 <div className="hb-lottie-wrap" aria-label="Join an activity animation">
                   <LottieBox
                     src="/videos/hallo-buur/responding-to-a-request.lottie"
-                    poster="/images/hallo-buur/posters/responding-to-a-request.jpg"
+                    poster="/images/hallo-buur/posters/responding-to-a-request.webp"
                   />
                 </div>
               </AnimatedContent>
@@ -709,7 +702,7 @@ const HalloBuur: React.FC = () => {
                 <div className="hb-lottie-wrap" aria-label="Ongoing connection animation">
                   <LottieBox
                     src="/videos/hallo-buur/manage-profile-settings.lottie"
-                    poster="/images/hallo-buur/posters/manage-profile-settings.jpg"
+                    poster="/images/hallo-buur/posters/manage-profile-settings.webp"
                   />
                 </div>
               </AnimatedContent>
@@ -731,11 +724,11 @@ const HalloBuur: React.FC = () => {
           <div className="hb-grid">
             <div className="hb-cards-2" role="list" aria-label="Project learnings">
               {[
-                { title: "Assumption barriers", body: "Co-creation helped uncover hidden beliefs between residents.", iconClass: "mask-hidden" },
-                { title: "Contact, not connection", body: "Real interaction happens offline, the app just opens the door.", iconClass: "mask-door" },
-                { title: "Small barriers matter", body: "Even tiny obstacles can prevent people from connecting. Simplicity makes a difference.", iconClass: "mask-barrier" },
-                { title: "Accessibility is key", body: "Simple flows and a Help Centre made the app usable for everyone.", iconClass: "mask-access" },
-                { title: "People want control", body: "Balancing visibility and privacy builds trust.", iconClass: "mask-joystick" },
+                { title: "Assumptions", body: "Co-creation exposed the hidden assumptions that were quietly keeping residents apart.", iconClass: "mask-hidden" },
+                { title: "Opening the door", body: "Connection does not happen on a screen. The app only helps residents take the first step.", iconClass: "mask-door" },
+                { title: "Small barriers", body: "Even minor obstacles can stop interaction from happening. Simplicity makes all the difference.", iconClass: "mask-barrier" },
+                { title: "Accessibility", body: "Simple flows and clear support made the app more usable for residents with different needs and abilities.", iconClass: "mask-access" },
+                { title: "Trust", body: "Letting residents decide what they share helped make the experience feel safer and more trustworthy.", iconClass: "mask-joystick" },
               ].map((c, i) => (
                 <AnimatedContent key={i} {...textReveal} delay={i * 0.06}>
                   <div className="hb-card" role="listitem">
